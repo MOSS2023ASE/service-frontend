@@ -4,9 +4,14 @@
 
 <script>
 // deps for editor
-import 'codemirror/lib/codemirror.css'
-import '@toast-ui/editor/dist/toastui-editor.css'
-import Editor from '@toast-ui/vue-editor'
+// import 'codemirror/lib/codemirror.css' // codemirror
+// import 'tui-editor/dist/tui-editor.css' // editor ui
+// import 'tui-editor/dist/tui-editor-contents.css' // editor content
+
+import 'codemirror/lib/codemirror.css' // Editor's Dependency Style
+import '@toast-ui/editor/dist/toastui-editor.css' // Editor's Style
+// import Editor from 'tui-editor'
+import Editor from '@toast-ui/editor'
 import defaultOptions from './default-options'
 
 export default {
@@ -99,10 +104,10 @@ export default {
       this.editor.off('change')
       this.editor.remove()
     },
-    setMarkdown(value) {
+    setValue(value) {
       this.editor.setMarkdown(value)
     },
-    getMarkdown() {
+    getValue() {
       return this.editor.getMarkdown()
     },
     setHtml(value) {

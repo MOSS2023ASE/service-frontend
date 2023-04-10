@@ -41,6 +41,17 @@ export const constantRoutes = [
     hidden: true
   },
   // 新增放在下面
+  {
+    path: '/',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'issueInfoDetail',
+        component: () => import('@/views/issueInfo/issueInfoDetail')
+      }
+    ]
+  },
 ]
 
 export const asyncRoutes = [
