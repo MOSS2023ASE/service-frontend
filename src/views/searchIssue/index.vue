@@ -1,5 +1,17 @@
 <template>
     <div class="app-container">
+        <el-header height="100">
+            <el-button type="danger" v-show="user_type === 0" @click="handleClickPost" 
+                        class="post-issue-button">
+                发布问题
+            </el-button>
+        </el-header>
+        <div>
+            <PostIssue 
+                v-show="dialogVisible"
+                :dialogVisible="dialogVisible"
+                @closeDialogEvent="closeDialog" />
+        </div>
         <div class="search-bar">
             <div class="search-info">
                 <el-input v-model="search_keyword"
@@ -72,12 +84,14 @@
 
 <script>
 import IssueItem from "./components/issueItem.vue";
+import PostIssue from "./components/postIssue.vue";
 import {Message} from 'element-ui'
 
 export default {
     name: "Search",
     components: {
-        IssueItem
+        IssueItem,
+        PostIssue
     },
     props: {
     },
@@ -85,6 +99,7 @@ export default {
     },
     data() {
         return {
+            dialogVisible: false,
             user_type: 0,
             search_keyword: '',
             search_tags: [],
@@ -145,6 +160,13 @@ export default {
         };
     },
     methods: {
+        handleClickPost() {
+            this.dialogVisible = true;
+        },
+        closeDialog() {
+            console.log('click');
+            this.dialogVisible = false;
+        },
         search() {
             // TODO
             Message({
@@ -195,6 +217,15 @@ export default {
 </script>
 
 <style scoped>
+
+.post-issue-button {
+    float: right;
+    height: 50px;
+    width: 80px;
+    padding: 0px;
+    font-size: 15px;
+    color: white;
+}
 
 .search-bar {
     display: flex;
