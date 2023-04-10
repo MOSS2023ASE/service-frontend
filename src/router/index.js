@@ -56,6 +56,18 @@ export const asyncRoutes = [
       },
     ]
   },
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      {
+        path: 'search',
+        name: 'Search',
+        component: () => import('@/views/searchIssue/index'),
+        meta: {title: '搜索问题', icon: 'el-icon-search', roles: ['admin', 'editor', 'visitor']},
+      },
+    ]
+  },
   // 404 page must be placed at the end !!!
   {path: '*', redirect: '/404', hidden: true}
 ]
