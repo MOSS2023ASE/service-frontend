@@ -2,7 +2,7 @@
   <div class="bg_container">
     <div class="login-container">
       <el-row :gutter="20">
-        <el-col :span="8" :offset="14">
+        <el-col :span="10" :offset="7">
           <el-form
             ref="loginForm"
             :model="loginForm"
@@ -15,11 +15,11 @@
             <div class="title-container">
               <el-row type="flex" style="display: flex;align-items: center">
                 <el-col :span="4">
-                  <img src="logo3.png" style="vertical-align:middle;max-height: 200px;max-width: 100px;">
+                  <img src="logo.jpg" style="vertical-align:middle;max-height: 160px;max-width: 80px;">
                 </el-col>
-                <el-col :span="20" >
-                  <h2 class="title">航&nbsp;味</h2>
-                  <h2 class="sub_title">厨房</h2>
+                <el-col :span="16" >
+                  <h2 class="title">士&nbsp;问</h2>
+                  <h2 class="title" style="margin-left: 50px;">士&nbsp;答</h2>
                 </el-col>
               </el-row>
 
@@ -224,7 +224,7 @@ export default {
           // 按钮会有一个loading效果
           this.loading = true
 
-          // 测试 如果后酸暂时不支持权限，使用下面这三行
+          // 测试 如果后段暂时不支持权限，使用下面这三行
           this.$store.dispatch('user/forceLogin', this.loginForm)
           this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
           this.loading = false
@@ -287,6 +287,10 @@ $cursor: #fff;
   }
 }
 
+.login-container .el-input input {
+  color: white !important;
+}
+
 .el-button {
   color: white;
 }
@@ -332,17 +336,18 @@ $light_gray: #eee;
 .bg_container {
   min-height: 100%;
   width: 100%;
-  background: url('../../assets/images/login_cover_image.png') repeat-x;
+  opacity: 0.8;
+  background: url('../../assets/images/login_background.jpg') no-repeat;
+  background-size: 100% 100%;
 }
 
 .login-container {
   min-height: 100%;
   width: 100%;
-
   overflow: hidden;
 
   .login-form {
-    background-color: rgb(63, 77, 96, 0.8);
+    background-color: rgb(63, 86, 108, 0.8);
     position: relative;
     width: 520px;
     max-width: 100%;
@@ -382,14 +387,6 @@ $light_gray: #eee;
       margin: 0 auto 0 auto;
       text-align: center;
       font-weight: bold;
-      font-family: 华文中宋,serif;
-    }
-    .sub_title {
-      font-size: 48px;
-      color: $light_gray;
-      margin: 0 auto 0 auto;
-      text-align: center;
-      font-weight: lighter;
       font-family: 华文中宋,serif;
     }
   }

@@ -6,16 +6,18 @@
       <v-row dense>
         <v-col cols="2">
           <v-row>
-            <span class="title ml-3 mr-5" style="margin-top: 20px;">
-              航味
+            <span class="title ml-3 mr-5" style="margin-top: 8px;">
+              士问
             </span>
           </v-row>
           <v-row>
-            <span class="font-weight-light title" style="margin-left: 20px;">厨房</span>
+            <span class="title ml-3 mr-5" style="margin-left: 20px !important;">
+              士答
+            </span>
           </v-row>
         </v-col>
         <v-col cols="2" style="margin-left: -60px">
-          <v-img src="logo3.png" style="vertical-align:middle;max-height: 100px;max-width: 50px;"></v-img>
+          <v-img src="logo.jpg" style="vertical-align:middle;max-height: 100px;max-width: 50px;"></v-img>
         </v-col>
       </v-row>
       <!--    <breadcrumb id="breadcrumb-container" class="breadcrumb-container"/>-->
