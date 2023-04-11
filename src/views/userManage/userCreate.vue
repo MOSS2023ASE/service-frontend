@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container>
-      <v-row class="mt-6">
+      <v-row class="mt-6" v-if="page === 1">
         <v-spacer></v-spacer>
         <v-col :cols="4">
           <v-card>
@@ -73,17 +73,33 @@
         </v-col>
         <v-spacer></v-spacer>
       </v-row>
+      <v-row v-if="page === 2">
+        <v-col>
+          <user-list></user-list>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-pagination
+            v-model="page"
+            :length="2">
+          </v-pagination>
+        </v-col>
+      </v-row>
     </v-container>
   </v-app>
 </template>
 
 <script>
+import UserList from './userList'
 export default {
   data() {
     return {
-        userType:["学生","辅导师","管理员"],
-        user:{}
+      userType:["学生","辅导师","管理员"],
+      user:{},
+      page: 1
     }
-  }
+  },
+  components: { UserList }
 }
 </script>

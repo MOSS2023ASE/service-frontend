@@ -42,8 +42,6 @@
 </template>
 
 <script>
-import { type } from 'os';
-
   export default {
     data() {
       return {
