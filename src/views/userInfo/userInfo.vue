@@ -33,11 +33,62 @@
                     </span>
                   </v-col>
                   <v-col :cols="12" class="text-left mt-n2">
-                    <v-icon>mdi-lock-outline</v-icon>
+                    <v-icon color="error">mdi-lock-outline</v-icon>
                     <v-btn text class="ml-n1" color="error">修改密码</v-btn>
                   </v-col>
                 </v-col>
               </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-spacer></v-spacer>
+      </v-row>
+
+      <v-row class="mt-8">
+        <v-spacer></v-spacer>
+        <v-col :cols="8">
+          <v-card>
+            <v-card-title>
+              <v-icon>mdi-file-question-outline</v-icon>
+              <span class="ml-3">提出的问题</span>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text class="mt-n4">
+              <user-issue :type="1"></user-issue>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-spacer></v-spacer>
+      </v-row>
+
+      <v-row class="mt-8">
+        <v-spacer></v-spacer>
+        <v-col :cols="8">
+          <v-card>
+            <v-card-title>
+              <v-icon>mdi-file-question-outline</v-icon>
+              <span class="ml-3">回答的问题</span>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text class="mt-n4">
+              <user-issue :type="2"></user-issue>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-spacer></v-spacer>
+      </v-row>
+
+      <v-row class="mt-8">
+        <v-spacer></v-spacer>
+        <v-col :cols="8">
+          <v-card>
+            <v-card-title>
+              <v-icon>mdi-file-question-outline</v-icon>
+              <span class="ml-3">复审的问题</span>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text class="mt-n4">
+              <user-issue :type="3"></user-issue>
             </v-card-text>
           </v-card>
         </v-col>
@@ -48,7 +99,11 @@
 </template>
 
 <script>
+import UserIssue from './userIssue'
 export default {
+  components: {
+    UserIssue
+  },
   computed: {
     items() {
       return [
