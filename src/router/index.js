@@ -49,6 +49,10 @@ export const constantRoutes = [
       {
         path: 'issueInfoDetail',
         component: () => import('@/views/issueInfo/issueInfoDetail')
+      },
+      {
+        path: 'userInfo',
+        component: () => import('@/views/userInfo/userInfo')
       }
     ]
   },
