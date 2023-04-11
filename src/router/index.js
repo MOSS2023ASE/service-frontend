@@ -76,7 +76,19 @@ export const asyncRoutes = [
         name: 'Search',
         component: () => import('@/views/searchIssue/index'),
         meta: {title: '搜索问题', icon: 'el-icon-search', roles: ['admin', 'editor', 'visitor']},
-      },
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      {
+        path: 'userCreate',
+        name: 'userCreate',
+        component: () => import('@/views/userManage/userCreate'),
+        meta: {title: '用户管理', icon: 'el-icon-user'}
+      }
     ]
   },
   // 404 page must be placed at the end !!!
