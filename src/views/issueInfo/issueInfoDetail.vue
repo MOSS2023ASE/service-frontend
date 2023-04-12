@@ -8,7 +8,7 @@
             class="mx-auto"
           >
             <v-card-title>
-              <v-btn text color="green">
+              <v-btn text color="green" @click="back()">
                 <v-icon
                   large
                   left
@@ -41,20 +41,20 @@
             </v-row>
             <v-row justify="end" style="margin-right: 10px">
               <v-card-actions>
-                <v-btn text>
+                <v-btn text @click="like()">
                   <v-icon left>
                     mdi-thumb-up-outline
                   </v-icon>
                   点赞
                 </v-btn>
-                <v-btn text>
+                <v-btn text @click="collect()">
                   <v-icon left>
                     mdi-heart-outline
                   </v-icon>
                   收藏
                 </v-btn>
-                <v-btn text>编辑</v-btn>
-                <v-btn text>关闭</v-btn>
+                <v-btn text @click="edit()">编辑</v-btn>
+                <v-btn text @click="close()">关闭</v-btn>
               </v-card-actions>
             </v-row>
             <br/>
@@ -135,10 +135,6 @@
         </v-container>
         <v-divider></v-divider>
       </v-card>
-<!--      <div style="margin-top: 10px">-->
-<!--        <el-tiptap v-model="content" :extensions="extensions" lang="zh" :contain="true" style="height: 500px"/>-->
-<!--      </div>-->
-
       <div>
         <markdown-editor v-model="content" height="500px"/>
       </div>
@@ -155,48 +151,107 @@
 
 <script>
 import MarkdownEditor from '@/components/MarkdownEditor'
+import {deleteComment, getComments} from "@/api/comment";
 
 export default {
   name: "issueInfoDetail",
   components: {MarkdownEditor},
+  props: {
+    id: {
+      type: String,
+      default: "01"
+    },
+
+  },
   data() {
     return {
       dialog: false,
-      notifications: false,
-      sound: true,
-      widgets: false,
+
+      issue_id: '2',
+      title: '',
       content: '',
-      editorText: "#asd",
+      user_name: '',
+      user_avatar: '',
+      counselor_list: [],
+      reviewer_list: [],
+      chapter_name: '',
+      subject_name: '',
+      status: '',
+      anonymous: 0,
+      create_at: '',
+      update_at: '',
+      score: 0,
+      tag_list: [],
+      editorText: "发布你的回答",
       editorOptions: {},
-      items: [
-        {header: '回答者'},
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: "<span class='text--primary'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
-        },
-        {divider: true, inset: true},
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.",
-        },
-        {header: '复审者'},
-        {divider: true, inset: true},
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?",
-        },
-      ],
     }
   },
   methods: {
+    initIssueId() {
+      this.issue_id = this.$route.params.issue_id
+      console.log(this.issue_id)
+    },
+    initissueInfo() {
+      let issueInfoQuery = {
+        jwt: this.$store.state.user.token,
+        issue_id: this.issue_id
+      }
+      getComments(issueInfoQuery).then(response => {
+        this.title = response.data.title
+        this.content = response.data.content
+        this.user_name = response.data.user_name
+        this.user_avatar = response.data.user_avatar
+        this.counselor_list = response.data.counselor_list
+        this.reviewer_list = response.data.reviewer_list
+        this.chapter_name = response.data.chapter_name
+        this.subject_name = response.data.subject_name
+        this.status = response.data.status
+        this.anonymous = response.data.anonymous
+        this.create_at = response.data.create_at
+        this.update_at = response.data.update_at
+        this.score = response.data.score
+        this.tag_list = response.data.tag_list
+      }).catch(error => {
+        this.$notify({
+          title: '获取失败',
+          message: '获取issue信息失败',
+          type: 'warning',
+          duration: 2000
+        })
+      })
+    },
+    initissueComment(){
+      let issueCommentQuery = {
+        jwt: this.$store.state.user.token,
+        issue_id: this.issue_id
+      }
+      getComments(issueCommentQuery).then(response=>{
+
+      }).catch(err=>{
+
+      })
+    },
+    like() {
+
+    },
+    back() {
+      this.$router.go(-1)
+    },
+    collect() {
+
+    },
+    edit() {
+
+    },
+    close() {
+
+    },
 
   },
-  computed: {
-
-  },
+  computed: {},
+  created() {
+    this.initIssueId()
+  }
 }
 </script>
 

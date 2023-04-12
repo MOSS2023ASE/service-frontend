@@ -100,6 +100,9 @@ export default {
     methods: {
         /* async */ toIssueDetailView() {
             // TODO: call backend API
+            //Test issueInfoDetail
+            this.$router.push({name: 'issueInfoDetail', params: {issue_id: "3"}})
+            //
             Message({
                 message: '点击问题',
                 type: 'warning',

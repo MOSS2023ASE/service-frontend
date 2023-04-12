@@ -48,6 +48,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'issueInfoDetail',
+        name: 'issueInfoDetail',
         component: () => import('@/views/issueInfo/issueInfoDetail')
       },
       {
