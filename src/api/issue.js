@@ -1,12 +1,12 @@
-import client from './client'
-
-let api_url_head:string = 'http://localhost:3000'
+import request from '@/utils/request'
 
 export function get_issue_detail(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id
 ) {
-  return client.POST(api_url_head + '/issue/get', {
+  return request({
+    url: '/issue/get',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -15,10 +15,12 @@ export function get_issue_detail(
 }
 
 export function cancel_issue(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id,
 ) {
-  return client.POST(api_url_head + '/issue/cancel', {
+  return request({
+    url: '/issue/cancel',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -27,11 +29,13 @@ export function cancel_issue(
 }
 
 export function classify_issue(
-  jwt: string,
-  issue_id: number,
-  is_valid: number
+  jwt,
+  issue_id,
+  is_valid
 ) {
-  return client.POST(api_url_head + '/issue/classify', {
+  return request({
+    url: '/issue/classify',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id,
@@ -41,10 +45,12 @@ export function classify_issue(
 }
 
 export function readopt_issue(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id,
 ) {
-  return client.POST(api_url_head + '/issue/readopt', {
+  return request({
+    url: '/issue/readopt',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -53,10 +59,12 @@ export function readopt_issue(
 }
 
 export function agree_issue(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id,
 ) {
-  return client.POST(api_url_head + '/issue/agree', {
+  return request({
+    url: '/issue/agree',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -65,10 +73,12 @@ export function agree_issue(
 }
 
 export function review_issue(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id,
 ) {
-  return client.POST(api_url_head + '/issue/review', {
+  return request({
+    url: '/issue/review',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -77,10 +87,12 @@ export function review_issue(
 }
 
 export function reject_issue(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id,
 ) {
-  return client.POST(api_url_head + '/issue/reject', {
+  return request({
+    url: '/issue/reject',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -89,10 +101,12 @@ export function reject_issue(
 }
 
 export function adopt_issue(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id,
 ) {
-  return client.POST(api_url_head + '/issue/adopt', {
+  return request({
+    url: '/issue/adopt',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -101,10 +115,12 @@ export function adopt_issue(
 }
 
 export function get_issue_tag(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id,
 ) {
-  return client.POST(api_url_head + '/issue/tags', {
+  return request({
+    url: '/issue/tags',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -113,24 +129,28 @@ export function get_issue_tag(
 }
 
 export function update_issue_tag(
-  jwt: string,
-  issue_id: number,
-  tag_list: Array<number>
+  jwt,
+  issue_id,
+  tag_id_list
 ) {
-  return client.POST(api_url_head + '/issue/tags_update', {
+  return request({
+    url: '/issue/tags_update',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id,
-      tag_list: tag_list
+      tag_list: tag_id_list
     }
   })
 }
 
 export function check_follow_issue(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id,
 ) {
-  return client.POST(api_url_head + '/issue/follow_check', {
+  return request({
+    url: '/issue/follow_check',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -139,10 +159,12 @@ export function check_follow_issue(
 }
 
 export function follow_issue(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id,
 ) {
-  return client.POST(api_url_head + '/issue/follow', {
+  return request({
+    url: '/issue/follow',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -151,10 +173,12 @@ export function follow_issue(
 }
 
 export function check_like_issue(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id,
 ) {
-  return client.POST(api_url_head + '/issue/favorite', {
+  return request({
+    url: '/issue/favorite',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -163,10 +187,12 @@ export function check_like_issue(
 }
 
 export function like_issue(
-  jwt: string,
-  issue_id: number,
+  jwt,
+  issue_id,
 ) {
-  return client.POST(api_url_head + '/issue/like', {
+  return request({
+    url: '/issue/like',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id
@@ -175,14 +201,16 @@ export function like_issue(
 }
 
 export function update_issue_info(
-  jwt: string,
-  issue_id: number,
-  chapter_id: number,
-  title: string,
-  content: string,
-  anonymous: number
+  jwt, //  string,
+  issue_id, //: number,
+  chapter_id, //: number,
+  title, //: string,
+  content, //: string,
+  anonymous, //: number
 ) {
-  return client.POST(api_url_head + '/issue/update', {
+  return request({
+    url: '/issue/update',
+    method: 'post',
     data: {
       jwt: jwt,
       issue_id: issue_id,
@@ -195,13 +223,15 @@ export function update_issue_info(
 }
 
 export function commit_issue(
-  jwt: string,
-  chapter_id: number,
-  title: string,
-  content: string,
-  anonymous: number
+  jwt, //: string,
+  chapter_id, //: number,
+  title, //: string,
+  content, //: string,
+  anonymous, //: number
 ) {
-  return client.POST(api_url_head + '/issue/commit', {
+  return request({
+    url: '/issue/commit',
+    method: 'post',
     data: {
       jwt: jwt,
       chapter_id: chapter_id,
@@ -213,16 +243,18 @@ export function commit_issue(
 }
 
 export function search_issue(
-  jwt: string,
-  keyword: string,
-  tag_list: Array<number>,
-  status_list: Array<number>,
-  chapter_list: Array<number>,
-  order: number,
-  page_no: number,
-  issue_per_page: number
+  jwt, //: string,
+  keyword, //: string,
+  tag_list, //: Array<number>,
+  status_list, //: Array<number>,
+  chapter_list, //: Array<number>,
+  order, //: number,
+  page_no, //: number,
+  issue_per_page, //: number
 ) {
-  return client.POST(api_url_head + '/issue', {
+  return request({
+    url: '/issue',
+    method: 'post',
     data: {
       jwt: jwt,
       keyword: keyword,
