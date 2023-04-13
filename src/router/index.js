@@ -59,18 +59,18 @@ export const constantRoutes = [
 ]
 
 export const asyncRoutes = [
-  {
-    path: '/',
-    component: Layout,
-    children: [
-      {
-        path: 'manage',
-        name: 'Management',
-        component: () => import('@/views/management/index'),
-        meta: {title: '后台管理', icon: 'el-icon-s-tools', roles: ['admin']},
-      },
-    ]
-  },
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'manage',
+  //       name: 'Management',
+  //       component: () => import('@/views/management/index'),
+  //       meta: {title: '后台管理', icon: 'el-icon-s-tools', roles: ['admin']},
+  //     },
+  //   ]
+  // },
   {
     path: '/',
     component: Layout,
