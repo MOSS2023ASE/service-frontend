@@ -151,7 +151,7 @@
 
 <script>
 import MarkdownEditor from '@/components/MarkdownEditor'
-import {deleteComment, getComments} from "@/api/comment";
+import {get_issue_detail,get_issue_tag} from "@/api/issue";
 
 export default {
   name: "issueInfoDetail",
@@ -192,44 +192,38 @@ export default {
       console.log(this.issue_id)
     },
     initissueInfo() {
-      let issueInfoQuery = {
-        jwt: this.$store.state.user.token,
-        issue_id: this.issue_id
-      }
-      getComments(issueInfoQuery).then(response => {
-        this.title = response.data.title
-        this.content = response.data.content
-        this.user_name = response.data.user_name
-        this.user_avatar = response.data.user_avatar
-        this.counselor_list = response.data.counselor_list
-        this.reviewer_list = response.data.reviewer_list
-        this.chapter_name = response.data.chapter_name
-        this.subject_name = response.data.subject_name
-        this.status = response.data.status
-        this.anonymous = response.data.anonymous
-        this.create_at = response.data.create_at
-        this.update_at = response.data.update_at
-        this.score = response.data.score
-        this.tag_list = response.data.tag_list
-      }).catch(error => {
-        this.$notify({
-          title: '获取失败',
-          message: '获取issue信息失败',
-          type: 'warning',
-          duration: 2000
-        })
-      })
+      let jwt = this.$store.state.user.token
+
+      // get_issue_detail(jwt,this.issue_id).then(response => {
+      //   this.title = response.data.title
+      //   this.content = response.data.content
+      //   this.user_name = response.data.user_name
+      //   this.user_avatar = response.data.user_avatar
+      //   this.counselor_list = response.data.counselor_list
+      //   this.reviewer_list = response.data.reviewer_list
+      //   this.chapter_name = response.data.chapter_name
+      //   this.subject_name = response.data.subject_name
+      //   this.status = response.data.status
+      //   this.anonymous = response.data.anonymous
+      //   this.create_at = response.data.create_at
+      //   this.update_at = response.data.update_at
+      //   this.score = response.data.score
+      //   this.tag_list = response.data.tag_list
+      // }).catch(error => {
+      //   this.$notify({
+      //     title: '获取失败',
+      //     message: '获取issue信息失败',
+      //     type: 'warning',
+      //     duration: 2000
+      //   })
+      // })
     },
     initissueComment(){
       let issueCommentQuery = {
         jwt: this.$store.state.user.token,
         issue_id: this.issue_id
       }
-      getComments(issueCommentQuery).then(response=>{
 
-      }).catch(err=>{
-
-      })
     },
     like() {
 

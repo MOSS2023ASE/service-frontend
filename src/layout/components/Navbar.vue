@@ -127,7 +127,6 @@ import variables from '@/styles/variables.scss'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import SidebarItem from '@/layout/components/Sidebar/SidebarItem'
-// import {fetchNotify,readNotify} from "@/api/Notify";
 
 export default {
   components: {
@@ -171,9 +170,9 @@ export default {
         user_id: this.$store.state.user.user_id,
         notify_id:id
       }
-      readNotify(Did).then(response => {
-        this.getList()
-      })
+      // readNotify(Did).then(response => {
+      //   this.getList()
+      // })
     },
     showNotify() {
       console.log("haha")
@@ -191,24 +190,24 @@ export default {
       let Did = {
         user_id:this.$store.state.user.user_id
       }
-      fetchNotify(Did).then(response => {
-        this.list_length = response.data.list_length
-        let originData = response.data.notify_list
-        console.log(originData)
-        let divide = {divider: true, inset: true}
-        let o
-        this.$nextTick(() => {
-          this.items = []
-          for (o in originData) {
-            this.items.push(originData[o])
-            this.items.push(divide)
-          }
-          console.log(this.items)
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
-        })
-      })
+      // fetchNotify(Did).then(response => {
+      //   this.list_length = response.data.list_length
+      //   let originData = response.data.notify_list
+      //   console.log(originData)
+      //   let divide = {divider: true, inset: true}
+      //   let o
+      //   this.$nextTick(() => {
+      //     this.items = []
+      //     for (o in originData) {
+      //       this.items.push(originData[o])
+      //       this.items.push(divide)
+      //     }
+      //     console.log(this.items)
+      //     setTimeout(() => {
+      //       this.listLoading = false
+      //     }, 1.5 * 1000)
+      //   })
+      // })
     },
 
   }
