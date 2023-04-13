@@ -20,22 +20,27 @@
             </v-card-title>
             <v-list-item three-line>
               <v-list-item-content>
-                <v-list-item-title class="headline mb-1">一个问题</v-list-item-title>
+                <v-list-item-title class="headline mb-1">{{ this.title }}</v-list-item-title>
                 <v-list-item-subtitle>
-                  问题描述
+                  {{ this.user_name }}
                 </v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-avatar
+                v-if="this.user_id !== 0"
                 tile
                 size="80"
                 color="grey"
-              ></v-list-item-avatar>
+              >
+                <v-img :src="this.user_avatar"></v-img>
+              </v-list-item-avatar>
             </v-list-item>
-
+            <v-card-text>
+              {{ this.content }}
+            </v-card-text>
             <v-row style="margin-left: 1px">
               <v-card-actions>
-                <v-btn outlined color="light-blue lighten-2">数学分析</v-btn>
+                <v-btn outlined color="light-blue lighten-2"></v-btn>
                 <v-btn outlined color="orange lighten-2">第一章</v-btn>
               </v-card-actions>
             </v-row>
@@ -58,9 +63,9 @@
               </v-card-actions>
             </v-row>
             <br/>
-            <v-stepper value="2" flat>
+            <v-stepper :value="this.computeStatus" flat>
               <v-stepper-header>
-                <v-stepper-step step="1" complete>未认领</v-stepper-step>
+                <v-stepper-step :rules="[() => this.status !== 5]" step="1" complete>{{this.firstStatus}}</v-stepper-step>
 
                 <v-divider></v-divider>
 
@@ -90,16 +95,16 @@
 
                 <v-list-item
                   v-else
-                  :key="item.title"
+                  :key="item.user_id"
                   @click=""
                 >
                   <v-list-item-avatar>
-                    <v-img :src="item.avatar"></v-img>
+                    <v-img :src="item.user_avatar"></v-img>
                   </v-list-item-avatar>
 
                   <v-list-item-content>
-                    <v-list-item-title v-html="item.title"></v-list-item-title>
-                    <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+                    <v-list-item-title v-html="item.user_name"></v-list-item-title>
+                    <v-list-item-subtitle v-html="item.avatar"></v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
               </template>
@@ -151,15 +156,16 @@
 
 <script>
 import MarkdownEditor from '@/components/MarkdownEditor'
-import {get_issue_detail,get_issue_tag} from "@/api/issue";
+import {get_issue_detail,like_issue,follow_issue,check_follow_issue,check_like_issue,cancel_issue} from "@/api/issue";
+import {get_issue_all_comments,create_comment,delete_comment} from "@/api/forum";
 
 export default {
   name: "issueInfoDetail",
   components: {MarkdownEditor},
   props: {
     id: {
-      type: String,
-      default: "01"
+      type: Number,
+      default: 0
     },
 
   },
@@ -168,14 +174,16 @@ export default {
       dialog: false,
 
       issue_id: '2',
-      title: '',
-      content: '',
-      user_name: '',
+      title: 'Title',
+      content: '内容',
+      user_name: 'wakaka',
+      user_id:1,
       user_avatar: '',
       counselor_list: [],
       reviewer_list: [],
-      chapter_name: '',
-      subject_name: '',
+      items:[],
+      chapter_name: '数学分析',
+      subject_name: '第一章',
       status: '',
       anonymous: 0,
       create_at: '',
@@ -193,32 +201,52 @@ export default {
     },
     initissueInfo() {
       let jwt = this.$store.state.user.token
-
-      // get_issue_detail(jwt,this.issue_id).then(response => {
-      //   this.title = response.data.title
-      //   this.content = response.data.content
-      //   this.user_name = response.data.user_name
-      //   this.user_avatar = response.data.user_avatar
-      //   this.counselor_list = response.data.counselor_list
-      //   this.reviewer_list = response.data.reviewer_list
-      //   this.chapter_name = response.data.chapter_name
-      //   this.subject_name = response.data.subject_name
-      //   this.status = response.data.status
-      //   this.anonymous = response.data.anonymous
-      //   this.create_at = response.data.create_at
-      //   this.update_at = response.data.update_at
-      //   this.score = response.data.score
-      //   this.tag_list = response.data.tag_list
-      // }).catch(error => {
-      //   this.$notify({
-      //     title: '获取失败',
-      //     message: '获取issue信息失败',
-      //     type: 'warning',
-      //     duration: 2000
-      //   })
-      // })
+      get_issue_detail(jwt, this.issue_id).then(response => {
+        this.title = response.data.title
+        this.content = response.data.content
+        this.user_name = response.data.user_name
+        this.user_avatar = response.data.user_avatar
+        this.user_id = response.data.user_id
+        this.counselor_list = response.data.counselor_list
+        this.reviewer_list = response.data.reviewer_list
+        this.chapter_name = response.data.chapter_name
+        this.subject_name = response.data.subject_name
+        this.status = response.data.status
+        this.anonymous = response.data.anonymous
+        this.create_at = response.data.create_at
+        this.update_at = response.data.update_at
+        this.score = response.data.score
+        this.tag_list = response.data.tag_list
+        let divide = { divider: true, inset: true }
+        let counselor_head = {header: '回答者'}
+        let reviewer_head = {header: '复审者'}
+        let o
+        this.$nextTick(() => {
+          this.items = []
+          this.items.push(counselor_head)
+          for (o in this.counselor_list) {
+            this.items.push(this.counselor_list[o])
+            this.items.push(divide)
+          }
+          this.items.push(reviewer_head)
+          for (o in this.reviewer_list) {
+            this.items.push(this.reviewer_list[o])
+            this.items.push(divide)
+          }
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1.5 * 1000)
+        })
+      }).catch(error => {
+        this.$notify({
+          title: '获取失败',
+          message: '获取issue信息失败',
+          type: 'warning',
+          duration: 2000
+        })
+      })
     },
-    initissueComment(){
+    initissueComment() {
       let issueCommentQuery = {
         jwt: this.$store.state.user.token,
         issue_id: this.issue_id
@@ -226,23 +254,89 @@ export default {
 
     },
     like() {
-
+      let jwt = this.$store.state.user.token
+      like_issue(jwt,this.issue_id).then(response=>{
+        this.$notify({
+          title: '点赞成功',
+          message: 'issue点赞成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(err=>{
+        this.$notify({
+          title: '点赞失败',
+          message: 'issue点赞失败',
+          type: 'warning',
+          duration: 2000
+        })
+      })
+      //TODO 图标的颜色转换
     },
     back() {
       this.$router.go(-1)
     },
     collect() {
-
+      let jwt = this.$store.state.user.token
+      follow_issue(jwt,this.issue_id).then(response=>{
+        this.$notify({
+          title: '收藏成功',
+          message: 'issue收藏成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(err=>{
+        this.$notify({
+          title: '收藏失败',
+          message: 'issue收藏失败',
+          type: 'warning',
+          duration: 2000
+        })
+      })
     },
     edit() {
 
     },
     close() {
-
+      let jwt = this.$store.state.user.token
+      cancel_issue(jwt,this.issue_id).then(response=>{
+        this.status = 5
+        this.$notify({
+          title: '关闭成功',
+          message: 'issue关闭成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(err=>{
+        this.$notify({
+          title: '关闭失败',
+          message: 'issue关闭成功',
+          type: 'warning',
+          duration: 2000
+        })
+      })
     },
 
   },
-  computed: {},
+  computed: {
+    computeStatus(){
+      if(this.status === 0 || this.status === 1){
+        return this.status+1
+      }else if(this.status ===  2) {
+        return 1
+      }else if(this.status === 5){
+        return 0
+      }else{
+        return this.status
+      }
+    },
+    firstStatus(){
+      if(this.status === 5){
+        return "无效问题"
+      }else{
+        return "未认领"
+      }
+    }
+  },
   created() {
     this.initIssueId()
   }
