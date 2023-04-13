@@ -127,7 +127,7 @@ import variables from '@/styles/variables.scss'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import SidebarItem from '@/layout/components/Sidebar/SidebarItem'
-import {fetchNotify,readNotify} from "@/api/Notify";
+// import {fetchNotify,readNotify} from "@/api/Notify";
 
 export default {
   components: {
