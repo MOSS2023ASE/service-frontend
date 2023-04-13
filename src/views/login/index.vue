@@ -135,7 +135,7 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
+        username: '20114514', // 学工号
         password: '111111'
       },
       loginRules: {
@@ -229,6 +229,7 @@ export default {
           this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
           this.loading = false
 
+          // TODO 在前后端对接阶段，将下面的注释取消，在 store/user 中的 login 中已经实现 api 的调用
           //如果后端支持权限，注释上面三行，取消下列代码的注释
           //派发一个action:user/login,带着用户名与密码的载荷
           // this.$store.dispatch('user/login', this.loginForm)
