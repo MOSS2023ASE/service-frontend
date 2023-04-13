@@ -46,16 +46,12 @@ export function create_tag(
 
 export function get_all_tags(
   jwt, //: string,
-  tag_id, //: number,
-  content //: string
 ) {
   return request({
     url: '/tag',
     method: 'post',
     data: {
-      jwt: jwt,
-      tag_id: tag_id,
-      content: content
+      jwt: jwt
     }
   })
 }
