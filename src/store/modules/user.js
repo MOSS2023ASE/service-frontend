@@ -1,4 +1,4 @@
-import {login, logout, getInfo, register, getProfile} from '@/api/user'
+import {user_login, user_logout, getInfo, register, getProfile} from '@/api/user'
 import {
   getToken,
   setToken,
@@ -69,7 +69,8 @@ const actions = {
     const {username, password} = userInfo
     return new Promise((resolve, reject) => {
 
-      login({user_name: username.trim(), password: password}).then(response => {
+      user_login(username.trim(), password).then(response => {
+        // TODO 替换为后端传回数据的真实字段名
         const {data} = response
         // store.dispatch('user/resetToken')
         commit('SET_TOKEN', data.login_token)
@@ -141,7 +142,7 @@ const actions = {
   // user logout
   logout({commit, state, dispatch}) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      user_logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_USER_ID', 0)
         commit('SET_ROLES', [])
