@@ -98,7 +98,7 @@ export default {
     data() {
         return {
             dialogVisible: false,
-            user_type: 1,
+            user_type: 0,
             search_keyword: '',
             search_tags: [],
             search_state: null,
@@ -363,35 +363,37 @@ export default {
               console.log(error)
             })
         },
-      initChapters() {
-        get_all_subjects(getToken()).then(response => {
-          console.log('获取科目成功')
-          this.all_subjects = response.data['subject_list']
-        }).catch(error => {
-          console.log('获取科目失败')
-          console.log(error)
-        })
-        let i = 0;
-        for (i = 0; i < this.all_subjects.length; i++) {
-          get_subject_all_chapters(getToken(), this.all_subjects[i].subject_id).then(
-            response => {
-              this.all_chapters[this.all_subjects[i].subject_id] = response.data['chapter_list']
-            }
-          ).catch(error => {
-            console.log('获取章节失败')
+        initChapters() {
+          get_all_subjects(getToken()).then(response => {
+            console.log('获取科目成功')
+            this.all_subjects = response.data['subject_list']
+          }).catch(error => {
+            console.log('获取科目失败')
             console.log(error)
           })
-        }
-      },
+          let i = 0;
+          for (i = 0; i < this.all_subjects.length; i++) {
+            get_subject_all_chapters(getToken(), this.all_subjects[i].subject_id).then(
+              response => {
+                this.all_chapters[this.all_subjects[i].subject_id] = response.data['chapter_list']
+              }
+            ).catch(error => {
+              console.log('获取章节失败')
+              console.log(error)
+            })
+          }
+        },
         getIssues() {
             // TODO: get issues and issue_count
+            // TODO: 目前的api是按照页请求的，所以不需要slice?
             this.issues = this.all_issues.slice(0, 5);
         },
 
         toPrevPage() {
             // TODO
+            // TODO: 目前的api是按照页请求的，所以不需要slice?
             if (this.cur_page !== 1) {
-                this.issues = this.all_issues.slice((this.cur_page - 2) * 5, (this.cur_page - 1) * 5);
+                // this.issues = this.all_issues.slice((this.cur_page - 2) * 5, (this.cur_page - 1) * 5);
                 this.cur_page -= 1;
                 this.search();
             }
@@ -400,7 +402,7 @@ export default {
         toNextPage() {
             // TODO
             if (this.cur_page !== this.total_page) {
-                this.issues = this.all_issues.slice(this.cur_page * 5, (this.cur_page + 1) * 5);
+                // this.issues = this.all_issues.slice(this.cur_page * 5, (this.cur_page + 1) * 5);
                 this.cur_page += 1;
                 this.search();
             }
