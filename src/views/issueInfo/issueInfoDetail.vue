@@ -169,7 +169,7 @@
 <script>
 import MarkdownEditor from '@/components/MarkdownEditor'
 import MyRichText from "@/views/issueInfo/components/MyRichText";
-import postIssue from "@/views/issueInfo/components/postIssue";
+import postIssue from "@/views/searchIssue/components/postIssue";
 import {
   get_issue_detail,
   like_issue,
@@ -437,6 +437,7 @@ export default {
   },
   created() {
     this.initIssueId()
+    //对接时打开
     //this.initLike()
     //this.initFollow()
     //this.initissueInfo()
