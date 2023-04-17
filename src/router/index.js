@@ -48,7 +48,6 @@ export const constantRoutes = [
     children: [
       {
         path: 'issueInfoDetail',
-        name: 'issueInfoDetail',
         component: () => import('@/views/issueInfo/issueInfoDetail')
       },
       {
@@ -60,6 +59,18 @@ export const constantRoutes = [
 ]
 
 export const asyncRoutes = [
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'manage',
+  //       name: 'Management',
+  //       component: () => import('@/views/management/index'),
+  //       meta: {title: '后台管理', icon: 'el-icon-s-tools', roles: ['admin']},
+  //     },
+  //   ]
+  // },
   {
     path: '/',
     component: Layout,
@@ -77,8 +88,8 @@ export const asyncRoutes = [
     component: Layout,
     children: [
       {
-        path: 'userCreate',
-        name: 'userCreate',
+        path: 'manage',
+        name: 'manage',
         component: () => import('@/views/userManage/userCreate'),
         meta: {title: '用户管理', icon: 'el-icon-user'}
       }
