@@ -446,7 +446,7 @@ export default {
     margin-bottom: 20px;
     padding: 16px 24px 16px 24px;
     border: solid;
-    border-width: 3px;
+    border-width: 1px;
     border-color: #76a8dd;
     border-radius: 1.2ch;
 }
@@ -492,7 +492,7 @@ export default {
     border: solid;
     border-color: #76a8dd;
     border-radius: 1.2ch;
-    border-width: 3px;
+    border-width: 1px;
     margin-left: 10%;
     margin-top: 30px;
 }
