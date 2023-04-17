@@ -49,7 +49,7 @@ export function get_all_tags(
 ) {
   return request({
     url: '/tag/',
-    method: 'post',
+    method: 'get',
     data: {
       jwt: jwt
     }

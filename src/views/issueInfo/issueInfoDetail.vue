@@ -156,7 +156,7 @@
       <post-issue
         v-show="dialogVisible"
         :dialogVisible="dialogVisible"
-        :editmode="true"
+        :editMode="true"
         :issue_id="this.issue_id"
         @closeDialogEvent="closeDialog"
       >

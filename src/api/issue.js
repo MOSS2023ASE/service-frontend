@@ -230,7 +230,7 @@ export function commit_issue(
   anonymous, //: number
 ) {
   return request({
-    url: '/issue/commit/',
+    url: '/issue/commit',
     method: 'post',
     data: {
       jwt: jwt,
