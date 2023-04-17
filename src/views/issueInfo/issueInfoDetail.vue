@@ -438,10 +438,10 @@ export default {
   created() {
     this.initIssueId()
     //对接时打开
-    //this.initLike()
-    //this.initFollow()
-    //this.initissueInfo()
-    //this.initissueComment()
+    this.initLike()
+    this.initFollow()
+    this.initissueInfo()
+    this.initissueComment()
   },
 }
 </script>

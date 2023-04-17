@@ -4,7 +4,7 @@ export function get_all_subjects(
   jwt //: string
 ) {
   return request({
-    url: '/subject',
+    url: '/subject/',
     method: 'post',
     data: {
       jwt: jwt
@@ -19,7 +19,7 @@ export function update_chapter(
   content //: string
 ) {
   return request({
-    url: '/chapter/update',
+    url: '/chapter/update/',
     method: 'post',
     data: {
       jwt: jwt,
@@ -37,7 +37,7 @@ export function update_subject(
   content //: string
 ) {
   return request({
-    url: 'subject/update',
+    url: 'subject/update/',
     method: 'post',
     data: {
       jwt: jwt,
@@ -53,7 +53,7 @@ export function delete_chapter(
   chapter_id //: number
 ) {
   return request({
-    url: '/chapter/delete',
+    url: '/chapter/delete/',
     method: 'post',
     data: {
       jwt: jwt,
@@ -67,7 +67,7 @@ export function delete_subject(
   subject_id //: number
 ) {
   return request({
-    url: '/subject/delete',
+    url: '/subject/delete/',
     method: 'post',
     data: {
       jwt: jwt,
@@ -83,7 +83,7 @@ export function create_chapter(
   subject_id, //: number
 ) {
   return request({
-    url: '/chapter/create',
+    url: '/chapter/create/',
     method: 'post',
     data: {
       jwt: jwt,
@@ -100,7 +100,7 @@ export function create_subject(
   content, //: string
 ) {
   return request({
-    url: '/subject/create',
+    url: '/subject/create/',
     method: 'post',
     data: {
       jwt: jwt,
@@ -115,7 +115,7 @@ export function get_subject_all_chapters(
   subject_id //: number
 ) {
   return request({
-    url: '/chapter',
+    url: '/chapter/',
     method: 'post',
     data: {
       jwt: jwt,
