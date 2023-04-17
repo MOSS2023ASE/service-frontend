@@ -63,6 +63,25 @@
               </span>
               </el-form-item>
             </el-tooltip>
+
+            <el-row>
+              <el-col :span="14">
+                <el-form-item prop="captcha">
+                    <span class="svg-container">
+                      <svg-icon icon-class="lock"/>
+                    </span>
+                    <el-input
+                      placeholder="输入验证码"
+                      v-model="loginForm.code"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="10">
+                <div class="login-code" style="float: right;" @click="refreshCode">
+                  <Captcha :identifyCode="identifyCode"></Captcha>
+                </div>
+              </el-col>
+            </el-row>
+
             <el-row type="flex" justify="space-around">
               <el-col>
                 <el-button
@@ -111,13 +130,15 @@
 </template>
 
 <script>
+import {Message} from 'element-ui'
 import {validUsername} from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
 import editModal from './components/registerPanel.vue'
+import Captcha from './components/captcha.vue'
 
 export default {
   name: 'Login',
-  components: {SocialSign, editModal},
+  components: {SocialSign, editModal, Captcha},
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -136,12 +157,15 @@ export default {
     return {
       loginForm: {
         username: '20373743', // Built-in admin account
-        password: '123456'
+        password: '123456',
+        code: '',
       },
       loginRules: {
         username: [{required: true, trigger: 'blur', validator: validateUsername}],
         password: [{required: true, trigger: 'blur', validator: validatePassword}]
       },
+      identifyCodes: '1234567890abcdefjhijklinopqrsduvwxyz',
+      identifyCode: '',
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
@@ -173,12 +197,13 @@ export default {
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
+    this.identifyCode = '';
+    this.makeCode(this.identifyCodes, 4);
   },
   destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-
     register() {
       this.dialogFormVisible = true;
     },
@@ -217,6 +242,15 @@ export default {
       })
     },
     handleLogin() {
+      console.log(this.identifyCode, this.loginForm.code);
+      if (this.identifyCode.toLowerCase() !== this.loginForm.code.toLowerCase()) {
+        Message({
+            message: '验证码错误',
+            type: 'error',
+        })
+        this.refreshCode();
+        return;
+      }
       // 这里是在验证表单元素（用户名与密码）的是否符合规则
       this.$refs.loginForm.validate(valid => {
         // 如果符合验证规则
@@ -271,6 +305,24 @@ export default {
         return acc
       }, {})
     },
+    
+    randomNum(min, max) {
+      return Math.floor(Math.random() * (max - min) + min);
+    },
+
+    makeCode(o, l) {
+      for (let i = 0; i < l; i++) {
+        //通过循环获取字符串内随机几位
+        this.identifyCode +=
+          this.identifyCodes[this.randomNum(0, this.identifyCodes.length)];
+      }
+    },
+
+    refreshCode() {
+      this.identifyCode = '';
+      this.makeCode(this.identifyCodes, 4);
+    },
+
   }
 }
 </script>
