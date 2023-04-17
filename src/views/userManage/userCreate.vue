@@ -21,7 +21,7 @@
             <v-row class="mt-1">
               <v-spacer></v-spacer>
               <v-col class="d-flex justify-center">
-                <v-btn color="blue" class="white--text">确认创建</v-btn>
+                <v-btn color="blue" class="white--text" @click="uploadSingle">确认创建</v-btn>
               </v-col>
               <v-spacer></v-spacer>
             </v-row>
@@ -67,7 +67,7 @@
                 </v-btn>
               </v-col>
               <v-col class="d-flex justify-center">
-                <v-btn color="orange" class="white--text">批量导入</v-btn>
+                <v-btn color="orange" class="white--text" @click="uploadTable">批量导入</v-btn>
               </v-col>
               <v-spacer></v-spacer>
             </v-row>
@@ -113,11 +113,16 @@
           <user-list></user-list>
         </v-col>
       </v-row>
+      <v-row v-if="page === 3">
+        <v-col>
+          <label-manage></label-manage>
+        </v-col>
+      </v-row>
       <v-row>
         <v-col>
           <v-pagination
             v-model="page"
-            :length="2">
+            :length="3">
           </v-pagination>
         </v-col>
       </v-row>
@@ -129,6 +134,7 @@
 import UserList from './userList';
 import { readXlsxFile } from '@/utils/file';
 import { Message } from 'element-ui';
+import LabelManage from './labelManage';
 export default {
   data() {
     return {
@@ -141,7 +147,7 @@ export default {
       dataTable: []
     }
   },
-  components: { UserList },
+  components: { UserList, LabelManage },
   methods: {
     uploadCancel() {
       this.canUpload = true;
@@ -184,6 +190,10 @@ export default {
         data.push(elm);
       }
       return data;
+    },
+    uploadTable() {
+    },
+    uploadSingle() {
     }
   }
 }
