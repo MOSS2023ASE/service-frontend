@@ -117,7 +117,7 @@
         <v-container fluid>
           <v-timeline>
             <v-timeline-item
-              v-for="(comment, index) in comment_list"
+              v-for="(comment, index) in currentPageItems"
               :key="index"
               large
             >
@@ -137,6 +137,11 @@
               </v-card>
             </v-timeline-item>
           </v-timeline>
+          <v-pagination
+            v-model="currentPage"
+            :length="totalPages"
+            :total-visible="7"
+          ></v-pagination>
         </v-container>
         <v-divider></v-divider>
       </v-card>
@@ -148,13 +153,23 @@
         <v-btn raised color="light-blue darken-2" @click="handleComment()">发布</v-btn>
       </v-row>
       <br/>
+      <post-issue
+        v-show="dialogVisible"
+        :dialogVisible="dialogVisible"
+        :editmode="true"
+        :issue_id="this.issue_id"
+        @closeDialogEvent="closeDialog"
+      >
+      </post-issue>
     </v-app>
+
   </div>
 </template>
 
 <script>
 import MarkdownEditor from '@/components/MarkdownEditor'
 import MyRichText from "@/views/issueInfo/components/MyRichText";
+import postIssue from "@/views/searchIssue/components/postIssue";
 import {
   get_issue_detail,
   like_issue,
@@ -167,7 +182,7 @@ import {get_issue_all_comments, create_comment, delete_comment} from "@/api/foru
 
 export default {
   name: "issueInfoDetail",
-  components: {MarkdownEditor, MyRichText},
+  components: {MarkdownEditor, MyRichText,postIssue},
   props: {
     id: {
       type: Number,
@@ -177,8 +192,7 @@ export default {
   },
   data() {
     return {
-      dialog: false,
-
+      dialogVisible: false,
       issue_id: '2',
       title: 'Title',
       content: '<p>这是一段富文本内容</p><p><img src="https://pic.imgdb.cn/item/6395462eb1fccdcd36ecbeb8.jpg"></p>',
@@ -210,6 +224,8 @@ export default {
       tag_list: ['课后题', '定理问题'],
       editorText: "发布你的回答",
       editorOptions: {},
+      pageSize: 10,
+      currentPage: 1
     }
   },
   methods: {
@@ -336,7 +352,8 @@ export default {
       })
     },
     edit() {
-
+      console.log("show")
+      this.dialogVisible = true
     },
     close() {
       let jwt = this.$store.state.user.token
@@ -357,12 +374,12 @@ export default {
         })
       })
     },
-    handleComment(){
+    handleComment() {
       const html = this.$refs.editor.getHtml();
       let jwt = this.$store.state.user.token
-      create_comment(jwt,this.issue_id,html).then(response=>{
+      create_comment(jwt, this.issue_id, html).then(response => {
         this.initissueComment()
-      }).catch(err=>{
+      }).catch(err => {
         this.$notify({
           title: '发表失败',
           message: 'comment发表失败',
@@ -370,7 +387,11 @@ export default {
           duration: 2000
         })
       })
-    }
+    },
+    closeDialog() {
+      console.log('click');
+      this.dialogVisible = false;
+    },
   },
   computed: {
     computeStatus() {
@@ -404,14 +425,23 @@ export default {
       } else {
         return "black"
       }
-    }
+    },
+    totalPages() {
+      return Math.ceil(this.comment_list.length / this.pageSize); // 总页数
+    },
+    currentPageItems() {
+      const start = (this.currentPage - 1) * this.pageSize; // 当前页的起始项索引
+      const end =start + this.pageSize; // 当前页的结束项索引
+      return this.comment_list.slice(start, end); // 返回当前页的时间线项
+    },
   },
   created() {
     this.initIssueId()
-    //this.initLike()
-    //this.initFollow()
-    //this.initissueInfo()
-    //this.initissueComment()
+    //对接时打开
+    this.initLike()
+    this.initFollow()
+    this.initissueInfo()
+    this.initissueComment()
   },
 }
 </script>
