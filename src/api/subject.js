@@ -1,13 +1,15 @@
 import request from '@/utils/request'
 
 export function get_all_subjects(
-  jwt //: string
+  jwt, //: string
+  year_id, //: number
 ) {
   return request({
     url: '/subject/',
     method: 'post',
     data: {
-      jwt: jwt
+      jwt: jwt,
+      year_id: year_id
     }
   })
 }
@@ -98,6 +100,7 @@ export function create_subject(
   jwt, //: string,
   name, //: string,
   content, //: string
+  year_id, //: number
 ) {
   return request({
     url: '/subject/create/',
@@ -105,7 +108,8 @@ export function create_subject(
     data: {
       jwt: jwt,
       name: name,
-      content: content
+      content: content,
+      year_id: year_id
     }
   })
 }
