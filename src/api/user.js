@@ -5,7 +5,7 @@ export function user_login(
   password, //: string,
 ) {
   return request({
-    url: '/user/login/',
+    url: '/user/user_login',
     method: 'post',
     data: {
       student_id: student_id,
@@ -18,7 +18,7 @@ export function user_logout(
   jwt //: string
 ) {
   return request({
-    url: '/user/user_logout/',
+    url: '/user/user_logout',
     method: 'post',
     data: {
       jwt: jwt

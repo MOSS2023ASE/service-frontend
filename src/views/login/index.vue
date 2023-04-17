@@ -135,8 +135,8 @@ export default {
     }
     return {
       loginForm: {
-        username: '20114514', // 学工号
-        password: '111111'
+        username: '20373743', // Built-in admin account
+        password: '123456'
       },
       loginRules: {
         username: [{required: true, trigger: 'blur', validator: validateUsername}],
@@ -225,37 +225,38 @@ export default {
           this.loading = true
 
           // 测试 如果后段暂时不支持权限，使用下面这三行
-          this.$store.dispatch('user/forceLogin', this.loginForm)
-          this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-          this.loading = false
+          // this.$store.dispatch('user/forceLogin', this.loginForm)
+          // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          // this.loading = false
 
           // TODO 在前后端对接阶段，将下面的注释取消，在 store/user 中的 login 中已经实现 api 的调用
           //如果后端支持权限，注释上面三行，取消下列代码的注释
           //派发一个action:user/login,带着用户名与密码的载荷
-          // this.$store.dispatch('user/login', this.loginForm)
-          //   .then(() => {
-          //     // 登录成功进行路由的跳转
-          //     // console.log("we would login success")
-          //     this.$router.push({path: this.redirect || '/', query: this.otherQuery})
-          //     // loading效果结束
-          //     this.loading = false
-          //     this.$notify({
-          //       title: '登陆成功',
-          //       message: '登陆成功',
-          //       type: 'success',
-          //       duration: 2000
-          //     })
-          //     //this.$store.dispatch('user/getInfo')
-          //   })
-          //   .catch((error) => {
-          //     this.loading = false
-          //     this.$notify({
-          //       title: '登陆失败',
-          //       message: '用户名或密码错误',
-          //       type: 'warning',
-          //       duration: 2000
-          //     })
-          //   })
+          this.$store.dispatch('user/login', this.loginForm)
+            .then(() => {
+              // 登录成功进行路由的跳转
+              // console.log("we would login success")
+              this.$router.push({path: this.redirect || '/', query: this.otherQuery})
+              // loading效果结束
+              this.loading = false
+              this.$notify({
+                title: '登陆成功',
+                message: '登陆成功',
+                type: 'success',
+                duration: 2000
+              })
+              //this.$store.dispatch('user/getInfo')
+            })
+            .catch((error) => {
+              this.loading = false
+              console.log(error)
+              this.$notify({
+                title: '登陆失败',
+                message: '用户名或密码错误',
+                type: 'warning',
+                duration: 2000
+              })
+            })
         } else {
           console.log('error submit!!')
           return false

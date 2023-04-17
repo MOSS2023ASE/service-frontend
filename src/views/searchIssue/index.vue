@@ -84,7 +84,7 @@ import {Message} from 'element-ui'
 import {search_issue} from '@/api/issue'
 import {get_all_tags} from '@/api/tag'
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
-import {getToken} from '@/utils/auth'
+import {getToken, getRole} from '@/utils/auth'
 
 export default {
     name: "Search",
@@ -99,14 +99,14 @@ export default {
     data() {
         return {
             dialogVisible: false,
-            user_type: 0,
+            user_type: getRole(),
             search_keyword: '',
             search_tags: [],
             search_state: null,
             search_subject: null,
             search_chapter: null,
             sort_order: null,
-            year_id: 1, // alpha 阶段先用固定的year_id, beta
+            year_id: 2, // alpha 阶段先用固定的year_id, beta
             all_tags: [
                 {
                     tag_id: 1,
@@ -367,6 +367,7 @@ export default {
         },
         initChapters() {
           get_all_subjects(getToken(), this.year_id).then(response => {
+            console.log(response)
             // why should JSON? see https://blog.csdn.net/weixin_46331416/article/details/123262798
             this.all_subjects = JSON.parse(JSON.stringify(response.data['subject_list']));
             // this.all_subjects = response.data['subject_list']
