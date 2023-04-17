@@ -7,7 +7,7 @@ import {
   removeUserId,
   getUserId,
   removeRole,
-  setRole,
+  setRole, getRole,
 } from '@/utils/auth'
 import router, {resetRouter} from '@/router'
 
@@ -70,17 +70,19 @@ const actions = {
     return new Promise((resolve, reject) => {
 
       user_login(username.trim(), password).then(response => {
-        // TODO 替换为后端传回数据的真实字段名
-        const {data} = response
         // store.dispatch('user/resetToken')
-        commit('SET_TOKEN', data.login_token)
-        commit('SET_USER_ID', data.user_id)
-        //let roles = [data.user_role]
-        //commit('SET_ROLES', roles)
-        setToken(data.login_token)
-        setUserId(data.user_id)
+        commit('SET_TOKEN', response.data['jwt'])
+        // since jwt contains backend userId information, here frontend user_id is student_id
+        commit('SET_USER_ID', username.trim())
+        commit('SET_ROLES', response.data['role'])
+        setToken(response.data['jwt'])
+        setUserId(username.trim())
+        setRole(response.data['role'])
+        console.log(getToken())
+        console.log(getRole())
         resolve()
       }).catch(error => {
+        console.log(error)
         reject(error)
       })
     })
@@ -142,7 +144,8 @@ const actions = {
   // user logout
   logout({commit, state, dispatch}) {
     return new Promise((resolve, reject) => {
-      user_logout(state.token).then(() => {
+      user_logout(state.token).then((response) => {
+        console.log(response)
         commit('SET_TOKEN', '')
         commit('SET_USER_ID', 0)
         commit('SET_ROLES', [])
