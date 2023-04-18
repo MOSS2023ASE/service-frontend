@@ -146,7 +146,7 @@
         <v-divider></v-divider>
       </v-card>
       <div>
-        <markdown-editor ref="editor" v-model="content" height="500px"/>
+        <markdown-editor ref="editor" v-model="content" height="500px" :hooks="this.hooks"/>
       </div>
       <br/>
       <v-row justify="end" style="margin-right: 10px;">
@@ -179,6 +179,7 @@ import {
   cancel_issue
 } from "@/api/issue";
 import {get_issue_all_comments, create_comment, delete_comment} from "@/api/forum";
+import {upload_public} from "@/api/upload";
 
 export default {
   name: "issueInfoDetail",
@@ -188,7 +189,6 @@ export default {
       type: Number,
       default: 0
     },
-
   },
   data() {
     return {
@@ -225,7 +225,29 @@ export default {
       editorText: "发布你的回答",
       editorOptions: {},
       pageSize: 10,
-      currentPage: 1
+      currentPage: 1,
+      hooks:{
+        addImageBlobHook: async (blob, callback) => {
+          let jwt = this.$store.state.user.token
+          const formData = new FormData();
+          formData.append('file', blob);
+          console.log(jwt)
+          //callback('http://shieask.com/pic/1.png');
+          upload_public(formData).then(response=>{
+            if (response.data) {
+              callback(response.data.url);
+            }
+          }).catch(err=>{
+            this.$notify({
+              title: '上传图片失败',
+              message: '上传图片信息失败',
+              type: 'warning',
+              duration: 2000
+            })
+          })
+
+        },
+      }
     }
   },
   methods: {
@@ -438,10 +460,10 @@ export default {
   created() {
     this.initIssueId()
     //对接时打开
-    this.initLike()
-    this.initFollow()
-    this.initissueInfo()
-    this.initissueComment()
+    //this.initLike()
+    //this.initFollow()
+    //this.initissueInfo()
+    //this.initissueComment()
   },
 }
 </script>

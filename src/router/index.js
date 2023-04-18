@@ -44,18 +44,28 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    hidden: true,
+    // hidden: true,
     children: [
       {
         path: 'issueInfoDetail',
+        name:'issueInfoDetail',
         component: () => import('@/views/issueInfo/issueInfoDetail')
       },
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    // hidden: true,
+    children: [
       {
         path: 'userInfo',
+        name:'userInfo',
         component: () => import('@/views/userInfo/userInfo')
       }
     ]
   },
+
 ]
 
 export const asyncRoutes = [
