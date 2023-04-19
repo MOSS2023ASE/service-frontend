@@ -243,8 +243,8 @@ export default {
       // console.log(parseInt(this.issue.anonymous))
       commit_issue(getToken(), this.issue.chapter, this.issue.title,
         this.content, parseInt(this.issue.anonymous)).then(response => {
+          console.log(response)
         this.$emit('closeDialogEvent');
-        console.log('close!!!!');
         Message({
           message: '发布问题成功',
           type: 'success'

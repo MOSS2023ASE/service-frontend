@@ -1,7 +1,7 @@
 <template>
     <div class="app-container">
         <el-header height="100">
-            <el-button type="danger" v-show="user_type === 0" @click="handleClickPost"
+            <el-button type="danger" v-show="user_type !== 3" @click="handleClickPost"
                         class="post-issue-button">
                 发布问题
             </el-button>
@@ -347,6 +347,7 @@ export default {
                 console.log('success')
                 this.issues = response.data['issue_list']
                 this.total_page = response.data['total_page']
+                console.log(this.total_page)
               setTimeout(() => {
                 this.listLoading = false
               }, 1.5 * 1000)
