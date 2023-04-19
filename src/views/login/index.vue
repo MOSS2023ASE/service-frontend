@@ -15,7 +15,7 @@
             <div class="title-container">
               <el-row type="flex" style="display: flex;align-items: center">
                 <el-col :span="4">
-                  <img src="logo.jpg" style="vertical-align:middle;max-height: 160px;max-width: 80px;">
+                  <img src="http://shieask.com/pic/1.png" style="vertical-align:middle;max-height: 160px;max-width: 80px;">
                 </el-col>
                 <el-col :span="16" >
                   <h2 class="title">士&nbsp;问</h2>
