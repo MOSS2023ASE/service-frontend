@@ -56,7 +56,7 @@
                   <v-icon left>
                     mdi-heart-outline
                   </v-icon>
-                  收藏
+                  {{ this.follows }}
                 </v-btn>
                 <v-btn text @click="edit()">编辑</v-btn>
                 <v-btn text @click="close()">关闭</v-btn>
@@ -213,6 +213,7 @@ export default {
       chapter_name: '数学分析',
       subject_name: '第一章',
       likes: 0,
+      follows: 0,
       islike: 0,
       isfollow: 0,
       status: '',
@@ -256,14 +257,16 @@ export default {
       //this.issue_id = 1
       console.log(this.issue_id)
     },
-    initLike() {
+    initLike(changed) {
       let jwt = this.$store.state.user.token
       check_like_issue(jwt, this.issue_id).then(response => {
           this.islike = response.data.is_like
-          if (this.islike === 1) {
-            this.likes += 1
-          } else {
-            this.likes -= 1
+          if (changed) {
+            if (this.islike === 1) {
+              this.likes += 1
+            } else {
+              this.likes -= 1
+            }
           }
         }
       ).catch(err => {
@@ -275,10 +278,17 @@ export default {
         })
       })
     },
-    initFollow() {
+    initFollow(changed) {
       let jwt = this.$store.state.user.token
       check_follow_issue(jwt, this.issue_id).then(response => {
           this.isfollow = response.data.is_follow
+          if (changed) {
+            if (this.isfollow === 1) {
+              this.follows += 1
+            } else {
+              this.follows -= 1
+            }
+          }
         }
       ).catch(err => {
         this.$notify({
@@ -306,6 +316,9 @@ export default {
         this.anonymous = response.data.anonymous
         this.create_at = response.data.create_at
         this.update_at = response.data.update_at
+        // TODO: wait for backend API
+        // this.likes = response.data.likes
+        // this.follows = response.data.follows
         this.score = response.data.score
         this.tag_list = response.data.tag_list
         let divide = {divider: true, inset: true}
@@ -354,7 +367,7 @@ export default {
     like() {
       let jwt = this.$store.state.user.token
       like_issue(jwt, this.issue_id).then(response => {
-        this.initLike()
+        this.initLike(true)
       }).catch(err => {
         this.$notify({
           title: '点赞操作失败',
@@ -370,7 +383,7 @@ export default {
     collect() {
       let jwt = this.$store.state.user.token
       follow_issue(jwt, this.issue_id).then(response => {
-        this.initFollow()
+        this.initFollow(true)
       }).catch(err => {
         this.$notify({
           title: '收藏操作失败',
@@ -464,8 +477,8 @@ export default {
     this.initIssueId()
   },
   mounted() {
-    this.initLike()
-    this.initFollow()
+    this.initLike(false)
+    this.initFollow(false)
     this.initissueInfo()
     this.initissueComment()
   }
