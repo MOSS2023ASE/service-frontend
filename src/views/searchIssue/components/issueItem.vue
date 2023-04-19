@@ -42,6 +42,8 @@
 
 <script>
 import {Message} from 'element-ui'
+import {adopt_issue, review_issue} from '@/api/issue'
+import {getToken, getRole} from '@/utils/auth'
 
 export default {
   name: 'IssueItem',
@@ -114,16 +116,28 @@ export default {
       console.log("to issue detail");
     },
     answerIssue() {
-      Message({
-        message: '回答问题',
-        type: 'success',
+      adopt_issue(getToken(), this.id).then(response => {
+        console.log(response)
+        Message({
+          message: '回答问题',
+          type: 'success',
+        })
+      }).catch(error => {
+        console.log(error)
       })
+
     },
     verifyIssue() {
-      Message({
-        message: '复审问题',
-        type: 'success',
+      review_issue(getToken(), this.id).then(response => {
+        console.log(response)
+        Message({
+          message: '复审问题',
+          type: 'success',
+        })
+      }).catch(error => {
+        console.log(error)
       })
+
     }
   }
 }
