@@ -35,7 +35,7 @@
                 <span style="margin: 0px 0px 4px 5px">{{this.issue_comment_count}}</span>
             </div>
         </div>
-        <div class="interactions" v-if="this.user_type === 1">
+        <div class="interactions" v-if="this.user_type !== 0">
             <el-button type="warning" style="issue-button" @click.stop="answerIssue">认领回答</el-button>
             <el-button type="warning" style="issue-button" @click.stop="verifyIssue">认领复审</el-button>
         </div>
