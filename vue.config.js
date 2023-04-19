@@ -43,10 +43,12 @@ module.exports = {
     proxy: {
       '/dev-api': {
         target: 'http://101.43.219.110:8080/', // 接口地址
+        changeOrigin: true,
         pathRewrite: { '^/dev-api': '' } // 路径重写
       },
       '/prod-api': {
-        target: 'http://101.43.219.110:8080/', // 接口地址
+        target: 'http://localhost:8080/', // 接口地址
+        changeOrigin: true,
         pathRewrite: { '^/prod-api': '' } // 路径重写
       }
     }

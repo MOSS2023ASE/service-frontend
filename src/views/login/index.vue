@@ -266,6 +266,7 @@ export default {
           // TODO 在前后端对接阶段，将下面的注释取消，在 store/user 中的 login 中已经实现 api 的调用
           //如果后端支持权限，注释上面三行，取消下列代码的注释
           //派发一个action:user/login,带着用户名与密码的载荷
+
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               // 登录成功进行路由的跳转
@@ -305,7 +306,7 @@ export default {
         return acc
       }, {})
     },
-    
+
     randomNum(min, max) {
       return Math.floor(Math.random() * (max - min) + min);
     },
