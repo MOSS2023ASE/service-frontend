@@ -84,7 +84,7 @@ export default {
   },
   data() {
     return {
-      year_id: 2,
+      year_id: 1,
       all_subjects: [
         {
           subject_id: 1,

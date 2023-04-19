@@ -106,7 +106,7 @@ export default {
             search_subject: null,
             search_chapter: null,
             sort_order: null,
-            year_id: 2, // alpha 阶段先用固定的year_id, beta
+            year_id: 1, // alpha 阶段先用固定的year_id, beta
             all_tags: [
                 {
                     tag_id: 1,
@@ -344,6 +344,7 @@ export default {
             search_issue(getToken(), this.search_keyword, this.search_tags,
               this.search_state, this.search_chapter, this.sort_order,
               this.cur_page, this.page_size).then(response => {
+                console.log(response)
                 console.log('success')
                 this.issues = response.data['issue_list']
                 this.total_page = response.data['total_page']
