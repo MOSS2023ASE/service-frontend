@@ -50,7 +50,7 @@
                   <v-icon left>
                     mdi-thumb-up-outline
                   </v-icon>
-                  点赞
+                  {{ this.likes }}
                 </v-btn>
                 <v-btn text @click="collect()" :color="this.followIconColor">
                   <v-icon left>
@@ -214,6 +214,7 @@ export default {
       items: [],
       chapter_name: '数学分析',
       subject_name: '第一章',
+      likes: 0,
       islike: 0,
       isfollow: 0,
       status: '',
@@ -259,6 +260,11 @@ export default {
       let jwt = this.$store.state.user.token
       check_like_issue(jwt, this.issue_id).then(response => {
           this.islike = response.data.is_like
+          if (this.islike === 1) {
+            this.likes += 1
+          } else {
+            this.likes -= 1
+          }
         }
       ).catch(err => {
         this.$notify({
