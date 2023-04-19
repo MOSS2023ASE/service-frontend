@@ -1,4 +1,3 @@
-// doc: https://nhnent.github.io/tui.editor/api/latest/ToastUIEditor.html#ToastUIEditor
 export default {
   minHeight: '700px',
   previewStyle: 'vertical',

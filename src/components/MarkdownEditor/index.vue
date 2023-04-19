@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" />
+  <div :id="id"/>
 </template>
 
 <script>
@@ -7,9 +7,10 @@
 // import 'codemirror/lib/codemirror.css' // codemirror
 // import 'tui-editor/dist/tui-editor.css' // editor ui
 // import 'tui-editor/dist/tui-editor-contents.css' // editor content
-
 import 'codemirror/lib/codemirror.css' // Editor's Dependency Style
 import '@toast-ui/editor/dist/toastui-editor.css' // Editor's Style
+// import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css'; // 引入插件样式
+// import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 // import Editor from 'tui-editor'
 import Editor from '@toast-ui/editor'
 import defaultOptions from './default-options'
@@ -47,7 +48,8 @@ export default {
       type: String,
       required: false,
       default: 'en_US' // https://github.com/nhnent/tui.editor/tree/master/src/js/langs
-    }
+    },
+    hooks: {},
   },
   data() {
     return {
@@ -60,6 +62,7 @@ export default {
       options.initialEditType = this.mode
       options.height = this.height
       options.language = this.language
+      options.hooks = this.hooks
       return options
     }
   },
@@ -78,6 +81,9 @@ export default {
     },
     mode(newValue) {
       this.editor.changeMode(newValue)
+    },
+    hooks(newValue) {
+      this.editor.hooks(newValue)
     }
   },
   mounted() {
