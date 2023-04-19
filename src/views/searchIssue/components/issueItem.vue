@@ -47,8 +47,8 @@ export default {
             default: 0
         },
         id: {
-            type: String,
-            default: "issue998244353"
+            type: Number,
+            default: 998244353
         },
         title: {
             type: String,
