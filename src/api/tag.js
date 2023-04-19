@@ -6,7 +6,7 @@ export function update_tag(
   content //: string
 ) {
   return request({
-    url: '/tag/update/',
+    url: '/tag/update',
     method: 'post',
     data: {
       jwt: jwt,
@@ -21,7 +21,7 @@ export function delete_tag(
   tag_id //: number
 ) {
   return request({
-    url: '/tag/delete/',
+    url: '/tag/delete',
     method: 'post',
     data: {
       jwt: jwt,
@@ -35,7 +35,7 @@ export function create_tag(
   content //: string
 ) {
   return request({
-    url: '/tag/create/',
+    url: '/tag/create',
     method: 'post',
     data: {
       jwt: jwt,
