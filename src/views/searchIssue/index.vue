@@ -417,8 +417,6 @@ export default {
         }
     },
     created() {
-        console.log('user type:')
-        console.log(typeof this.user_type)
         // TODO: get user_type
         this.initTags();
         this.initChapters();

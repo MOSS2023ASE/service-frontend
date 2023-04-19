@@ -32,7 +32,7 @@ export function removeUserId() {
 }
 
 export function getRole() {
-  return Cookies.get(RoleKey)
+  return parseInt(Cookies.get(RoleKey))
 }
 
 export function removeRole() {
