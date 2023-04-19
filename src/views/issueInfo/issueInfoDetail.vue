@@ -185,15 +185,11 @@ export default {
   name: "issueInfoDetail",
   components: {MarkdownEditor, MyRichText,postIssue},
   props: {
-    id: {
-      type: Number,
-      default: 0
-    },
   },
   data() {
     return {
       dialogVisible: false,
-      issue_id: '2',
+      issue_id: 2,
       title: 'Title',
       content: '<p>这是一段富文本内容</p><p><img src="https://pic.imgdb.cn/item/6395462eb1fccdcd36ecbeb8.jpg"></p>',
       comment_list: [{
@@ -253,7 +249,8 @@ export default {
   },
   methods: {
     initIssueId() {
-      this.issue_id = this.$route.params.issue_id
+      //this.issue_id = this.$route.params.issue_id
+      this.issue_id = 1
       console.log(this.issue_id)
     },
     initLike() {
@@ -292,6 +289,7 @@ export default {
     initissueInfo() {
       let jwt = this.$store.state.user.token
       get_issue_detail(jwt, this.id).then(response => {
+        console.log(response)
         this.title = response.data.title
         this.content = response.data.content
         this.user_name = response.data.user_name
@@ -386,6 +384,7 @@ export default {
     close() {
       let jwt = this.$store.state.user.token
       cancel_issue(jwt, this.issue_id).then(response => {
+        console.log("false")
         this.status = 5
         this.$notify({
           title: '关闭成功',
@@ -394,12 +393,7 @@ export default {
           duration: 2000
         })
       }).catch(err => {
-        this.$notify({
-          title: '关闭失败',
-          message: 'issue关闭失败',
-          type: 'warning',
-          duration: 2000
-        })
+
       })
     },
     handleComment() {
@@ -465,12 +459,13 @@ export default {
   },
   created() {
     this.initIssueId()
-    //对接时打开
+  },
+  mounted() {
     this.initLike()
     this.initFollow()
     this.initissueInfo()
     this.initissueComment()
-  },
+  }
 }
 </script>
 
