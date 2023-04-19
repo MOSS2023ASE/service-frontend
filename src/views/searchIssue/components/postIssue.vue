@@ -331,6 +331,7 @@ export default {
         this.issue.title,
         this.content,
         this.issue.anonymous).then(response => {
+        this.$emit('closeDialogEvent');
         this.$notify({
           title: '编辑成功',
           message: '编辑issue信息成功',

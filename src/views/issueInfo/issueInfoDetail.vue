@@ -260,7 +260,7 @@ export default {
     initLike(changed) {
       let jwt = this.$store.state.user.token
       check_like_issue(jwt, this.issue_id).then(response => {
-          this.islike = response.data.is_like
+          this.islike = response.data['is_like']
           if (changed) {
             if (this.islike === 1) {
               this.likes += 1
