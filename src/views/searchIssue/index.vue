@@ -62,7 +62,7 @@
             :user_name="issue.user_name"
             :user_avatar="issue.user_avatar"
             :abstract="issue.abstract"
-            :issue_time="issue.issue_time"
+            :create_at="issue.create_at"
             :subject="issue.subject_name"
             :chapter="issue.chapter_name"
             :tags="issue.tags"
@@ -243,7 +243,7 @@ export default {
                     issue_title: '对数分答案的异议',
                     user_name: '学生A',
                     abstract: '怀疑书上这道积分题答案有误。如下是我的...',
-                    issue_time: '2022-08-08',
+                    create_at: '2022-08-08',
                     subject_name: '数学分析',
                     chapter_name: '不定积分',
                     tags: ['作业题', '答案勘误'],
@@ -255,7 +255,7 @@ export default {
                     issue_title: '哈夫曼树作业bug',
                     user_name: '学生B',
                     abstract: '做哈夫曼树的作业时遇到了问题。对于输入...',
-                    issue_time: '2022-09-09',
+                    create_at: '2022-09-09',
                     subject_name: '数据结构',
                     chapter_name: '树',
                     tags: ['debug'],
