@@ -8,7 +8,9 @@
         <div class="previews">
             <div style="display: flex;">
                 <div class="title">{{this.title}}</div>
-                <div class="time">{{this.issue_time}}</div>
+                <div class="time">
+                    {{this.created_at.slice(0, 10)}} {{this.created_at.slice(11, 16)}}
+                </div>
             </div>
             <div class="content">{{this.abstract}}</div>
             <div class="subject-chapter">
@@ -84,9 +86,9 @@ export default {
             type: String,
             default: '未定章节'
         },
-        issue_time: {
+        created_at: {
             type: String,
-            default: '2022-09-01'
+            default: '2022-09-01 00:00'
         },
         issue_like_count: {
             type: Number,
@@ -272,8 +274,8 @@ export default {
     margin-right: 3%;
     color: #444444;
     font-weight: 400;
-    font-size: 16px;
-    letter-spacing: 0.8px;
+    font-size: 14px;
+    letter-spacing: 0.4px;
 }
 
 .issue_like_count {

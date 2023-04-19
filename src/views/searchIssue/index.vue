@@ -62,9 +62,13 @@
             :user_name="issue.user_name"
             :user_avatar="issue.user_avatar"
             :abstract="issue.abstract"
-            :create_at="issue.create_at"
-            :subject="issue.subject_name"
-            :chapter="issue.chapter_name"
+            :created_at="issue.created_at.slice(0, 16)"
+            :subject="issue.subject_name.length > 4 ?
+                      issue.subject_name.slice(0, 3) + '...' :
+                      issue.subject_name"
+            :chapter="issue.chapter_name.length > 4 ?
+                      issue.chapter_name.slice(0, 3) + '...' :
+                      issue.chapter_name"
             :tags="issue.tags"
             :issue_like_count="issue.issue_like_count"
             :issue_comment_count="issue.issue_comment_count"
@@ -243,7 +247,7 @@ export default {
                     issue_title: '对数分答案的异议',
                     user_name: '学生A',
                     abstract: '怀疑书上这道积分题答案有误。如下是我的...',
-                    create_at: '2022-08-08',
+                    created_at: '2022-08-08 00:00',
                     subject_name: '数学分析',
                     chapter_name: '不定积分',
                     tags: ['作业题', '答案勘误'],
@@ -255,7 +259,7 @@ export default {
                     issue_title: '哈夫曼树作业bug',
                     user_name: '学生B',
                     abstract: '做哈夫曼树的作业时遇到了问题。对于输入...',
-                    create_at: '2022-09-09',
+                    created_at: '2022-09-09 00:00',
                     subject_name: '数据结构',
                     chapter_name: '树',
                     tags: ['debug'],
