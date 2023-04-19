@@ -8,7 +8,7 @@
         <div class="previews">
             <div style="display: flex;">
                 <div class="title">{{this.title}}</div>
-                <div class="time">{{this.create_at}}</div>
+                <div class="time">{{this.issue_time}}</div>
             </div>
             <div class="content">{{this.abstract}}</div>
             <div class="subject-chapter">
@@ -42,6 +42,8 @@
 
 <script>
 import {Message} from 'element-ui'
+import {adopt_issue, review_issue} from '@/api/issue'
+import {getToken, getRole} from '@/utils/auth'
 
 export default {
     name: 'IssueItem',
@@ -82,7 +84,7 @@ export default {
             type: String,
             default: '未定章节'
         },
-        create_at: {
+        issue_time: {
             type: String,
             default: '2022-09-01'
         },
@@ -114,16 +116,28 @@ export default {
             console.log("to issue detail");
         },
         answerIssue() {
-            Message({
-                message: '回答问题',
-                type: 'success',
+            adopt_issue(getToken(), this.id).then(response => {
+                console.log(response)
+                Message({
+                  message: '回答问题',
+                  type: 'success',
+                })
+            }).catch(error => {
+                console.log(error)
             })
+
         },
         verifyIssue() {
-            Message({
+            review_issue(getToken(), this.id).then(response => {
+              console.log(response)
+              Message({
                 message: '复审问题',
                 type: 'success',
+              })
+            }).catch(error => {
+              console.log(error)
             })
+
         }
     }
 }

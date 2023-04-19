@@ -6,7 +6,7 @@ export function get_issue_all_comments(
   issue_id //: number
 ) {
   return request({
-    url: '/subject/',
+    url: '/issue/comments',
     method: 'post',
     data: {
       jwt: jwt,
@@ -21,7 +21,7 @@ export function delete_comment(
 ) {
   return request({
     url: '/issue/comment',
-    method: 'post',
+    method: 'delete',
     data: {
       jwt: jwt,
       comment_id: comment_id

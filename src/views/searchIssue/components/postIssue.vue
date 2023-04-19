@@ -330,7 +330,7 @@ export default {
         this.issue.chapter,
         this.issue.title,
         this.content,
-        this.issue.anonymous).catch(response => {
+        this.issue.anonymous).then(response => {
         this.$notify({
           title: '编辑成功',
           message: '编辑issue信息成功',

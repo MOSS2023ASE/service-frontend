@@ -146,7 +146,7 @@
         <v-divider></v-divider>
       </v-card>
       <div>
-        <markdown-editor ref="editor" v-model="content" height="500px" :hooks="this.hooks"/>
+        <markdown-editor ref="editor" v-model="editor_content" height="500px" :hooks="this.hooks"/>
       </div>
       <br/>
       <v-row justify="end" style="margin-right: 10px;">
@@ -167,6 +167,8 @@
 </template>
 
 <script>
+//刷新回退上一页面
+//数字
 import MarkdownEditor from '@/components/MarkdownEditor'
 import MyRichText from "@/views/issueInfo/components/MyRichText";
 import postIssue from "@/views/searchIssue/components/postIssue";
@@ -185,15 +187,11 @@ export default {
   name: "issueInfoDetail",
   components: {MarkdownEditor, MyRichText,postIssue},
   props: {
-    id: {
-      type: Number,
-      default: 0
-    },
   },
   data() {
     return {
       dialogVisible: false,
-      issue_id: '2',
+      issue_id: 2,
       title: 'Title',
       content: '<p>这是一段富文本内容</p><p><img src="https://pic.imgdb.cn/item/6395462eb1fccdcd36ecbeb8.jpg"></p>',
       comment_list: [{
@@ -248,17 +246,19 @@ export default {
           })
 
         },
-      }
+      },
+      editor_content:'发表你的评论和回答',
     }
   },
   methods: {
     initIssueId() {
       this.issue_id = this.$route.params.issue_id
+      //this.issue_id = 1
       console.log(this.issue_id)
     },
     initLike() {
       let jwt = this.$store.state.user.token
-      check_like_issue(jwt, this.id).then(response => {
+      check_like_issue(jwt, this.issue_id).then(response => {
           this.islike = response.data.is_like
           if (this.islike === 1) {
             this.likes += 1
@@ -277,7 +277,7 @@ export default {
     },
     initFollow() {
       let jwt = this.$store.state.user.token
-      check_follow_issue(jwt, this.id).then(response => {
+      check_follow_issue(jwt, this.issue_id).then(response => {
           this.isfollow = response.data.is_follow
         }
       ).catch(err => {
@@ -291,7 +291,8 @@ export default {
     },
     initissueInfo() {
       let jwt = this.$store.state.user.token
-      get_issue_detail(jwt, this.id).then(response => {
+      get_issue_detail(jwt, this.issue_id).then(response => {
+        console.log(response)
         this.title = response.data.title
         this.content = response.data.content
         this.user_name = response.data.user_name
@@ -338,7 +339,7 @@ export default {
     },
     initissueComment() {
       let jwt = this.$store.state.user.token
-      get_issue_all_comments(jwt, this.id).then(response => {
+      get_issue_all_comments(jwt, this.issue_id).then(response => {
         this.comment_list = response.data.comment_list
       }).catch(err => {
         this.$notify({
@@ -386,6 +387,7 @@ export default {
     close() {
       let jwt = this.$store.state.user.token
       cancel_issue(jwt, this.issue_id).then(response => {
+        console.log("false")
         this.status = 5
         this.$notify({
           title: '关闭成功',
@@ -394,12 +396,7 @@ export default {
           duration: 2000
         })
       }).catch(err => {
-        this.$notify({
-          title: '关闭失败',
-          message: 'issue关闭失败',
-          type: 'warning',
-          duration: 2000
-        })
+
       })
     },
     handleComment() {
@@ -465,12 +462,13 @@ export default {
   },
   created() {
     this.initIssueId()
-    //对接时打开
+  },
+  mounted() {
     this.initLike()
     this.initFollow()
     this.initissueInfo()
     this.initissueComment()
-  },
+  }
 }
 </script>
 
