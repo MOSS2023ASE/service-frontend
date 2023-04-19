@@ -8,7 +8,7 @@
         <div class="previews">
             <div style="display: flex;">
                 <div class="title">{{this.title}}</div>
-                <div class="time">{{this.issue_time}}</div>
+                <div class="time">{{this.create_at}}</div>
             </div>
             <div class="content">{{this.abstract}}</div>
             <div class="subject-chapter">
@@ -82,7 +82,7 @@ export default {
             type: String,
             default: '未定章节'
         },
-        issue_time: {
+        create_at: {
             type: String,
             default: '2022-09-01'
         },
