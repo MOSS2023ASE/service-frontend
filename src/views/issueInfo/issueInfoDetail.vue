@@ -59,25 +59,38 @@
                   {{ this.follows }}
                 </v-btn>
                 <v-btn text @click="edit()">编辑</v-btn>
-                <v-btn text @click="close()">关闭</v-btn>
+                <v-btn v-show="user_type === 0 && this.status === 0" text @click="close()">关闭</v-btn>
+                <v-btn v-show="user_type === 0 && this.status === 1" text @click="reject()">拒绝辅导师回答</v-btn>
+                <v-btn v-show="user_type === 0 && this.status === 1" text @click="agree()">同意辅导师回答</v-btn>
+
+                <v-btn v-show="user_type === 1 && this.status === 0" text @click="adopt()">认领问题</v-btn>
+                <v-btn v-show="user_type === 1 && this.status === 2" text @click="review()">复审问题</v-btn>
+                <v-btn v-show="user_type === 1 && this.status === 3" text @click="readopt()">重新认领</v-btn>
+                <v-btn v-show="user_type === 1 && this.status === 3" text @click="validIssue()">有效问题</v-btn>
+                <v-btn v-show="user_type === 1 && this.status === 3" text @click="invalidIssue()">无效问题</v-btn>
               </v-card-actions>
             </v-row>
             <br/>
-            <v-stepper :value="this.computeStatus" flat>
+            <v-stepper :value="this.status" flat>
               <v-stepper-header>
-                <v-stepper-step :rules="[() => this.status !== 5]" step="1" complete>{{ this.firstStatus }}
+                <v-stepper-step step="0">{{ this.firstStatus }}
                 </v-stepper-step>
 
                 <v-divider></v-divider>
 
-                <v-stepper-step step="2">已认领</v-stepper-step>
+                <v-stepper-step step="1">已认领</v-stepper-step>
+
+                <v-divider></v-divider>
+                <v-stepper-step step="2">未认领复审</v-stepper-step>
 
                 <v-divider></v-divider>
 
-                <v-stepper-step step="3">已关闭</v-stepper-step>
+                <v-stepper-step step="3">已认领复审</v-stepper-step>
                 <v-divider></v-divider>
+                <v-stepper-step step="4">有效问题</v-stepper-step>
 
-                <v-stepper-step step="4">已复审</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step :rules="[() => this.status !== 5]" step="5">无效问题</v-stepper-step>
               </v-stepper-header>
             </v-stepper>
             <v-list three-line>
@@ -158,6 +171,7 @@
         :dialogVisible="dialogVisible"
         :editMode="true"
         :issue_id="this.issue_id"
+        @updateEvent="initissueInfo"
         @closeDialogEvent="closeDialog"
       >
       </post-issue>
@@ -178,18 +192,25 @@ import {
   follow_issue,
   check_follow_issue,
   check_like_issue,
-  cancel_issue
+  cancel_issue,
+  adopt_issue,
+  reject_issue,
+  agree_issue,
+  review_issue,
+  readopt_issue,
+  classify_issue
 } from "@/api/issue";
 import {get_issue_all_comments, create_comment, delete_comment} from "@/api/forum";
 import {upload_public} from "@/api/upload";
+import {getRole} from "@/utils/auth";
 
 export default {
   name: "issueInfoDetail",
-  components: {MarkdownEditor, MyRichText,postIssue},
-  props: {
-  },
+  components: {MarkdownEditor, MyRichText, postIssue},
+  props: {},
   data() {
     return {
+      user_type: getRole(),
       dialogVisible: false,
       issue_id: 2,
       title: 'Title',
@@ -226,18 +247,18 @@ export default {
       editorOptions: {},
       pageSize: 10,
       currentPage: 1,
-      hooks:{
+      hooks: {
         addImageBlobHook: async (blob, callback) => {
           let jwt = this.$store.state.user.token
           const formData = new FormData();
           formData.append('file', blob);
           console.log(jwt)
           //callback('http://shieask.com/pic/1.png');
-          upload_public(formData).then(response=>{
+          upload_public(formData).then(response => {
             if (response.data) {
               callback(response.data.url);
             }
-          }).catch(err=>{
+          }).catch(err => {
             this.$notify({
               title: '上传图片失败',
               message: '上传图片信息失败',
@@ -248,12 +269,13 @@ export default {
 
         },
       },
-      editor_content:'发表你的评论和回答',
+      editor_content: '发表你的评论和回答',
     }
   },
   methods: {
     initIssueId() {
       this.issue_id = this.$route.params.issue_id
+      //console.log('here' + this.$route.params.issue_id)
       //this.issue_id = 1
       console.log(this.issue_id)
     },
@@ -365,6 +387,7 @@ export default {
 
     },
     like() {
+      this.status = this.status + 1
       let jwt = this.$store.state.user.token
       like_issue(jwt, this.issue_id).then(response => {
         this.initLike(true)
@@ -378,6 +401,7 @@ export default {
       })
     },
     back() {
+      //localStorage.removeItem('issue_id')
       this.$router.go(-1)
     },
     collect() {
@@ -397,10 +421,10 @@ export default {
       console.log("show")
       this.dialogVisible = true
     },
+    //下面是各种状态转换
     close() {
       let jwt = this.$store.state.user.token
       cancel_issue(jwt, this.issue_id).then(response => {
-        console.log("false")
         this.status = 5
         this.$notify({
           title: '关闭成功',
@@ -409,6 +433,104 @@ export default {
           duration: 2000
         })
       }).catch(err => {
+
+      })
+    },
+    adopt() {
+      let jwt = this.$store.state.user.token
+      adopt_issue(jwt, this.issue_id).then(response => {
+        this.status = 1
+        this.$notify({
+          title: '认领问题',
+          message: '认领问题成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(err=>{
+
+      })
+    },
+    reject(){
+      let jwt = this.$store.state.user.token
+      reject_issue(jwt, this.issue_id).then(response => {
+        this.status = 0
+        this.$notify({
+          title: '拒绝回答',
+          message: '拒绝回答成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(err=>{
+
+      })
+    },
+    agree(){
+      let jwt = this.$store.state.user.token
+      agree_issue(jwt, this.issue_id).then(response => {
+        this.status = 2
+        this.$notify({
+          title: '同意回答',
+          message: '同意回答成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(err=>{
+
+      })
+    },
+    review(){
+      let jwt = this.$store.state.user.token
+      review_issue(jwt, this.issue_id).then(response => {
+        this.status = 3
+        this.$notify({
+          title: '认领复审',
+          message: '认领复审成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(err=>{
+
+      })
+    },
+    readopt(){
+      let jwt = this.$store.state.user.token
+      readopt_issue(jwt, this.issue_id).then(response => {
+        this.status = 1
+        this.$notify({
+          title: '重新认领',
+          message: '重新认领成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(err=>{
+
+      })
+    },
+    validIssue(){
+      let jwt = this.$store.state.user.token
+      classify_issue(jwt, this.issue_id,1).then(response => {
+        this.status = 4
+        this.$notify({
+          title: '有效问题',
+          message: '判定有效问题',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(err=>{
+
+      })
+    },
+    invalidIssue(){
+      let jwt = this.$store.state.user.token
+      classify_issue(jwt, this.issue_id,0).then(response => {
+        this.status = 5
+        this.$notify({
+          title: '无效问题',
+          message: '判定无效问题',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(err=>{
 
       })
     },
@@ -469,12 +591,24 @@ export default {
     },
     currentPageItems() {
       const start = (this.currentPage - 1) * this.pageSize; // 当前页的起始项索引
-      const end =start + this.pageSize; // 当前页的结束项索引
+      const end = start + this.pageSize; // 当前页的结束项索引
       return this.comment_list.slice(start, end); // 返回当前页的时间线项
     },
   },
   created() {
-    this.initIssueId()
+    if (!localStorage.getItem('issue_id')) {
+      this.initIssueId()
+      localStorage.setItem('issue_id', this.$route.params.issue_id)
+    } else {
+      this.issue_id = localStorage.getItem('issue_id')
+    }
+
+    //this.initIssueId()
+
+  },
+  beforeDestroy() {
+    // 从LocalStorage中移除数据
+    localStorage.removeItem('issue_id')
   },
   mounted() {
     this.initLike(false)
