@@ -21,13 +21,13 @@
       prop="address"
       label="操作"
       align="center">
+      <v-btn text color="blue" @click="toIssueDetailView()">
+        <v-icon>mdi-file-document-outline</v-icon>
+        <span class="ml-2">查看</span>
+      </v-btn>
       <v-btn text color="blue" v-if="type == 1">
         <v-icon>mdi-timeline-check-outline</v-icon>
         <span class="ml-2">关闭</span>
-      </v-btn>
-      <v-btn text color="blue" v-if="type == 2">
-        <v-icon>mdi-file-document-outline</v-icon>
-        <span class="ml-2">查看</span>
       </v-btn>
       <v-btn text color="success" v-if="type == 3">
         <v-icon>mdi-check-circle</v-icon>
@@ -57,6 +57,14 @@
         }]
       }
     },
-    props: ['type']
+    props: ['type'],
+    methods: {
+        /* async */ toIssueDetailView() {
+            // TODO: call backend API
+            // Test issueInfoDetail
+            this.$router.push({name: 'issueInfoDetail', params: {issue_id: "3"}})
+            //
+        },
+    },
   }
 </script>

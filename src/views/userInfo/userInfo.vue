@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-spacer></v-spacer>
-        <v-col :cols="8">
+        <v-col :cols="10">
           <v-card>
             <v-card-title>
               <v-icon>mdi-account-details-outline</v-icon>
@@ -12,7 +12,7 @@
             <v-divider></v-divider>
             <v-card-text>
               <v-row no-gutters>
-                <v-col :cols="5" class="pl-16">
+                <v-col :cols="6" class="pl-16">
                   <v-avatar size="150">
                     <v-img :src="require('@/assets/images/anonymous.jpg')"></v-img>
                   </v-avatar>
@@ -46,7 +46,7 @@
 
       <v-row class="mt-8">
         <v-spacer></v-spacer>
-        <v-col :cols="8">
+        <v-col :cols="10">
           <v-card>
             <v-card-title>
               <v-icon>mdi-file-question-outline</v-icon>
@@ -63,7 +63,7 @@
 
       <v-row class="mt-8">
         <v-spacer></v-spacer>
-        <v-col :cols="8">
+        <v-col :cols="10">
           <v-card>
             <v-card-title>
               <v-icon>mdi-file-question-outline</v-icon>
@@ -80,7 +80,7 @@
 
       <v-row class="mt-8">
         <v-spacer></v-spacer>
-        <v-col :cols="8">
+        <v-col :cols="10">
           <v-card>
             <v-card-title>
               <v-icon>mdi-file-question-outline</v-icon>
