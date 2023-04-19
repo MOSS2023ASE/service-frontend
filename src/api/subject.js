@@ -5,7 +5,7 @@ export function get_all_subjects(
   year_id, //: number
 ) {
   return request({
-    url: '/subject',
+    url: '/subject/',
     method: 'post',
     data: {
       jwt: jwt,

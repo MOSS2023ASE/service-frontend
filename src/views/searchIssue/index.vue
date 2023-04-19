@@ -396,7 +396,7 @@ export default {
         getIssues() {
             // TODO: get issues and issue_count
             // TODO: 目前的api是按照页请求的，所以不需要slice?
-            this.issues = this.all_issues.slice(0, 5);
+            this.search()
         },
 
         toPrevPage() {
