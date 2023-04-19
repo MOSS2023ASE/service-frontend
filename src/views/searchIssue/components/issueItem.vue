@@ -21,11 +21,15 @@
         </div>
         <div class="interactions" v-if="this.user_type === 0">
             <div class="issue_like_count">
-                <i style="margin-top: 5px" class="el-icon-star-on"></i>
+                <v-icon left>
+                    mdi-thumb-up-outline
+                </v-icon>
                 <span style="margin: 0px 0px 4px 5px">{{this.issue_like_count}}</span>
             </div>
             <div class="issue_comment_count">
-                <i style="margin-top: 5px" class="el-icon-chat-line-square"></i>
+                <v-icon left>
+                    mdi-message-text-outline
+                </v-icon>
                 <span style="margin: 0px 0px 4px 5px">{{this.issue_comment_count}}</span>
             </div>
         </div>
