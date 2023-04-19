@@ -13,8 +13,9 @@
         <el-col :span="24">
           <markdown-editor
             v-model="content"
-            height="350px"
+            height="500px"
             lang="zh"
+            :hooks="this.hooks"
           />
         </el-col>
       </el-form-item>
@@ -65,6 +66,7 @@ import {
 } from '@/api/issue'
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
 import {getToken} from '@/utils/auth'
+import {upload_public} from "@/api/upload";
 
 export default {
   name: 'PostIssueDialog',
@@ -206,6 +208,26 @@ export default {
         anonymous: null,
       },
       content: '点此输入问题...',
+      hooks:{
+        addImageBlobHook: async (blob, callback) => {
+          let jwt = this.$store.state.user.token
+          const formData = new FormData();
+          formData.append('file', blob);
+          upload_public(formData).then(response=>{
+            if (response.data) {
+              callback(response.data.url);
+            }
+          }).catch(err=>{
+            this.$notify({
+              title: '上传图片失败',
+              message: '上传图片信息失败',
+              type: 'warning',
+              duration: 2000
+            })
+          })
+
+        },
+      }
     };
   },
   setup() {

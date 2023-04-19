@@ -33,7 +33,7 @@ export function password_modify(
   password_new //: string
 ) {
   return request({
-    url: '/user/password_modify/',
+    url: '/user/password_modify',
     method: 'post',
     data: {
       jwt: jwt,
@@ -47,7 +47,7 @@ export function get_user_info(
   jwt //: string
 ) {
   return request({
-    url: '/user/get_user_info/',
+    url: '/user/get_user_info',
     method: 'post',
     data: {
       jwt: jwt
@@ -61,7 +61,7 @@ export function modify_user_info(
   mail, //: string
 ) {
   return request({
-    url: '/user/modify_user_info/',
+    url: '/user/modify_user_info',
     method: 'post',
     data: {
       jwt: jwt,
@@ -76,7 +76,7 @@ export function get_user_subject(
   tutor_id //: number,
 ) {
   return request({
-    url: '/user/get_user_subject/',
+    url: '/user/get_user_subject',
     method: 'post',
     data: {
       jwt: jwt,
@@ -91,7 +91,7 @@ export function check_user_subject(
   subject_id //: number
 ) {
   return request({
-    url: '/user/check_user_subject/',
+    url: '/user/check_user_subject',
     method: 'post',
     data: {
       jwt: jwt,
@@ -107,7 +107,7 @@ export function modify_user_subject(
   subject_id_list //: Array<number>
 ) {
   return request({
-    url: '/user/modify_user_subject/',
+    url: '/user/modify_user_subject',
     method: 'post',
     data: {
       jwt: jwt,
@@ -123,7 +123,7 @@ export function get_review_issue(
   issue_per_page //: number
 ) {
   return request({
-    url: '/user/get_review_issue/',
+    url: '/user/get_review_issue',
     method: 'post',
     data: {
       jwt: jwt,
@@ -139,7 +139,7 @@ export function get_adopt_issue(
   issue_per_page //: number
 ) {
   return request({
-    url: '/user/get_adopt_issue/',
+    url: '/user/get_adopt_issue',
     method: 'post',
     data: {
       jwt: jwt,
@@ -155,7 +155,7 @@ export function get_ask_issue(
   issue_per_page //: number
 ) {
   return request({
-    url: '/user/get_ask_issue/',
+    url: '/user/get_ask_issue',
     method: 'post',
     data: {
       jwt: jwt,
@@ -171,7 +171,7 @@ export function get_follow_issue(
   issue_per_page //: number
 ) {
   return request({
-    url: '/user/get_follow_issue/',
+    url: '/user/get_follow_issue',
     method: 'post',
     data: {
       jwt: jwt,

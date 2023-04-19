@@ -258,7 +258,7 @@ export default {
     },
     initLike() {
       let jwt = this.$store.state.user.token
-      check_like_issue(jwt, this.issue_id).then(response => {
+      check_like_issue(jwt, this.id).then(response => {
           this.islike = response.data.is_like
           if (this.islike === 1) {
             this.likes += 1
@@ -277,7 +277,7 @@ export default {
     },
     initFollow() {
       let jwt = this.$store.state.user.token
-      check_follow_issue(jwt, this.issue_id).then(response => {
+      check_follow_issue(jwt, this.id).then(response => {
           this.isfollow = response.data.is_follow
         }
       ).catch(err => {
@@ -291,7 +291,7 @@ export default {
     },
     initissueInfo() {
       let jwt = this.$store.state.user.token
-      get_issue_detail(jwt, this.issue_id).then(response => {
+      get_issue_detail(jwt, this.id).then(response => {
         this.title = response.data.title
         this.content = response.data.content
         this.user_name = response.data.user_name
@@ -338,7 +338,7 @@ export default {
     },
     initissueComment() {
       let jwt = this.$store.state.user.token
-      get_issue_all_comments(jwt, this.issue_id).then(response => {
+      get_issue_all_comments(jwt, this.id).then(response => {
         this.comment_list = response.data.comment_list
       }).catch(err => {
         this.$notify({
@@ -466,10 +466,10 @@ export default {
   created() {
     this.initIssueId()
     //对接时打开
-    //this.initLike()
-    //this.initFollow()
-    //this.initissueInfo()
-    //this.initissueComment()
+    this.initLike()
+    this.initFollow()
+    this.initissueInfo()
+    this.initissueComment()
   },
 }
 </script>

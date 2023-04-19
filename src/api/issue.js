@@ -5,7 +5,7 @@ export function get_issue_detail(
   issue_id
 ) {
   return request({
-    url: '/issue/get/',
+    url: '/issue/get',
     method: 'post',
     data: {
       jwt: jwt,
@@ -19,7 +19,7 @@ export function cancel_issue(
   issue_id,
 ) {
   return request({
-    url: '/issue/cancel/',
+    url: '/issue/cancel',
     method: 'post',
     data: {
       jwt: jwt,
@@ -34,7 +34,7 @@ export function classify_issue(
   is_valid
 ) {
   return request({
-    url: '/issue/classify/',
+    url: '/issue/classify',
     method: 'post',
     data: {
       jwt: jwt,
@@ -49,7 +49,7 @@ export function readopt_issue(
   issue_id,
 ) {
   return request({
-    url: '/issue/readopt/',
+    url: '/issue/readopt',
     method: 'post',
     data: {
       jwt: jwt,
@@ -63,7 +63,7 @@ export function agree_issue(
   issue_id,
 ) {
   return request({
-    url: '/issue/agree/',
+    url: '/issue/agree',
     method: 'post',
     data: {
       jwt: jwt,
@@ -77,7 +77,7 @@ export function review_issue(
   issue_id,
 ) {
   return request({
-    url: '/issue/review/',
+    url: '/issue/review',
     method: 'post',
     data: {
       jwt: jwt,
@@ -91,7 +91,7 @@ export function reject_issue(
   issue_id,
 ) {
   return request({
-    url: '/issue/reject/',
+    url: '/issue/reject',
     method: 'post',
     data: {
       jwt: jwt,
@@ -105,7 +105,7 @@ export function adopt_issue(
   issue_id,
 ) {
   return request({
-    url: '/issue/adopt/',
+    url: '/issue/adopt',
     method: 'post',
     data: {
       jwt: jwt,
@@ -119,7 +119,7 @@ export function get_issue_tag(
   issue_id,
 ) {
   return request({
-    url: '/issue/tags/',
+    url: '/issue/tags',
     method: 'post',
     data: {
       jwt: jwt,
@@ -134,7 +134,7 @@ export function update_issue_tag(
   tag_id_list
 ) {
   return request({
-    url: '/issue/tags_update/',
+    url: '/issue/tags_update',
     method: 'post',
     data: {
       jwt: jwt,
@@ -149,7 +149,7 @@ export function check_follow_issue(
   issue_id,
 ) {
   return request({
-    url: '/issue/follow_check/',
+    url: '/issue/follow_check',
     method: 'post',
     data: {
       jwt: jwt,
@@ -163,7 +163,7 @@ export function follow_issue(
   issue_id,
 ) {
   return request({
-    url: '/issue/follow/',
+    url: '/issue/follow',
     method: 'post',
     data: {
       jwt: jwt,
@@ -177,7 +177,7 @@ export function check_like_issue(
   issue_id,
 ) {
   return request({
-    url: '/issue/favorite/',
+    url: '/issue/favorite',
     method: 'post',
     data: {
       jwt: jwt,
@@ -191,7 +191,7 @@ export function like_issue(
   issue_id,
 ) {
   return request({
-    url: '/issue/like/',
+    url: '/issue/like',
     method: 'post',
     data: {
       jwt: jwt,
@@ -209,7 +209,7 @@ export function update_issue_info(
   anonymous, //: number
 ) {
   return request({
-    url: '/issue/update/',
+    url: '/issue/update',
     method: 'post',
     data: {
       jwt: jwt,

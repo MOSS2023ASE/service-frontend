@@ -61,7 +61,8 @@ export const constantRoutes = [
       {
         path: 'userInfo',
         name:'userInfo',
-        component: () => import('@/views/userInfo/userInfo')
+        component: () => import('@/views/userInfo/userInfo'),
+        meta: {title: '个人信息', icon: 'el-icon-user'}
       }
     ]
   },
@@ -101,7 +102,7 @@ export const asyncRoutes = [
         path: 'manage',
         name: 'manage',
         component: () => import('@/views/userManage/userCreate'),
-        meta: {title: '用户管理', icon: 'el-icon-user'}
+        meta: {title: '用户管理', icon: 'el-icon-s-tools'}
       }
     ]
   },
