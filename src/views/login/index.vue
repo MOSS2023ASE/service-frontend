@@ -72,7 +72,7 @@
                     </span>
                     <el-input
                       placeholder="输入验证码"
-                      v-model="loginForm.code"/>
+                      v-model="code"/>
                 </el-form-item>
               </el-col>
               <el-col :span="10">
@@ -158,7 +158,6 @@ export default {
       loginForm: {
         username: '20373743', // Built-in admin account
         password: '123456',
-        code: '',
       },
       loginRules: {
         username: [{required: true, trigger: 'blur', validator: validateUsername}],
@@ -166,6 +165,7 @@ export default {
       },
       identifyCodes: '1234567890abcdefjhijklinopqrsduvwxyz',
       identifyCode: '',
+      code: '',
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
@@ -242,8 +242,8 @@ export default {
       })
     },
     handleLogin() {
-      console.log(this.identifyCode, this.loginForm.code);
-      if (this.identifyCode.toLowerCase() !== this.loginForm.code.toLowerCase()) {
+      console.log(this.identifyCode, this.code);
+      if (this.identifyCode.toLowerCase() !== this.code.toLowerCase()) {
         Message({
             message: '验证码错误',
             type: 'error',
