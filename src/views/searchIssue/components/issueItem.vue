@@ -109,7 +109,7 @@ export default {
         /* async */ toIssueDetailView() {
             // TODO: call backend API
             //Test issueInfoDetail
-            this.$router.push({name: 'issueInfoDetail', params: {issue_id: "3"}})
+            this.$router.push({name: 'issueInfoDetail', params: {issue_id: this.id}})
             //
             Message({
                 message: '点击问题',

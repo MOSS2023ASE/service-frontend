@@ -66,22 +66,6 @@ export const constantRoutes = [
       }
     ]
   },
-
-]
-
-export const asyncRoutes = [
-  // {
-  //   path: '/',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'manage',
-  //       name: 'Management',
-  //       component: () => import('@/views/management/index'),
-  //       meta: {title: '后台管理', icon: 'el-icon-s-tools', roles: ['admin']},
-  //     },
-  //   ]
-  // },
   {
     path: '/',
     component: Layout,
@@ -90,10 +74,13 @@ export const asyncRoutes = [
         path: 'search',
         name: 'Search',
         component: () => import('@/views/searchIssue/index'),
-        meta: {title: '搜索问题', icon: 'el-icon-search', roles: ['admin', 'editor', 'visitor']},
+        meta: {title: '搜索问题', icon: 'el-icon-search'},
       }
     ]
   },
+]
+
+export const asyncRoutes = [
   {
     path: '/',
     component: Layout,
