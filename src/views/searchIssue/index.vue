@@ -71,6 +71,7 @@
           :like_count="issue.like_count"
           :follow_count="issue.follow_count"
           :status_trans_permit="issue.status_trans_permit"
+          @refreshEvent="refresh" 
           />
           <el-pagination small layout="prev, pager, next"
               :page-size="this.page_size" :total="total_page * page_size" :current-page.sync="cur_page"
@@ -336,8 +337,11 @@ export default {
       handleClickPost() {
           this.dialogVisible = true;
       },
-      closeDialog() {
+      closeDialog(refresh = false) {
           this.dialogVisible = false;
+          if (refresh === true) {
+            this.search()
+          }
       },
       search() {
           if (this.sort_order === null) {
@@ -390,6 +394,11 @@ export default {
           console.log(error)
         })
       },
+
+      refresh() {
+        this.search();
+      },
+
       getIssues() {
           this.search()
       },
