@@ -106,7 +106,7 @@ export default {
         },
         status_trans_permit: {
             type: Array,
-            default: [1, 0, 0, 0, 0 ,0, 0]
+            default: [0, 0, 0, 0, 0 ,0, 0]
         }
     },
     data() {
