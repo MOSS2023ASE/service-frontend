@@ -14,10 +14,14 @@
               <v-row no-gutters>
                 <v-col :cols="6" class="pl-16">
                   <v-avatar size="150">
-                    <v-img :src="require('@/assets/images/anonymous.jpg')"></v-img>
+                    <v-img :src="avatar">
+                      <template v-slot:placeholder>
+                        <v-img/>
+                      </template>
+                    </v-img>
                   </v-avatar>
                   <div class="mt-4">
-                    <v-btn text color="blue">
+                    <v-btn text color="blue" @click="$refs.input.click()">
                       <v-icon class="ml-n1 mr-1">mdi-pencil</v-icon>
                       <span class="text-h6">修改头像</span>
                     </v-btn>
@@ -43,6 +47,7 @@
         </v-col>
         <v-spacer></v-spacer>
       </v-row>
+      <input ref="input" type="file" name="image" accept="image/*" @change="loadAvatar" style="display: none" />
 
       <v-row>
         <v-col>
@@ -140,9 +145,10 @@
 
 <script>
 import UserIssue from './userIssue'
-import { get_user_info, password_modify } from '@/api/user';
+import { get_user_info, password_modify, modify_user_info } from '@/api/user';
 import { getToken, getRole } from '@/utils/auth';
 import { Message } from 'element-ui';
+import { upload_public } from '@/api/upload';
 export default {
   data() {
     return {
@@ -154,6 +160,7 @@ export default {
       showNewPwd: false, 
       oldPwd: '',
       newPwd: '',
+      avatar: '',
     }
   },
   components: {
@@ -167,6 +174,8 @@ export default {
     getUserInfo() {
       get_user_info(getToken()).then(response => {
         console.log(response);
+        this.avatar = response.data.avatar;
+        this.mail = response.data.mail;
         this.items = [
           {
             icon: 'mdi-fingerprint',
@@ -211,6 +220,34 @@ export default {
                         });
                         this.showDialog = false;
                       });
+    },
+    async loadAvatar(element) {
+      console.log(element.target.files[0]);
+      let formData = new FormData();
+      formData.append('file', element.target.files[0]);
+      console.log(formData);
+      upload_public(formData).then(response => {
+        this.avatar = response.data.url;
+        modify_user_info(getToken(),
+                        this.avatar,
+                        this.mail).then(response => {
+                          this.getUserInfo();
+                          Message({
+                            message: '上传头像成功',
+                            type: 'success'
+                          });
+                        }).catch(error => {
+                          Message({
+                            message: '上传头像失败',
+                            type: 'error'
+                          });
+                        });
+      }).catch(error => {
+        Message({
+          message: '上传头像失败',
+          type: 'error'
+        });
+      });
     }
   }
 }
