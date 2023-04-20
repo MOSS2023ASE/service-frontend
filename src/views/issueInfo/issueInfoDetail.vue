@@ -59,15 +59,15 @@
                   {{ this.follows }}
                 </v-btn>
                 <v-btn text @click="edit()">编辑</v-btn>
-                <v-btn v-show="user_type === 0 && this.status === 0" text @click="close()">关闭</v-btn>
-                <v-btn v-show="user_type === 0 && this.status === 1" text @click="reject()">拒绝辅导师回答</v-btn>
-                <v-btn v-show="user_type === 0 && this.status === 1" text @click="agree()">同意辅导师回答</v-btn>
+                <v-btn v-show="this.status_trans_permit[1] === 1" text @click="close()">关闭</v-btn>
+                <v-btn v-show="this.status_trans_permit[2] === 1" text @click="reject()">拒绝辅导师回答</v-btn>
+                <v-btn v-show="this.status_trans_permit[3] === 1" text @click="agree()">同意辅导师回答</v-btn>
 
-                <v-btn v-show="user_type === 1 && this.status === 0" text @click="adopt()">认领问题</v-btn>
-                <v-btn v-show="user_type === 1 && this.status === 2" text @click="review()">复审问题</v-btn>
-                <v-btn v-show="user_type === 1 && this.status === 3" text @click="readopt()">重新认领</v-btn>
-                <v-btn v-show="user_type === 1 && this.status === 3" text @click="validIssue()">有效问题</v-btn>
-                <v-btn v-show="user_type === 1 && this.status === 3" text @click="invalidIssue()">无效问题</v-btn>
+                <v-btn v-show="this.status_trans_permit[0] === 1" text @click="adopt()">认领问题</v-btn>
+                <v-btn v-show="this.status_trans_permit[4] === 1" text @click="review()">复审问题</v-btn>
+                <v-btn v-show="this.status_trans_permit[5] === 1" text @click="readopt()">重新认领</v-btn>
+                <v-btn v-show="this.status_trans_permit[6] === 1" text @click="validIssue()">有效问题</v-btn>
+                <v-btn v-show="this.status_trans_permit[6] === 1" text @click="invalidIssue()">无效问题</v-btn>
               </v-card-actions>
             </v-row>
             <br/>
@@ -159,10 +159,10 @@
         <v-divider></v-divider>
       </v-card>
       <div>
-        <markdown-editor ref="editor" v-model="editor_content" height="500px" :hooks="this.hooks"/>
+        <markdown-editor v-if="this.allow_comment === 1" ref="editor" v-model="editor_content" height="500px" :hooks="this.hooks"/>
       </div>
       <br/>
-      <v-row justify="end" style="margin-right: 10px;">
+      <v-row v-if="this.allow_comment === 1" justify="end" style="margin-right: 10px;">
         <v-btn raised color="light-blue darken-2" @click="handleComment()">发布</v-btn>
       </v-row>
       <br/>
@@ -210,6 +210,8 @@ export default {
   props: {},
   data() {
     return {
+      status_trans_permit: [1, 1, 1, 1, 1, 1, 1],
+      allow_comment: 1,
       user_type: getRole(),
       dialogVisible: false,
       issue_id: 2,
@@ -235,8 +237,8 @@ export default {
       subject_name: '第一章',
       likes: 0,
       follows: 0,
-      islike: 0,
-      isfollow: 0,
+      is_like: 0,
+      is_follow: 0,
       status: '',
       anonymous: 0,
       create_at: '',
@@ -279,17 +281,11 @@ export default {
       //this.issue_id = 1
       console.log(this.issue_id)
     },
-    initLike(changed) {
+    initLike() {
       let jwt = this.$store.state.user.token
       check_like_issue(jwt, this.issue_id).then(response => {
-          this.islike = response.data['is_like']
-          if (changed) {
-            if (this.islike === 1) {
-              this.likes += 1
-            } else {
-              this.likes -= 1
-            }
-          }
+          this.is_like = response.data['is_like'];
+          this.likes = response.data['like_count'];
         }
       ).catch(err => {
         this.$notify({
@@ -300,17 +296,11 @@ export default {
         })
       })
     },
-    initFollow(changed) {
+    initFollow() {
       let jwt = this.$store.state.user.token
       check_follow_issue(jwt, this.issue_id).then(response => {
-          this.isfollow = response.data.is_follow
-          if (changed) {
-            if (this.isfollow === 1) {
-              this.follows += 1
-            } else {
-              this.follows -= 1
-            }
-          }
+          this.is_follow = response.data['is_follow'];
+          this.follows = response.data['follow_count'];
         }
       ).catch(err => {
         this.$notify({
@@ -338,6 +328,8 @@ export default {
         this.anonymous = response.data.anonymous
         this.create_at = response.data.create_at
         this.update_at = response.data.update_at
+        this.allow_comment = response.data.allow_comment
+        this.status_trans_permit = response.data.status_trans_permit
         // TODO: wait for backend API
         // this.likes = response.data.likes
         // this.follows = response.data.follows
@@ -390,7 +382,8 @@ export default {
       this.status = this.status + 1
       let jwt = this.$store.state.user.token
       like_issue(jwt, this.issue_id).then(response => {
-        this.initLike(true)
+        this.is_like = response.data.is_like;
+        this.likes = response.data.like_count;
       }).catch(err => {
         this.$notify({
           title: '点赞操作失败',
@@ -407,8 +400,10 @@ export default {
     collect() {
       let jwt = this.$store.state.user.token
       follow_issue(jwt, this.issue_id).then(response => {
-        this.initFollow(true)
+        this.is_follow = response.data['is_follow'];
+        this.follows = response.data['follow_count'];
       }).catch(err => {
+        console.log(err)
         this.$notify({
           title: '收藏操作失败',
           message: 'issue收藏操作失败',
@@ -425,6 +420,7 @@ export default {
     close() {
       let jwt = this.$store.state.user.token
       cancel_issue(jwt, this.issue_id).then(response => {
+        console.log(response)
         this.status = 5
         this.$notify({
           title: '关闭成功',
@@ -433,12 +429,19 @@ export default {
           duration: 2000
         })
       }).catch(err => {
-
+        this.$notify({
+          title: '关闭失败',
+          message: 'issue关闭失败',
+          type: 'error',
+          duration: 2000
+        })
+        console.log(err)
       })
     },
     adopt() {
       let jwt = this.$store.state.user.token
       adopt_issue(jwt, this.issue_id).then(response => {
+        console.log(response)
         this.status = 1
         this.$notify({
           title: '认领问题',
@@ -447,12 +450,19 @@ export default {
           duration: 2000
         })
       }).catch(err=>{
-
+        console.log(err)
+        this.$notify({
+          title: '认领失败',
+          message: '认领问题失败',
+          type: 'error',
+          duration: 2000
+        })
       })
     },
     reject(){
       let jwt = this.$store.state.user.token
       reject_issue(jwt, this.issue_id).then(response => {
+        console.log(response)
         this.status = 0
         this.$notify({
           title: '拒绝回答',
@@ -461,12 +471,19 @@ export default {
           duration: 2000
         })
       }).catch(err=>{
-
+        this.$notify({
+          title: '拒绝回答',
+          message: '拒绝回答失败',
+          type: 'error',
+          duration: 2000
+        })
+        console.log(err)
       })
     },
     agree(){
       let jwt = this.$store.state.user.token
       agree_issue(jwt, this.issue_id).then(response => {
+        console.log(response)
         this.status = 2
         this.$notify({
           title: '同意回答',
@@ -475,12 +492,19 @@ export default {
           duration: 2000
         })
       }).catch(err=>{
-
+        this.$notify({
+          title: '同意回答',
+          message: '同意回答失败',
+          type: 'error',
+          duration: 2000
+        })
+        console.log(err)
       })
     },
     review(){
       let jwt = this.$store.state.user.token
       review_issue(jwt, this.issue_id).then(response => {
+        console.log(response)
         this.status = 3
         this.$notify({
           title: '认领复审',
@@ -489,12 +513,19 @@ export default {
           duration: 2000
         })
       }).catch(err=>{
-
+        this.$notify({
+          title: '认领复审',
+          message: '认领复审失败',
+          type: 'error',
+          duration: 2000
+        })
+        console.log(err)
       })
     },
     readopt(){
       let jwt = this.$store.state.user.token
       readopt_issue(jwt, this.issue_id).then(response => {
+        console.log(response)
         this.status = 1
         this.$notify({
           title: '重新认领',
@@ -503,12 +534,19 @@ export default {
           duration: 2000
         })
       }).catch(err=>{
-
+        this.$notify({
+          title: '重新认领',
+          message: '重新认领失败',
+          type: 'error',
+          duration: 2000
+        })
+        console.log(err)
       })
     },
     validIssue(){
       let jwt = this.$store.state.user.token
       classify_issue(jwt, this.issue_id,1).then(response => {
+        console.log(response)
         this.status = 4
         this.$notify({
           title: '有效问题',
@@ -517,12 +555,19 @@ export default {
           duration: 2000
         })
       }).catch(err=>{
-
+        this.$notify({
+          title: '有效问题',
+          message: '判定有效问题失败',
+          type: 'error',
+          duration: 2000
+        })
+        console.log(err)
       })
     },
     invalidIssue(){
       let jwt = this.$store.state.user.token
       classify_issue(jwt, this.issue_id,0).then(response => {
+        console.log(response)
         this.status = 5
         this.$notify({
           title: '无效问题',
@@ -531,7 +576,13 @@ export default {
           duration: 2000
         })
       }).catch(err=>{
-
+        this.$notify({
+          title: '无效问题',
+          message: '判定无效问题失败',
+          type: 'error',
+          duration: 2000
+        })
+        console.log(err)
       })
     },
     handleComment() {
@@ -573,14 +624,14 @@ export default {
       }
     },
     likeIconColor() {
-      if (this.islike === 1) {
+      if (this.is_like === 1) {
         return "pink"
       } else {
         return "black"
       }
     },
     followIconColor() {
-      if (this.isfollow === 1) {
+      if (this.is_follow === 1) {
         return "pink"
       } else {
         return "black"
@@ -611,8 +662,8 @@ export default {
     localStorage.removeItem('issue_id')
   },
   mounted() {
-    this.initLike(false)
-    this.initFollow(false)
+    this.initLike()
+    this.initFollow()
     this.initissueInfo()
     this.initissueComment()
   }

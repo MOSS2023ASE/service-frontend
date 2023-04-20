@@ -35,9 +35,9 @@
                 <span style="margin: 0px 0px 4px 5px">{{this.issue_comment_count}}</span>
             </div>
         </div>
-        <div class="interactions" v-if="this.user_type !== 0">
-            <el-button type="warning" style="issue-button" @click.stop="answerIssue">认领回答</el-button>
-            <el-button type="warning" style="issue-button" @click.stop="verifyIssue">认领复审</el-button>
+        <div class="interactions" >
+            <el-button type="warning" v-if="this.status_trans_permit[0] === 1" style="issue-button" @click.stop="answerIssue">认领回答</el-button>
+            <el-button type="warning" v-if="this.status_trans_permit[4] === 1" style="issue-button" @click.stop="verifyIssue">认领复审</el-button>
         </div>
     </div>
 </template>
@@ -97,6 +97,10 @@ export default {
         issue_comment_count: {
             type: Number,
             default: 0
+        },
+        status_trans_permit: {
+            type: Array,
+            default: [1, 0, 0, 0, 0 ,0, 0]
         }
     },
     data() {
@@ -107,14 +111,13 @@ export default {
     },
     methods: {
         /* async */ toIssueDetailView() {
-            // TODO: call backend API
             //Test issueInfoDetail
             this.$router.push({name: 'issueInfoDetail', params: {issue_id: this.id}})
             //
-            Message({
-                message: '点击问题',
-                type: 'warning',
-            })
+            // Message({
+            //     message: '点击问题',
+            //     type: 'warning',
+            // })
             console.log("to issue detail");
         },
         answerIssue() {

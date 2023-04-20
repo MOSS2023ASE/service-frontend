@@ -72,6 +72,7 @@
             :tags="issue.tags"
             :issue_like_count="issue.issue_like_count"
             :issue_comment_count="issue.issue_comment_count"
+            :status_trans_permit="issue.status_trans_permit"
             />
             <el-pagination small layout="prev, pager, next"
                 :page-size="this.page_size" :total="issue_count"
