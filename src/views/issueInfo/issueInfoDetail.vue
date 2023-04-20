@@ -140,7 +140,7 @@
                 </v-avatar>
               </template>
               <template v-slot:opposite>
-                <span>{{ comment.time }}</span>
+                <span>{{ comment.time.slice(0, 10) }} {{ comment.time.slice(11, 19) }}</span>
               </template>
               <v-card class="elevation-2">
                 <v-card-title class="headline">{{ comment.name }}</v-card-title>
