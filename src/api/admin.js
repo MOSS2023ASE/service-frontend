@@ -5,16 +5,18 @@ export function batch_register(
   jwt, //: string,
   name_list, //: Array<string>,
   student_id_list, //: Array<string>,
-  password_list //: Array<string>
+  password_list, //: Array<string>
+  role_list
 ) {
   return request({
-    url: '/admins/create_user_batch/',
+    url: '/admins/create_user_batch',
     method: 'post',
     data: {
       jwt: jwt,
       name_list: name_list,
       student_id_list: student_id_list,
-      password_list: password_list
+      password_list: password_list,
+      role_list: role_list
     }
   })
 }
@@ -25,7 +27,7 @@ export function update_privilege(
   user_role, //: number
 ) {
   return request({
-    url: '/admins/update_privilege/',
+    url: '/admins/update_privilege',
     method: 'post',
     data: {
       jwt: jwt,
@@ -39,7 +41,7 @@ export function get_users(
   jwt //: string
 ) {
   return request({
-    url: '/admins/users/',
+    url: '/admins/users',
     method: 'post',
     data: {
       jwt: jwt
@@ -53,7 +55,7 @@ export function freeze_user(
   frozen, //: number
 ) {
   return request({
-    url: '/admins/freeze_user/',
+    url: '/admins/freeze_user',
     method: 'post',
     data: {
       jwt: jwt,
@@ -68,7 +70,7 @@ export function delete_issue(
   issue_id, //: number
 ) {
   return request({
-    url: '/admins/issue/delete/',
+    url: '/admins/issue/delete',
     method: 'post',
     data: {
       jwt: jwt,
@@ -81,16 +83,18 @@ export function single_register(
   jwt, //: string,
   name, //: string,
   student_id, //: string,
-  password //: string
+  password, //: string
+  role
 ) {
   return request({
-    url: '/admins/create_user/',
+    url: '/admins/create_user',
     method: 'post',
     data: {
       jwt: jwt,
       name: name,
       student_id: student_id,
-      password: password
+      password: password,
+      role: role
     }
   })
 }

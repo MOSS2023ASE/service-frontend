@@ -34,7 +34,7 @@ export async function readXlsxFile(file) {
     role_list: []
   };
   while ('A' + i.toString() in Sheet1) {
-    table.student_id_list.push(Sheet1[colMap.get('学号') + i.toString()].v);
+    table.student_id_list.push(Sheet1[colMap.get('学号') + i.toString()].v.toString());
     table.name_list.push(Sheet1[colMap.get('用户名') + i.toString()].v);
     table.password_list.push(Sheet1[colMap.get('用户密码') + i.toString()].v);
     table.role_list.push(Sheet1[colMap.get('用户类型') + i.toString()].v);
