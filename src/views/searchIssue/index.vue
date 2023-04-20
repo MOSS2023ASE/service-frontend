@@ -49,7 +49,7 @@
                   </el-select>
               </div>
           </div>
-          <el-button icon="el-icon-search" style="width: 8%; height: inherit;" @click="search">搜索</el-button>
+          <el-button icon="el-icon-search" style="width: 8%; height: inherit; color: #666666;" @click="search">搜索</el-button>
       </v-card>
       <v-card class="issues-table">
           <!--在这里应该最多传三个tag进去，不然显示不了 -->
@@ -65,12 +65,8 @@
                      issue.content.slice(0, 15) + '...' :
                      issue.content"
           :created_at="issue.created_at.slice(0, 16)"
-          :subject="issue.subject_name.length > 4 ?
-                    issue.subject_name.slice(0, 3) + '...' :
-                    issue.subject_name"
-          :chapter="issue.chapter_name.length > 4 ?
-                    issue.chapter_name.slice(0, 3) + '...' :
-                    issue.chapter_name"
+          :subject="issue.subject_name"
+          :chapter="issue.chapter_name"
           :tags="issue.tags"
           :issue_like_count="issue.issue_like_count"
           :issue_comment_count="issue.issue_comment_count"
