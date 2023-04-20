@@ -73,7 +73,7 @@
             <br/>
             <v-stepper :value="this.status" flat>
               <v-stepper-header>
-                <v-stepper-step step="0">{{ this.firstStatus }}
+                <v-stepper-step step="0">未认领
                 </v-stepper-step>
 
                 <v-divider></v-divider>
@@ -379,7 +379,6 @@ export default {
 
     },
     like() {
-      this.status = this.status + 1
       let jwt = this.$store.state.user.token
       like_issue(jwt, this.issue_id).then(response => {
         this.is_like = response.data.is_like;
@@ -420,8 +419,7 @@ export default {
     close() {
       let jwt = this.$store.state.user.token
       cancel_issue(jwt, this.issue_id).then(response => {
-        console.log(response)
-        this.status = 5
+        this.initAll()
         this.$notify({
           title: '关闭成功',
           message: 'issue关闭成功',
@@ -441,8 +439,7 @@ export default {
     adopt() {
       let jwt = this.$store.state.user.token
       adopt_issue(jwt, this.issue_id).then(response => {
-        console.log(response)
-        this.status = 1
+        this.initAll()
         this.$notify({
           title: '认领问题',
           message: '认领问题成功',
@@ -462,8 +459,7 @@ export default {
     reject(){
       let jwt = this.$store.state.user.token
       reject_issue(jwt, this.issue_id).then(response => {
-        console.log(response)
-        this.status = 0
+        this.initAll()
         this.$notify({
           title: '拒绝回答',
           message: '拒绝回答成功',
@@ -483,8 +479,7 @@ export default {
     agree(){
       let jwt = this.$store.state.user.token
       agree_issue(jwt, this.issue_id).then(response => {
-        console.log(response)
-        this.status = 2
+        this.initAll()
         this.$notify({
           title: '同意回答',
           message: '同意回答成功',
@@ -504,8 +499,7 @@ export default {
     review(){
       let jwt = this.$store.state.user.token
       review_issue(jwt, this.issue_id).then(response => {
-        console.log(response)
-        this.status = 3
+        this.initAll()
         this.$notify({
           title: '认领复审',
           message: '认领复审成功',
@@ -525,8 +519,7 @@ export default {
     readopt(){
       let jwt = this.$store.state.user.token
       readopt_issue(jwt, this.issue_id).then(response => {
-        console.log(response)
-        this.status = 1
+        this.initAll()
         this.$notify({
           title: '重新认领',
           message: '重新认领成功',
@@ -546,8 +539,7 @@ export default {
     validIssue(){
       let jwt = this.$store.state.user.token
       classify_issue(jwt, this.issue_id,1).then(response => {
-        console.log(response)
-        this.status = 4
+        this.initAll()
         this.$notify({
           title: '有效问题',
           message: '判定有效问题',
@@ -567,8 +559,7 @@ export default {
     invalidIssue(){
       let jwt = this.$store.state.user.token
       classify_issue(jwt, this.issue_id,0).then(response => {
-        console.log(response)
-        this.status = 5
+        this.initAll()
         this.$notify({
           title: '无效问题',
           message: '判定无效问题',
@@ -603,6 +594,12 @@ export default {
       console.log('click');
       this.dialogVisible = false;
     },
+    initAll(){
+      this.initLike()
+      this.initFollow()
+      this.initissueInfo()
+      this.initissueComment()
+    }
   },
   computed: {
     computeStatus() {
