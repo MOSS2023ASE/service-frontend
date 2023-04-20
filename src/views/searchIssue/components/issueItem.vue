@@ -1,8 +1,8 @@
 <template>
     <div class="issue-item" @click="toIssueDetailView()">
         <div class="author">
-            <!-- 显示头像还没调，暂时都显示默认头像 -->
-            <el-avatar class="user_avatar" :src="require('../../../assets/images/anonymous.jpg')" :key="this.user_avatar" />
+            <el-avatar v-if="this.user_avatar !== null" class="user_avatar" :src="this.user_avatar" :key="this.user_avatar" />
+            <el-avatar v-else class="user_avatar" :src="require('../../../assets/images/anonymous.jpg')" />
             <div class="user_name">{{this.user_name}}</div>
         </div>
         <div class="previews">
@@ -119,11 +119,6 @@ export default {
         /* async */ toIssueDetailView() {
             //Test issueInfoDetail
             this.$router.push({name: 'issueInfoDetail', params: {issue_id: this.id}})
-            //
-            // Message({
-            //     message: '点击问题',
-            //     type: 'warning',
-            // })
             console.log("to issue detail");
         },
         answerIssue() {
