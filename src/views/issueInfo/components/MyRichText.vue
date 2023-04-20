@@ -1,6 +1,6 @@
 <template>
   <div class="rich-text">
-    <div v-html="content"></div>
+    <div style="margin-top: 10px" v-html="content"></div>
   </div>
 </template>
 

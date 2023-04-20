@@ -36,7 +36,7 @@
               </v-list-item-avatar>
             </v-list-item>
             <v-card-text>
-              <MyRichText :content="this.content"></MyRichText>
+              <MyRichText :content="this.html_content"></MyRichText>
             </v-card-text>
 
             <v-row style="margin-left: 1px">
@@ -186,6 +186,7 @@
 import MarkdownEditor from '@/components/MarkdownEditor'
 import MyRichText from "@/views/issueInfo/components/MyRichText";
 import postIssue from "@/views/searchIssue/components/postIssue";
+import marked from 'marked';
 import {
   get_issue_detail,
   like_issue,
@@ -206,7 +207,7 @@ import {getRole} from "@/utils/auth";
 
 export default {
   name: "issueInfoDetail",
-  components: {MarkdownEditor, MyRichText, postIssue},
+  components: {MarkdownEditor, MyRichText, postIssue, marked},
   props: {},
   data() {
     return {
@@ -217,6 +218,7 @@ export default {
       issue_id: 2,
       title: 'Title',
       content: '<p>这是一段富文本内容</p><p><img src="https://pic.imgdb.cn/item/6395462eb1fccdcd36ecbeb8.jpg"></p>',
+      html_content: '<p>这是一段富文本内容</p><p><img src="https://pic.imgdb.cn/item/6395462eb1fccdcd36ecbeb8.jpg"></p>',
       comment_list: [{
         "comment_id": 4,
         "content": "<p>这是一段富文本内容</p><p><img src=\"https://pic.imgdb.cn/item/6395462eb1fccdcd36ecbeb8.jpg\"></p>",
@@ -317,6 +319,7 @@ export default {
         console.log(response)
         this.title = response.data.title
         this.content = response.data.content
+        this.html_content = marked.parse(this.content)
         this.user_name = response.data.user_name
         this.user_avatar = response.data.user_avatar
         this.user_id = response.data.user_id
