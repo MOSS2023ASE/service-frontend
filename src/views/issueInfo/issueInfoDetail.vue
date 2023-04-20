@@ -58,7 +58,7 @@
                   </v-icon>
                   {{ this.follows }}
                 </v-btn>
-                <v-btn text @click="edit()">编辑</v-btn>
+                <v-btn v-show="this.allow_comment === 1" text @click="edit()">编辑</v-btn>
                 <v-btn v-show="this.status_trans_permit[1] === 1" text @click="close()">关闭</v-btn>
                 <v-btn v-show="this.status_trans_permit[2] === 1" text @click="reject()">拒绝辅导师回答</v-btn>
                 <v-btn v-show="this.status_trans_permit[3] === 1" text @click="agree()">同意辅导师回答</v-btn>
