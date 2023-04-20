@@ -14,8 +14,14 @@
             </div>
             <div class="content">{{this.abstract}}</div>
             <div class="subject-chapter">
-                <div class="square-tag">{{ this.subject }}</div>
-                <div class="square-tag">{{ this.chapter }}</div>
+            <el-row style="width: 100%">
+            <el-col :span="10">
+                <el-tag type="warning" class="square-tag">{{ this.subject }}</el-tag>
+            </el-col>
+            <el-col :span="10">
+                <el-tag type="warning" class="square-tag">{{ this.chapter }}</el-tag>
+            </el-col>
+            </el-row>
             </div>
         </div>
         <div class="tags">
@@ -172,6 +178,7 @@ export default {
     padding-top: 13px;
     padding-left: 4%;
     width: 15%;
+    min-width: 80px;
 }
 
 .previews {
@@ -194,13 +201,14 @@ export default {
     display: flex;
     flex-direction: column;
     padding-top: 10px;
-    padding-left: 2%;
+    margin-left: 2%;
     width: 15%;
 }
 
 .user_avatar {
     width: 80px;
     height: 80px;
+    align-self: center;
     margin-top: 4%;
 }
 
@@ -211,20 +219,31 @@ export default {
     font-weight: 400;
     font-size: 18px;
     letter-spacing: 0.8px;
+    text-align: center;
 }
 
 .title {
     font-weight: 600;
     font-size: 22px;
     letter-spacing: 1.5px;
+    display: inline-block;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .content {
     padding-top: 12px;
-    color: #888888;
+    color: #666666;
     font-weight: 400;
     font-size: 14px;
     letter-spacing: 1px;
+    display: inline-block;
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .subject-chapter {
@@ -234,20 +253,13 @@ export default {
 }
 
 .square-tag {
-    width: 80px;
     height: 28px;
     margin-right: 20%;
-    padding-top: 3px;
-    padding-bottom: 3px;
-
-    border-style: none;
-    border-color: #ddb666;
-    background-color: #ddb666;
-    border-radius: 0.6ch;
-
-    color: #ffffff;
-    font-weight: 500;
-    text-align: center;
+    display: inline-block;
+    max-width: 90px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .tag {
@@ -276,6 +288,10 @@ export default {
     font-weight: 400;
     font-size: 14px;
     letter-spacing: 0.4px;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .issue_like_count {
@@ -298,6 +314,9 @@ export default {
     margin-bottom: 10%;
     margin-left: 0px;
     margin-right: 10%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .el-button--medium {
