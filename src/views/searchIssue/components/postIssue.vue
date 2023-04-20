@@ -22,7 +22,7 @@
       <el-row style="margin-top: 30px;">
         <el-col :span="8">
           <el-select v-model="issue.subject" class="search-select"
-                     placeholder="科目">
+                     placeholder="科目" @change="clearSubject">
             <el-option v-for="subject in all_subjects"
                        :key="subject.subject_id" :label="subject.name" :value="subject.subject_id"/>
           </el-select>
@@ -67,6 +67,7 @@ import {
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
 import {getToken} from '@/utils/auth'
 import {upload_public} from "@/api/upload";
+import { isSwitchStatement } from "@babel/types";
 
 export default {
   name: 'PostIssueDialog',
@@ -253,20 +254,33 @@ export default {
     }
   },
   methods: {
+    clearAllItems() {
+      this.issue.title = '';
+      this.issue.subject = null;
+      this.issue.chapter = null;
+      this.issue.anonymous = null;
+      this.content = '点此输入问题...';
+    },
+    clearSubject() {
+      this.issue.chapter = null
+    },
     closeDialog() {
+      if (this.editMode) {
+        this.getIssueInfo()
+      } else {
+        this.clearAllItems();
+      }
       this.$emit('closeDialogEvent');
     },
     loadImage(command) {
       command({src: "https://66.media.tumblr.com/dcd3d24b79d78a3ee0f9192246e727f1/tumblr_o00xgqMhPM1qak053o1_400.gif"})
     },
     /* async */ postIssue() {
-      // console.log(this.issue)
-      // console.log(this.content)
-      // console.log(parseInt(this.issue.anonymous))
       commit_issue(getToken(), this.issue.chapter, this.issue.title,
         this.content, parseInt(this.issue.anonymous)).then(response => {
           console.log(response)
-        this.$emit('closeDialogEvent');
+        this.clearAllItems();
+        this.$emit('closeDialogEvent', true);
         Message({
           message: '发布问题成功',
           type: 'success'

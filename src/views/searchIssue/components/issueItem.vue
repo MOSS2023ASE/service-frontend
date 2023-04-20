@@ -124,6 +124,7 @@ export default {
         answerIssue() {
             adopt_issue(getToken(), this.id).then(response => {
                 console.log(response)
+                this.$emit('refreshEvent');
                 Message({
                   message: '回答问题',
                   type: 'success',
@@ -136,6 +137,7 @@ export default {
         verifyIssue() {
             review_issue(getToken(), this.id).then(response => {
               console.log(response)
+              this.$emit('refreshEvent');
               Message({
                 message: '复审问题',
                 type: 'success',
