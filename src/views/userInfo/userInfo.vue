@@ -14,10 +14,14 @@
               <v-row no-gutters>
                 <v-col :cols="6" class="pl-16">
                   <v-avatar size="150">
-                    <v-img :src="require('@/assets/images/anonymous.jpg')"></v-img>
+                    <v-img :src="avatar">
+                      <template v-slot:placeholder>
+                        <v-img/>
+                      </template>
+                    </v-img>
                   </v-avatar>
                   <div class="mt-4">
-                    <v-btn text color="blue">
+                    <v-btn text color="blue" @click="$refs.input.click()">
                       <v-icon class="ml-n1 mr-1">mdi-pencil</v-icon>
                       <span class="text-h6">修改头像</span>
                     </v-btn>
@@ -34,7 +38,7 @@
                   </v-col>
                   <v-col :cols="12" class="text-left mt-n2">
                     <v-icon color="error">mdi-lock-outline</v-icon>
-                    <v-btn text class="ml-n1" color="error">修改密码</v-btn>
+                    <v-btn text class="ml-n1" color="error" @click="showDialog = true">修改密码</v-btn>
                   </v-col>
                 </v-col>
               </v-row>
@@ -42,6 +46,47 @@
           </v-card>
         </v-col>
         <v-spacer></v-spacer>
+      </v-row>
+      <input ref="input" type="file" name="image" accept="image/*" @change="loadAvatar" style="display: none" />
+
+      <v-row>
+        <v-col>
+          <v-dialog v-model="showDialog" max-width="600px">
+            <v-card>
+              <v-card-title class="text-h5">修改密码</v-card-title>
+              <v-card-text>
+                <v-text-field
+                  v-model="oldPwd"
+                  label="输入旧的密码"
+                  :append-icon="showOldPwd ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="showOldPwd ? 'text' : 'password'"
+                  outlined
+                  dense
+                ></v-text-field>
+                <v-text-field
+                  v-model="newPwd"
+                  label="输入新的密码"
+                  :append-icon="showNewPwd ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="showNewPwd ? 'text' : 'password'"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-card-text>
+              <v-card-actions>
+                <v-row class="mb-4">
+                  <v-spacer></v-spacer>
+                  <v-col class="d-flex justify-center">
+                    <v-btn color="blue" class="white--text" @click="changePwd">提交</v-btn>
+                  </v-col>
+                  <v-col class="d-flex justify-center">
+                    <v-btn color="error" @click="showDialog = false">放弃</v-btn>
+                  </v-col>
+                  <v-spacer></v-spacer>
+                </v-row>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-col>
       </v-row>
 
       <v-row class="mt-8">
@@ -100,34 +145,109 @@
 
 <script>
 import UserIssue from './userIssue'
+import { get_user_info, password_modify, modify_user_info } from '@/api/user';
+import { getToken, getRole } from '@/utils/auth';
+import { Message } from 'element-ui';
+import { upload_public } from '@/api/upload';
 export default {
+  data() {
+    return {
+      userInfo: {},
+      items: [],
+      userType: ['学生', '辅导师', '管理员'],
+      showDialog: false,
+      showOldPwd: false,
+      showNewPwd: false, 
+      oldPwd: '',
+      newPwd: '',
+      avatar: '',
+    }
+  },
   components: {
     UserIssue
   },
-  computed: {
-    items() {
-      return [
-        {
-          icon: 'mdi-fingerprint',
-          type: '学号　　',
-          value: '12345678'
-        },
-        {
-          icon: 'mdi-account-outline',
-          type: '用户名　',
-          value: '士小信'
-        },
-        {
-          icon: 'mdi-email-outline',
-          type: '个人邮箱',
-          value: '12345678@buaa.edu.cn'
-        },
-        {
-          icon: 'mdi-card-account-details-outline',
-          type: '用户类型',
-          value: '学生'
-        }
-      ]
+  mounted() {
+    console.log(this.userInfo);
+    this.getUserInfo();
+  },
+  methods: {
+    getUserInfo() {
+      get_user_info(getToken()).then(response => {
+        console.log(response);
+        this.avatar = response.data.avatar;
+        this.mail = response.data.mail;
+        this.items = [
+          {
+            icon: 'mdi-fingerprint',
+            type: '学号　　',
+            value: response.data.student_id,
+          },
+          {
+            icon: 'mdi-account-outline',
+            type: '用户名　',
+            value: response.data.name,
+          },
+          {
+            icon: 'mdi-email-outline',
+            type: '个人邮箱',
+            value: response.data.mail,
+          },
+          {
+            icon: 'mdi-card-account-details-outline',
+            type: '用户类型',
+            value: this.userType[getRole()],
+          }
+        ];
+        console.log('获取个人信息成功');
+      }).catch(error => {
+        console.log('获取用户信息失败');
+        console.log(error);
+      });
+    },
+    changePwd() {
+      password_modify(getToken(),
+                      this.oldPwd,
+                      this.newPwd).then(response => {
+                        Message({
+                          message: '修改密码成功',
+                          type: 'success'
+                        });
+                        this.showDialog = false;
+                      }).catch(error => {
+                        Message({
+                          message: '修改密码失败',
+                          type: 'error'
+                        });
+                        this.showDialog = false;
+                      });
+    },
+    async loadAvatar(element) {
+      console.log(element.target.files[0]);
+      let formData = new FormData();
+      formData.append('file', element.target.files[0]);
+      console.log(formData);
+      upload_public(formData).then(response => {
+        this.avatar = response.data.url;
+        modify_user_info(getToken(),
+                        this.avatar,
+                        this.mail).then(response => {
+                          this.getUserInfo();
+                          Message({
+                            message: '上传头像成功',
+                            type: 'success'
+                          });
+                        }).catch(error => {
+                          Message({
+                            message: '上传头像失败',
+                            type: 'error'
+                          });
+                        });
+      }).catch(error => {
+        Message({
+          message: '上传头像失败',
+          type: 'error'
+        });
+      });
     }
   }
 }
