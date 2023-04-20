@@ -73,8 +73,8 @@
           :status_trans_permit="issue.status_trans_permit"
           />
           <el-pagination small layout="prev, pager, next"
-              :page-size="this.page_size" :total="issue_count"
-              @prev-click="toPrevPage" @next-click="toNextPage">
+              :page-size="this.page_size" :total="total_page * page_size" :current-page.sync="cur_page"
+              @prev-click="toPrevPage" @next-click="toNextPage" @current-change="toSomePage">
           </el-pagination>
       </v-card>
 </div>
@@ -83,7 +83,6 @@
 <script>
 import IssueItem from "./components/issueItem.vue";
 import PostIssue from "./components/postIssue.vue";
-import {Message} from 'element-ui'
 import {search_issue} from '@/api/issue'
 import {get_all_tags} from '@/api/tag'
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
@@ -324,7 +323,6 @@ export default {
               name: '综合排序'
             },
           ],
-          issue_count: 7,
           cur_page: 1,
           total_page: 2,
           page_size: 10,
@@ -339,11 +337,9 @@ export default {
           this.dialogVisible = true;
       },
       closeDialog() {
-          console.log('click');
           this.dialogVisible = false;
       },
       search() {
-
           if (this.sort_order === null) {
             this.sort_order = 0
           }
@@ -354,14 +350,9 @@ export default {
               console.log('success')
               this.issues = response.data['issue_list']
               this.total_page = response.data['total_page']
-              console.log(this.total_page)
             setTimeout(() => {
               this.listLoading = false
             }, 1.5 * 1000)
-          })
-          Message({
-              message: '搜索',
-              type: 'success',
           })
       },
       initTags() {
@@ -400,28 +391,25 @@ export default {
         })
       },
       getIssues() {
-          // TODO: get issues and issue_count
-          // TODO: 目前的api是按照页请求的，所以不需要slice?
           this.search()
       },
 
       toPrevPage() {
-          // TODO
-          // TODO: 目前的api是按照页请求的，所以不需要slice?
           if (this.cur_page !== 1) {
-              // this.issues = this.all_issues.slice((this.cur_page - 2) * 5, (this.cur_page - 1) * 5);
               this.cur_page -= 1;
               this.search();
           }
       },
 
       toNextPage() {
-          // TODO
           if (this.cur_page !== this.total_page) {
-              // this.issues = this.all_issues.slice(this.cur_page * 5, (this.cur_page + 1) * 5);
               this.cur_page += 1;
               this.search();
           }
+      },
+
+      toSomePage() {
+          this.search();
       }
   },
   created() {
