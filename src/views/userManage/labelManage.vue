@@ -3,9 +3,9 @@
     <v-card>
       <v-card-title class="ml-4">
         标签管理：
-        <v-btn text class="text-h6" @click="goStep(0, year)">学年</v-btn> 
+        <v-btn text class="text-h6" @click="goStep(0)">学年</v-btn> 
         <span v-if="step > 0">/</span>  
-        <v-btn text class="text-h6" v-if="step > 0" @click="goStep(1, year)">科目</v-btn> 
+        <v-btn text class="text-h6" v-if="step > 0" @click="goStep(1)">科目</v-btn> 
         <span v-if="step > 1">/</span>
         <v-btn text class="text-h6" v-if="step > 1">章节</v-btn>
       </v-card-title>
@@ -13,13 +13,13 @@
       <v-card-text>
         <v-row v-if="step === 0">
           <v-col :cols="2" v-for="(year, i) in years" :key="i">
-            <v-btn @click="goStep(1, year)">{{ year }}</v-btn>
+            <v-btn @click="goStep(1)">{{ year }}</v-btn>
             <v-icon class="ml-2" v-if="canRemove" color="red">mdi-close-circle-outline</v-icon>
           </v-col>
         </v-row>
         <v-row v-if="step === 1">
           <v-col :cols="2" v-for="(subject, i) in subjects" :key="i">
-            <v-btn @click="goStep(2, subject)">{{ subject }}</v-btn>
+            <v-btn @click="goStep(2)">{{ subject }}</v-btn>
             <v-icon class="ml-2" v-if="canRemove" color="red">mdi-close-circle-outline</v-icon>
           </v-col>
         </v-row>

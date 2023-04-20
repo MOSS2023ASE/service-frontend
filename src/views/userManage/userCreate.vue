@@ -11,10 +11,10 @@
             <v-divider></v-divider>
             <v-card-text class="align-center pl-16 pr-16" style="height: 300px">
               <v-form>
-                <v-text-field rounded outlined dense label="学号" v-model="user.id"></v-text-field>
+                <v-text-field rounded outlined dense label="学号" v-model="user.student_id"></v-text-field>
                 <v-text-field rounded outlined dense label="用户名" v-model="user.name"></v-text-field>
                 <v-text-field rounded outlined dense label="用户密码" v-model="user.password"></v-text-field>
-                <v-select rounded outlined dense label="用户类型" :items="userType" v-model="user.type"></v-select>
+                <v-select rounded outlined dense label="用户类型" :items="userType" v-model="user.role"></v-select>
               </v-form>
             </v-card-text>
             <v-divider></v-divider>
@@ -75,7 +75,7 @@
         </v-col>
         <v-spacer></v-spacer>
       </v-row>
-      <v-row>
+      <v-row v-if="page === 1">
         <v-col>
           <v-card>
             <el-table
@@ -135,6 +135,8 @@ import UserList from './userList';
 import { readXlsxFile } from '@/utils/file';
 import { Message } from 'element-ui';
 import LabelManage from './labelManage';
+import { batch_register, single_register } from '@/api/admin';
+import { getToken } from '@/utils/auth';
 export default {
   data() {
     return {
@@ -159,9 +161,7 @@ export default {
       if (this.uploadFile !== null) {
         if (['application/vnd.ms-excel', 'application/wps-office.xls'].indexOf(this.uploadFile.type) !== -1) {
           this.canUpload = false;
-          console.log('test1');
           this.parseTable = await readXlsxFile(this.uploadFile);
-          console.log(this.parseTable);
           this.dataTable = await this.getDataTable(this.parseTable);
           this.canUpload = true; 
           this.uploadFile = null;
@@ -185,15 +185,36 @@ export default {
           student_id: table.student_id_list[i],
           name: table.name_list[i],
           password: table.password_list[i],
-          role: table.role_list[i]
+          role: table.role_list[i],
         };
+        table.role_list[i] = this.userType.indexOf(table.role_list[i]);
         data.push(elm);
       }
       return data;
     },
     uploadTable() {
+      batch_register(getToken(), 
+                    this.parseTable.name_list, 
+                    this.parseTable.student_id_list,
+                    this.parseTable.password_list,
+                    this.parseTable.role_list).then(response => {
+                      console.log(response)
+                    }).catch(error => {
+                      console.log('注册用户失败')
+                      console.log(error)
+                    })
     },
     uploadSingle() {
+      single_register(getToken(),
+                    this.user.name,
+                    this.user.student_id,
+                    this.user.password,
+                    this.userType.indexOf(this.user.role)).then(response => {
+                      console.log(response)
+                    }).catch(error => {
+                      console.log('注册用户失败')
+                      console.log(error)
+                    })
     }
   }
 }

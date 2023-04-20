@@ -5,7 +5,8 @@ export function batch_register(
   jwt, //: string,
   name_list, //: Array<string>,
   student_id_list, //: Array<string>,
-  password_list //: Array<string>
+  password_list, //: Array<string>
+  role_list
 ) {
   return request({
     url: '/admins/create_user_batch',
@@ -14,7 +15,8 @@ export function batch_register(
       jwt: jwt,
       name_list: name_list,
       student_id_list: student_id_list,
-      password_list: password_list
+      password_list: password_list,
+      role_list: role_list
     }
   })
 }
@@ -81,7 +83,8 @@ export function single_register(
   jwt, //: string,
   name, //: string,
   student_id, //: string,
-  password //: string
+  password, //: string
+  role
 ) {
   return request({
     url: '/admins/create_user',
@@ -90,7 +93,8 @@ export function single_register(
       jwt: jwt,
       name: name,
       student_id: student_id,
-      password: password
+      password: password,
+      role: role
     }
   })
 }
