@@ -61,7 +61,7 @@
           :title="issue.issue_title"
           :user_name="issue.user_name"
           :user_avatar="issue.user_avatar"
-          :abstract="issue.content.length > 16 ? 
+          :abstract="issue.content.length > 16 ?
                      issue.content.slice(0, 15) + '...' :
                      issue.content"
           :created_at="issue.created_at.slice(0, 16)"
@@ -70,6 +70,7 @@
           :tags="issue.tags"
           :issue_like_count="issue.issue_like_count"
           :issue_comment_count="issue.issue_comment_count"
+          :status_trans_permit="issue.status_trans_permit"
           />
           <el-pagination small layout="prev, pager, next"
               :page-size="this.page_size" :total="issue_count"
