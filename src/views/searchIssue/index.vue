@@ -489,8 +489,9 @@ export default {
 
 .search-select {
   /* width: 14%; */
-  width: 20%;
-  margin-left: 1%;
+  /* margin-left: 1%; */
+  width: 21%;
+  margin-right: 4%;
 }
 
 .search-select /deep/ .el-select__tags {
