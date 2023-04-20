@@ -18,31 +18,31 @@
               <el-input v-model="search_keyword"
                       placeholder="请输入关键词" class="search-keyword"/>
               <div class="search-options">
-                  <el-select v-model="search_tags" class="search-tags"
-                      filterable multiple :multiple-limit="3"
+                  <!-- <el-select v-model="search_tags" class="search-tags"
+                      filterable multiple collapse-tags :multiple-limit="3"
                       placeholder="请输入标签" style="width: 100%;">
                       <el-option v-for="tag in all_tags"
                           :key="tag.tag_id" :label="tag.content" :value="tag.tag_id"/>
-                  </el-select>
+                  </el-select> -->
                 <el-select v-model="sort_order" class="search-select"
                            placeholder="排序方式">
                   <el-option v-for="order in all_orders"
                              :key="order.order_id" :label="order.name" :value="order.order_id"/>
                 </el-select>
-                  <el-select v-model="search_state" class="search-select"
-                             filterable multiple :multiple-limit="6"
-                             placeholder="问题状态">
+                  <el-select v-model="search_state" v-if="this.user_type !== 0"
+                             class="search-select" filterable multiple collapse-tags
+                             :multiple-limit="6" placeholder="问题状态">
                     <el-option v-for="state in all_status"
                                :key="state.status_id" :label="state.name" :value="state.status_id"/>
                   </el-select>
                   <el-select v-model="search_subject" class="search-select"
-                             placeholder="科目">
+                             placeholder="科目" @change="clearSubject">
                     <el-option v-for="subject in all_subjects"
                                :key="subject.subject_id" :label="subject.name" :value="subject.subject_id"/>
                   </el-select>
                   <el-select v-show="this.search_subject !== 0 && this.search_subject !== null"
                              v-model="search_chapter"
-                             filterable multiple :multiple-limit="6"
+                             filterable multiple collapse-tags :multiple-limit="6"
                              class="search-select" placeholder="章节">
                     <el-option v-for="chapter in all_chapters[this.search_subject]"
                                :key="chapter.chapter_id" :label="chapter.name" :value="chapter.chapter_id"/>
@@ -53,7 +53,7 @@
       </v-card>
       <v-card class="issues-table">
           <!--在这里应该最多传三个tag进去，不然显示不了 -->
-          <!-- abstract tags issue_like_count issue_comment_count 目前还没有 -->
+          <!-- tags issue_like_count issue_comment_count 目前还没有 -->
           <IssueItem
           v-for="issue in issues"
           :user_type="user_type"
@@ -335,6 +335,9 @@ export default {
       };
   },
   methods: {
+      clearSubject() {
+          this.search_chapter = []
+      },
       handleClickPost() {
           this.dialogVisible = true;
       },
@@ -485,8 +488,24 @@ export default {
 }
 
 .search-select {
-  width: 14%;
+  /* width: 14%; */
+  width: 20%;
   margin-left: 1%;
+}
+
+.search-select /deep/ .el-select__tags {
+  height: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  flex-wrap: nowrap;
+}
+
+.search-select /deep/ .el-select__tags-text {
+  display: inline-block;
+  max-width: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .issues-table {
