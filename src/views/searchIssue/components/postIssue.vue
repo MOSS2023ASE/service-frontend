@@ -254,10 +254,22 @@ export default {
     }
   },
   methods: {
+    clearAllItems() {
+      this.issue.title = '';
+      this.issue.subject = null;
+      this.issue.chapter = null;
+      this.issue.anonymous = null;
+      this.content = '点此输入问题...';
+    },
     clearSubject() {
       this.issue.chapter = null
     },
     closeDialog() {
+      if (this.editMode) {
+        this.getIssueInfo()
+      } else {
+        this.clearAllItems();
+      }
       this.$emit('closeDialogEvent');
     },
     loadImage(command) {
@@ -267,6 +279,7 @@ export default {
       commit_issue(getToken(), this.issue.chapter, this.issue.title,
         this.content, parseInt(this.issue.anonymous)).then(response => {
           console.log(response)
+        this.clearAllItems();
         this.$emit('closeDialogEvent', true);
         Message({
           message: '发布问题成功',
