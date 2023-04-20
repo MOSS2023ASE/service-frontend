@@ -1,8 +1,8 @@
 <template>
     <div class="issue-item" @click="toIssueDetailView()">
         <div class="author">
-            <!-- 显示头像还没调，暂时都显示默认头像 -->
-            <el-avatar class="user_avatar" :src="require('../../../assets/images/anonymous.jpg')" :key="this.user_avatar" />
+            <el-avatar v-if="this.user_avatar !== null" class="user_avatar" :src="this.user_avatar" :key="this.user_avatar" />
+            <el-avatar v-else class="user_avatar" :src="require('../../../assets/images/anonymous.jpg')" />
             <div class="user_name">{{this.user_name}}</div>
         </div>
         <div class="previews">
@@ -28,22 +28,22 @@
             <li class="tag" v-for="tag in this.tags">{{tag}}</li>
         </div>
         <div class="interactions" v-if="this.user_type === 0">
-            <div class="issue_like_count">
+            <div class="like_count">
                 <v-icon left>
                     mdi-thumb-up-outline
                 </v-icon>
-                <span style="margin: 0px 0px 4px 5px">{{this.issue_like_count}}</span>
+                <span style="margin: 0px 0px 4px 5px">{{this.like_count}}</span>
             </div>
-            <div class="issue_comment_count">
+            <div class="follow_count">
                 <v-icon left>
-                    mdi-message-text-outline
+                    mdi-heart-outline
                 </v-icon>
-                <span style="margin: 0px 0px 4px 5px">{{this.issue_comment_count}}</span>
+                <span style="margin: 0px 0px 4px 5px">{{this.follow_count}}</span>
             </div>
         </div>
-        <div class="interactions" v-if="this.user_type !== 0">
-            <el-button type="warning" style="issue-button" @click.stop="answerIssue">认领回答</el-button>
-            <el-button type="warning" style="issue-button" @click.stop="verifyIssue">认领复审</el-button>
+        <div class="interactions" >
+            <el-button type="warning" v-if="this.status_trans_permit[0] === 1" style="issue-button" @click.stop="answerIssue">认领回答</el-button>
+            <el-button type="warning" v-if="this.status_trans_permit[4] === 1" style="issue-button" @click.stop="verifyIssue">认领复审</el-button>
         </div>
     </div>
 </template>
@@ -96,13 +96,17 @@ export default {
             type: String,
             default: '2022-09-01 00:00'
         },
-        issue_like_count: {
+        like_count: {
             type: Number,
             default: 0
         },
-        issue_comment_count: {
+        follow_count: {
             type: Number,
             default: 0
+        },
+        status_trans_permit: {
+            type: Array,
+            default: [0, 0, 0, 0, 0 ,0, 0]
         }
     },
     data() {
@@ -113,14 +117,8 @@ export default {
     },
     methods: {
         /* async */ toIssueDetailView() {
-            // TODO: call backend API
             //Test issueInfoDetail
             this.$router.push({name: 'issueInfoDetail', params: {issue_id: this.id}})
-            //
-            Message({
-                message: '点击问题',
-                type: 'warning',
-            })
             console.log("to issue detail");
         },
         answerIssue() {
@@ -294,14 +292,14 @@ export default {
     text-overflow: ellipsis;
 }
 
-.issue_like_count {
+.like_count {
     display:flex;
     padding-top: 5px;
     font-weight: 500;
     font-size: 22px;
 }
 
-.issue_comment_count {
+.follow_count {
     display:flex;
 
     padding-top: 30px;
