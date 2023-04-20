@@ -53,7 +53,7 @@
       </v-card>
       <v-card class="issues-table">
           <!--在这里应该最多传三个tag进去，不然显示不了 -->
-          <!-- tags issue_like_count issue_comment_count 目前还没有 -->
+          <!-- tags 目前还没有 -->
           <IssueItem
           v-for="issue in issues"
           :user_type="user_type"
@@ -68,8 +68,8 @@
           :subject="issue.subject_name"
           :chapter="issue.chapter_name"
           :tags="issue.tags"
-          :issue_like_count="issue.issue_like_count"
-          :issue_comment_count="issue.issue_comment_count"
+          :like_count="issue.like_count"
+          :follow_count="issue.follow_count"
           :status_trans_permit="issue.status_trans_permit"
           />
           <el-pagination small layout="prev, pager, next"
@@ -250,8 +250,8 @@ export default {
                   subject_name: '数学分析',
                   chapter_name: '不定积分',
                   tags: ['作业题', '答案勘误'],
-                  issue_like_count: 5,
-                  issue_comment_count: 5
+                  like_count: 5,
+                  follow_count: 5
               },
               {
                   id: 'issue1',
@@ -262,8 +262,8 @@ export default {
                   subject_name: '数据结构',
                   chapter_name: '树',
                   tags: ['debug'],
-                  issue_like_count: 8,
-                  issue_comment_count: 2
+                  like_count: 8,
+                  follow_count: 2
               },
               {
                   id: 'issue2'

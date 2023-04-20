@@ -28,17 +28,17 @@
             <li class="tag" v-for="tag in this.tags">{{tag}}</li>
         </div>
         <div class="interactions" v-if="this.user_type === 0">
-            <div class="issue_like_count">
+            <div class="like_count">
                 <v-icon left>
                     mdi-thumb-up-outline
                 </v-icon>
-                <span style="margin: 0px 0px 4px 5px">{{this.issue_like_count}}</span>
+                <span style="margin: 0px 0px 4px 5px">{{this.like_count}}</span>
             </div>
-            <div class="issue_comment_count">
+            <div class="follow_count">
                 <v-icon left>
-                    mdi-message-text-outline
+                    mdi-heart-outline
                 </v-icon>
-                <span style="margin: 0px 0px 4px 5px">{{this.issue_comment_count}}</span>
+                <span style="margin: 0px 0px 4px 5px">{{this.follow_count}}</span>
             </div>
         </div>
         <div class="interactions" >
@@ -96,11 +96,11 @@ export default {
             type: String,
             default: '2022-09-01 00:00'
         },
-        issue_like_count: {
+        like_count: {
             type: Number,
             default: 0
         },
-        issue_comment_count: {
+        follow_count: {
             type: Number,
             default: 0
         },
@@ -292,14 +292,14 @@ export default {
     text-overflow: ellipsis;
 }
 
-.issue_like_count {
+.like_count {
     display:flex;
     padding-top: 5px;
     font-weight: 500;
     font-size: 22px;
 }
 
-.issue_comment_count {
+.follow_count {
     display:flex;
 
     padding-top: 30px;
