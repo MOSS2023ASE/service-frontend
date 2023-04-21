@@ -26,7 +26,8 @@
         <v-row v-if="step === 2">
           <v-col :cols="2" v-for="(chapter, i) in chapters" :key="i">
             <v-btn>{{ chapter.name }}</v-btn>
-            <v-icon class="ml-2" v-if="canRemove" color="red">mdi-close-circle-outline</v-icon>
+            <v-icon class="ml-2" v-if="canRemove" color="red"
+            @click="removeChapter(chapter.chapter_id)">mdi-close-circle-outline</v-icon>
           </v-col>
         </v-row>
       </v-card-text>
@@ -77,7 +78,7 @@
 </template>
 
 <script>
-import { create_chapter, create_subject, get_all_subjects, get_subject_all_chapters } from '@/api/subject';
+import { create_chapter, create_subject, delete_chapter, get_all_subjects, get_subject_all_chapters } from '@/api/subject';
 import { getToken } from '@/utils/auth';
 export default {
   data() {
@@ -160,6 +161,16 @@ export default {
                         console.log('创建失败');
                       });
       }
+    },
+    removeChapter(chapter_id) {
+      delete_chapter(getToken(),
+                    chapter_id).then(response => {
+                      console.log('删除成功');
+                      // this.getChapter(this.record.subject.subject_id);
+                    }).catch(error => {
+                      console.log('删除失败');
+                      console.log(error);
+                    });
     }
   }
 }
