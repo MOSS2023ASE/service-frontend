@@ -2,7 +2,7 @@
   <v-container>
     <v-card>
       <v-card-title class="ml-4">
-        标签管理：
+        章节科目管理：
         <v-btn text class="text-h6" @click="goStep(0)">学年</v-btn> 
         <span v-if="step > 0">/</span>  
         <v-btn text class="text-h6" v-if="step > 0" @click="goStep(1)">科目</v-btn> 
@@ -13,19 +13,19 @@
       <v-card-text>
         <v-row v-if="step === 0">
           <v-col :cols="2" v-for="(year, i) in years" :key="i">
-            <v-btn @click="goStep(1)">{{ year }}</v-btn>
+            <v-btn @click="goStep(1, year)">{{ year.content }}</v-btn>
             <v-icon class="ml-2" v-if="canRemove" color="red">mdi-close-circle-outline</v-icon>
           </v-col>
         </v-row>
         <v-row v-if="step === 1">
           <v-col :cols="2" v-for="(subject, i) in subjects" :key="i">
-            <v-btn @click="goStep(2)">{{ subject }}</v-btn>
+            <v-btn @click="goStep(2, subject)">{{ subject.name }}</v-btn>
             <v-icon class="ml-2" v-if="canRemove" color="red">mdi-close-circle-outline</v-icon>
           </v-col>
         </v-row>
         <v-row v-if="step === 2">
           <v-col :cols="2" v-for="(chapter, i) in chapters" :key="i">
-            <v-btn>{{ chapter }}</v-btn>
+            <v-btn>{{ chapter.name }}</v-btn>
             <v-icon class="ml-2" v-if="canRemove" color="red">mdi-close-circle-outline</v-icon>
           </v-col>
         </v-row>
@@ -35,19 +35,50 @@
         <v-row>
           <v-spacer></v-spacer>
           <v-col :cols="2">
-            <v-btn color="blue" class="white--text">添加标签</v-btn>
+            <v-btn color="blue" class="white--text" v-if="step" @click="showDialog = true">
+            添加{{ (step === 1) ? "科目" : "章节" }}
+            </v-btn>
           </v-col>
           <v-col :cols="2">
-            <v-btn color="red" class="white--text" @click="canRemove = !canRemove">删除标签</v-btn>
+            <v-btn color="red" class="white--text" @click="canRemove = !canRemove" v-if="step">
+            添加{{ (step === 1) ? "科目" : "章节" }}
+            </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
+        <v-dialog v-model="showDialog" max-width="300px">
+          <v-card>
+            <v-card-title>添加{{ (step === 1) ? "科目" : "章节" }}</v-card-title>
+            <v-card-text>
+              <v-text-field
+                  v-model="newContent"
+                  label="新建内容"
+                  outlined
+                  dense
+                ></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <v-row class="mb-4">
+                <v-spacer></v-spacer>
+                <v-col class="d-flex justify-center">
+                  <v-btn color="blue" class="white--text" @click="submitContent">提交</v-btn>
+                </v-col>
+                <v-col class="d-flex justify-center">
+                  <v-btn color="error" @click="showDialog = false">放弃</v-btn>
+                </v-col>
+                <v-spacer></v-spacer>
+              </v-row>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-card-actions>
     </v-card>
   </v-container>
 </template>
 
 <script>
+import { create_chapter, create_subject, get_all_subjects, get_subject_all_chapters } from '@/api/subject';
+import { getToken } from '@/utils/auth';
 export default {
   data() {
     return {
@@ -55,34 +86,79 @@ export default {
       subjects: [],
       chapters: [],
       step: 0,
-      canRemove: false
+      canRemove: false,
+      record: {},
+      showDialog: false,
+      newContent: "",
     }
   },
   mounted() {
-    this.years = this.getYear();
+    this.getYear();
   },
   methods: {
     getYear() {
-      let years = ['大一上学期', '大一下学期', '大二上学期', '大二下学期'];
-      return years;
+      this.years = [{year_id: 2,
+                    content: '大一上学期'},
+                   {year_id: 3,
+                    content: '大一下学期'}]; 
     },
-    getSubject() {
-      let subjects = ['数学分析', '高等代数', '程序设计'];
-      return subjects;
+    getSubject(year_id) {
+      get_all_subjects(getToken(),
+                      year_id).then(response => {
+                        this.subjects = response.data.subject_list;
+                        console.log('获取学科成功');
+                      }).catch(error => {
+                        console.log('获取学科失败');
+                        console.log(error);
+                      });
     },
-    getChapter() {
-      let chapters = ['一元微积分', '多元微积分', '导数'];
-      return chapters;
+    getChapter(subject_id) {
+      get_subject_all_chapters(getToken(),
+                              subject_id).then(response => {
+                                this.subjects = response.data.chapter_list;
+                                console.log('获取章节成功');
+                              }).catch(error => {
+                                console.log('获取章节失败');
+                                console.log(error);
+                              });
     },
-    goStep(step) {
+    goStep(step, target) {
       this.canRemove = false;
       this.step = step;
       if (step === 0) {
-        this.years = this.getYear();
+        this.record = {};
+        this.getYear();
       } else if (step === 1) {
-        this.subjects = this.getSubject();
+        this.record.year = target;
+        this.getSubject();
       } else if (step === 2) {
-        this.chapters = this.getChapter();
+        this.record.subject = target;
+        this.getChapter();
+      }
+    },
+    submitContent() {
+      if (this.step === 1) {
+        create_subject(getToken(),
+                      this.newContent,
+                      "",
+                      this.record.year.year_id).then(response => {
+                        console.log('创建成功');
+                        // this.getSubject(this.record.year.year_id);
+                      }).catch(error => {
+                        console.log(error);
+                        console.log('创建失败');
+                      });
+      } else if (this.step === 2) {
+        create_chapter(getToken(),
+                      this.newContent,
+                      "",
+                      this.record.subject.subject_id).then(response => {
+                        console.log('创建成功');
+                        // this.getChapter(this.record.subject.subject_id);
+                      }).catch(error => {
+                        console.log(error);
+                        console.log('创建失败');
+                      });
       }
     }
   }
