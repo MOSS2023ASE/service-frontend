@@ -89,7 +89,7 @@
         </v-col>
       </v-row>
 
-      <v-row class="mt-8">
+      <v-row class="mt-8" v-if="role === 0">
         <v-spacer></v-spacer>
         <v-col :cols="10">
           <v-card>
@@ -106,7 +106,7 @@
         <v-spacer></v-spacer>
       </v-row>
 
-      <v-row class="mt-8">
+      <v-row class="mt-8" v-if="role === 1">
         <v-spacer></v-spacer>
         <v-col :cols="10">
           <v-card>
@@ -123,7 +123,7 @@
         <v-spacer></v-spacer>
       </v-row>
 
-      <v-row class="mt-8">
+      <v-row class="mt-8" v-if="role === 1">
         <v-spacer></v-spacer>
         <v-col :cols="10">
           <v-card>
@@ -134,6 +134,23 @@
             <v-divider></v-divider>
             <v-card-text class="mt-n4">
               <user-issue :type="3"></user-issue>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-spacer></v-spacer>
+      </v-row>
+
+      <v-row class="mt-8">
+        <v-spacer></v-spacer>
+        <v-col :cols="10">
+          <v-card>
+            <v-card-title>
+              <v-icon>mdi-file-question-outline</v-icon>
+              <span class="ml-3">收藏的问题</span>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text class="mt-n4">
+              <user-issue :type="4"></user-issue>
             </v-card-text>
           </v-card>
         </v-col>
@@ -161,6 +178,7 @@ export default {
       oldPwd: '',
       newPwd: '',
       avatar: '',
+      role: 0, 
     }
   },
   components: {
@@ -176,6 +194,7 @@ export default {
         console.log(response);
         this.avatar = response.data.avatar;
         this.mail = response.data.mail;
+        this.role = getRole();
         this.items = [
           {
             icon: 'mdi-fingerprint',

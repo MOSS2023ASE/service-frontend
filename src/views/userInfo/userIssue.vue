@@ -1,22 +1,21 @@
 <template>
   <el-table
-    :data="issueList"
+    :data="issue_list"
     style="width: 100%"
-    :default-sort = "{prop: 'date', order: 'descending'}"
+    :default-sort = "{prop: 'create_at', order: 'descending'}"
     >
     <el-table-column
-      prop="date"
+      prop="create_at"
       label="提出时间"
       sortable
       align="center">
     </el-table-column>
     <el-table-column
-      prop="name"
+      prop="title"
       label="问题名称"
       align="center">
     </el-table-column>
     <el-table-column
-      prop="address"
       label="操作"
       align="center">
       <template slot-scope="scope">
@@ -30,15 +29,12 @@
 </template>
 
 <script>
-import { get_adopt_issue, get_ask_issue, get_follow_issue, get_review_issue } from '@/api/user'
-import { getToken } from '@/utils/auth'
+import { get_adopt_issue, get_ask_issue, get_follow_issue, get_review_issue } from '@/api/user';
+import { getToken } from '@/utils/auth';
   export default {
     data() {
       return {
-        ask_issue: [],
-        review_issue: [],
-        adopt_issue: [],
-        follow_issue: []
+        issue_list: []
       }
     },
     props: ['type'],
@@ -51,10 +47,10 @@ import { getToken } from '@/utils/auth'
         },
         getAskIssue() {
           get_ask_issue(getToken(),
-                        0,
+                        1,
                         10).then(response => {
                           console.log('查询提问issue成功');
-                          this.ask_issue = response.data.issue_list;
+                          this.issue_list = response.data.issue_list;
                         }).catch(error => {
                           console.log(error);
                           console.log('查询提问issue失败');
@@ -62,10 +58,10 @@ import { getToken } from '@/utils/auth'
         },
         getReviewIssue() {
           get_review_issue(getToken(),
-                          0,
+                          1,
                           10).then(response => {
                             console.log('查询认领复审的issue');
-                            this.review_issue = response.data.issue_list;
+                            this.issue_list = response.data.issue_list;
                           }).catch(error => {
                             console.log(error);
                             console.log('查询认领复审的issue失败');
@@ -73,10 +69,10 @@ import { getToken } from '@/utils/auth'
         },
         getAdoptIssue() {
           get_adopt_issue(getToken(),
-                          0,
+                          1,
                           10).then(response => {
                             console.log('查询认领的issue成功');
-                            this.adopt_issue = response.data.issue_list;
+                            this.issue_list = response.data.issue_list;
                           }).catch(error => {
                             console.log(error);
                             console.log('查询认领的issue失败');
@@ -84,10 +80,10 @@ import { getToken } from '@/utils/auth'
         },
         getFollowIssue() {
           get_follow_issue(getToken(),
-                          0,
+                          1,
                           10).then(response => {
                             console.log('查询收藏的issue成功');
-                            this.follow_issue = response.data.issue_list;
+                            this.issue_list = response.data.issue_list;
                           }).catch(error => {
                             console.log(error);
                             console.log('查询收藏的issue失败');
@@ -95,10 +91,15 @@ import { getToken } from '@/utils/auth'
         }
     },
     mounted() {
-      this.getAskIssue();
-      this.getFollowIssue();
-      this.getAdoptIssue(); 
-      this.getReviewIssue();
+      if (this.type === 1) {
+        this.getAskIssue();
+      } else if (this.type === 2) {
+        this.getFollowIssue();
+      } else if (this.type === 3) {
+        this.getAdoptIssue(); 
+      } else if (this.type === 4) {
+        this.getReviewIssue();
+      }
     }
   }
 </script>
