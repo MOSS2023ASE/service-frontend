@@ -5,7 +5,7 @@
         章节科目管理：
         <v-btn text class="text-h6" @click="goStep(0)">学年</v-btn> 
         <span v-if="step > 0">/</span>  
-        <v-btn text class="text-h6" v-if="step > 0" @click="goStep(1)">科目</v-btn> 
+        <v-btn text class="text-h6" v-if="step > 0" @click="goStep(1, record.year)">科目</v-btn> 
         <span v-if="step > 1">/</span>
         <v-btn text class="text-h6" v-if="step > 1">章节</v-btn>
       </v-card-title>
@@ -41,8 +41,8 @@
             </v-btn>
           </v-col>
           <v-col :cols="2">
-            <v-btn color="red" class="white--text" @click="canRemove = !canRemove" v-if="step">
-            添加{{ (step === 1) ? "科目" : "章节" }}
+            <v-btn color="red" class="white--text" @click="canRemove = !canRemove" v-if="step === 2">
+            删除{{ (step === 1) ? "科目" : "章节" }}
             </v-btn>
           </v-col>
           <v-spacer></v-spacer>
@@ -98,9 +98,9 @@ export default {
   },
   methods: {
     getYear() {
-      this.years = [{year_id: 2,
+      this.years = [{year_id: 1,
                     content: '大一上学期'},
-                   {year_id: 3,
+                   {year_id: 2,
                     content: '大一下学期'}]; 
     },
     getSubject(year_id) {
@@ -116,8 +116,9 @@ export default {
     getChapter(subject_id) {
       get_subject_all_chapters(getToken(),
                               subject_id).then(response => {
-                                this.subjects = response.data.chapter_list;
+                                this.chapters = response.data.chapter_list;
                                 console.log('获取章节成功');
+                                console.log(response.data.chapter_list);
                               }).catch(error => {
                                 console.log('获取章节失败');
                                 console.log(error);
@@ -131,10 +132,10 @@ export default {
         this.getYear();
       } else if (step === 1) {
         this.record.year = target;
-        this.getSubject();
+        this.getSubject(target.year_id);
       } else if (step === 2) {
         this.record.subject = target;
-        this.getChapter();
+        this.getChapter(target.subject_id);
       }
     },
     submitContent() {
@@ -144,7 +145,7 @@ export default {
                       "",
                       this.record.year.year_id).then(response => {
                         console.log('创建成功');
-                        // this.getSubject(this.record.year.year_id);
+                        this.getSubject(this.record.year.year_id);
                       }).catch(error => {
                         console.log(error);
                         console.log('创建失败');
@@ -155,7 +156,8 @@ export default {
                       "",
                       this.record.subject.subject_id).then(response => {
                         console.log('创建成功');
-                        // this.getChapter(this.record.subject.subject_id);
+                        this.getChapter(this.record.subject.subject_id);
+                        this.showDialog = false; 
                       }).catch(error => {
                         console.log(error);
                         console.log('创建失败');
