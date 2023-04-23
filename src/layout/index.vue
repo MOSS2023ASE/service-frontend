@@ -66,7 +66,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('user/forceGetInfo')////如果后端支持权限改成getInfo
+    this.$store.dispatch('user/getInfo')////如果后端支持权限改成getInfo
   },
   methods: {
     handleClickOutside() {

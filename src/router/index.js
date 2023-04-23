@@ -89,7 +89,7 @@ export const asyncRoutes = [
         path: 'manage',
         name: 'manage',
         component: () => import('@/views/userManage/userCreate'),
-        meta: {title: '用户管理', icon: 'el-icon-s-tools'}
+        meta: {title: '用户管理', icon: 'el-icon-s-tools',roles:[1,2]}
       }
     ]
   },

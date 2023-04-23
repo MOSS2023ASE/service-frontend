@@ -1,4 +1,4 @@
-import {user_login, user_logout, getInfo, register, getProfile} from '@/api/user'
+import {user_login, user_logout, getInfo, register, getProfile, get_user_info} from '@/api/user'
 import {
   getToken,
   setToken,
@@ -115,27 +115,26 @@ const actions = {
   // get user info
   getInfo({commit, state}) {
     return new Promise((resolve, reject) => {
-      getProfile({user_id: state.user_id}).then(response => {
-        const {data} = response
-
+      let jwt = state.token
+      get_user_info(jwt).then(response=>{
+        const data = response.data
+        console.log(data)
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-
-        let {user_role, user_name, user_pic} = data
-
-        //commit('SET_ROLES', roles)
+        let user_id = response.data.user_id
+        let student_id = response.data.student_id
+        let name = response.data.name
+        let mail = response.data.mail
+        let avatar = response.data.avatar
+        let user_role = response.data.role
+        commit('SET_NAME', name)
         let roles = [user_role]
-        commit('SET_NAME', user_name)
-        if (user_pic === null) {
-          user_pic = "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-        }
-        commit('SET_AVATAR', user_pic)
+        commit('SET_AVATAR', avatar)
         commit('SET_ROLES', roles)
         console.log("COMMIT ROLE:" + state.roles)
-        //commit('SET_INTRODUCTION', introduction)
         resolve(data)
-      }).catch(error => {
+      }).catch(error=>{
         reject(error)
       })
     })
@@ -185,7 +184,7 @@ const actions = {
     commit('SET_TOKEN', token)
     setToken(token)
 
-    const {roles} = await dispatch('getInfo')
+    const {roles} = await dispatch('forcegGetInfo')
 
     resetRouter()
 

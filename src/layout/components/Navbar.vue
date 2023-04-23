@@ -43,16 +43,9 @@
             <i class="el-icon-caret-bottom"/>
           </div>
           <el-dropdown-menu slot="dropdown">
-            <router-link to="/index2">
-              <el-dropdown-item>首页</el-dropdown-item>
-            </router-link>
             <router-link to="/userInfo">
               <el-dropdown-item>我的信息</el-dropdown-item>
             </router-link>
-            <router-link to="/favorDish">
-              <el-dropdown-item>我的收藏</el-dropdown-item>
-            </router-link>
-            <el-dropdown-item divided @click.native="showNotify">我的通知</el-dropdown-item>
             <el-dropdown-item divided @click.native="logout">
               <span style="display:block;">退出登录</span>
             </el-dropdown-item>
