@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <v-card max-width="1600px" flat>
+      <v-card flat>
         <v-container fluid>
           <v-card
             outlined
@@ -58,16 +58,16 @@
                   </v-icon>
                   {{ this.follows }}
                 </v-btn>
-                <v-btn v-show="this.allow_comment === 1" text @click="edit()">编辑</v-btn>
-                <v-btn v-show="this.status_trans_permit[1] === 1" text @click="close()">关闭</v-btn>
-                <v-btn v-show="this.status_trans_permit[2] === 1" text @click="reject()">拒绝辅导师回答</v-btn>
-                <v-btn v-show="this.status_trans_permit[3] === 1" text @click="agree()">同意辅导师回答</v-btn>
+                <v-btn v-show="this.allow_comment === 1" outlined @click="edit()" color="green">编辑</v-btn>
+                <v-btn v-show="this.status_trans_permit[1] === 1" outlined @click="close()" color="deep-orange">关闭</v-btn>
+                <v-btn v-show="this.status_trans_permit[2] === 1" outlined @click="reject()" color="red">拒绝辅导师回答</v-btn>
+                <v-btn v-show="this.status_trans_permit[3] === 1" outlined @click="agree()" color="blue">同意辅导师回答</v-btn>
 
-                <v-btn v-show="this.status_trans_permit[0] === 1" text @click="adopt()">认领问题</v-btn>
-                <v-btn v-show="this.status_trans_permit[4] === 1" text @click="review()">复审问题</v-btn>
-                <v-btn v-show="this.status_trans_permit[5] === 1" text @click="readopt()">重新认领</v-btn>
-                <v-btn v-show="this.status_trans_permit[6] === 1" text @click="validIssue()">有效问题</v-btn>
-                <v-btn v-show="this.status_trans_permit[6] === 1" text @click="invalidIssue()">无效问题</v-btn>
+                <v-btn v-show="this.status_trans_permit[0] === 1" outlined @click="adopt()" color="blue">认领问题</v-btn>
+                <v-btn v-show="this.status_trans_permit[4] === 1" outlined @click="review()" color="green">复审问题</v-btn>
+                <v-btn v-show="this.status_trans_permit[5] === 1" outlined @click="readopt()" color="cyan">重新认领</v-btn>
+                <v-btn v-show="this.status_trans_permit[6] === 1" outlined @click="validIssue()" color="green">有效问题</v-btn>
+                <v-btn v-show="this.status_trans_permit[6] === 1" outlined @click="invalidIssue()" color="red">无效问题</v-btn>
               </v-card-actions>
             </v-row>
             <br/>
@@ -87,7 +87,7 @@
 
                 <v-stepper-step step="3">已认领复审</v-stepper-step>
                 <v-divider></v-divider>
-                <v-stepper-step step="4">有效问题</v-stepper-step>
+                <v-stepper-step step="4" :complete="this.status === 4" color="success">有效问题</v-stepper-step>
 
                 <v-divider></v-divider>
                 <v-stepper-step :rules="[() => this.status !== 5]" step="5">无效问题</v-stepper-step>
@@ -583,6 +583,7 @@ export default {
       const html = this.$refs.editor.getHtml();
       let jwt = this.$store.state.user.token
       create_comment(jwt, this.issue_id, html).then(response => {
+        this.editor_content = ''
         this.initissueComment()
       }).catch(err => {
         this.$notify({
