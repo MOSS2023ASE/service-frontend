@@ -56,7 +56,7 @@ export function delete_chapter(
 ) {
   return request({
     url: '/chapter/delete',
-    method: 'post',
+    method: 'delete',
     data: {
       jwt: jwt,
       chapter_id: chapter_id
