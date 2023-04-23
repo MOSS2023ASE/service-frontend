@@ -146,6 +146,7 @@ export default {
                       this.record.year.year_id).then(response => {
                         console.log('创建成功');
                         this.getSubject(this.record.year.year_id);
+                        this.newContent = ""; 
                       }).catch(error => {
                         console.log(error);
                         console.log('创建失败');
@@ -165,10 +166,11 @@ export default {
       }
     },
     removeChapter(chapter_id) {
+      console.log(chapter_id);
       delete_chapter(getToken(),
                     chapter_id).then(response => {
                       console.log('删除成功');
-                      // this.getChapter(this.record.subject.subject_id);
+                      this.getChapter(this.record.subject.subject_id);
                     }).catch(error => {
                       console.log('删除失败');
                       console.log(error);
