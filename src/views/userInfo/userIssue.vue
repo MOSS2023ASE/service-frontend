@@ -94,11 +94,11 @@ import { getToken } from '@/utils/auth';
       if (this.type === 1) {
         this.getAskIssue();
       } else if (this.type === 2) {
-        this.getFollowIssue();
-      } else if (this.type === 3) {
         this.getAdoptIssue(); 
-      } else if (this.type === 4) {
+      } else if (this.type === 3) {
         this.getReviewIssue();
+      } else if (this.type === 4) {
+        this.getFollowIssue();
       }
     }
   }
