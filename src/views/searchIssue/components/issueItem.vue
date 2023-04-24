@@ -251,7 +251,7 @@ export default {
     font-size: 22px;
     letter-spacing: 1.5px;
     display: inline-block;
-    max-width: 260px;
+    max-width: 220px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -264,7 +264,7 @@ export default {
     font-size: 14px;
     letter-spacing: 1px;
     display: inline-block;
-    max-width: 260px;
+    max-width: 220px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
