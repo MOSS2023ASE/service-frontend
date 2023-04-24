@@ -7,12 +7,32 @@
         </div>
         <div class="previews">
             <div style="display: flex;">
-                <div class="title">{{this.title}}</div>
-                <div class="time">
-                    {{this.created_at.slice(0, 10)}} {{this.created_at.slice(11, 16)}}
+                <div style="display: flex; flex-direction: column;">
+                    <div class="title">{{this.title}}</div>
+                    <div class="content">{{this.abstract}}</div>
+                </div>
+                <div class="time-state">
+                    <div>{{this.created_at.slice(0, 10)}} {{this.created_at.slice(11, 16)}}</div>
+                    <div v-if="this.status === 0" class="state0">
+                        [未认领回答]
+                    </div>
+                    <div v-if="this.status === 1" class="state1">
+                        [已认领回答]
+                    </div>
+                    <div v-if="this.status === 2" class="state2">
+                        [未认领复审]
+                    </div>
+                    <div v-if="this.status === 3" class="state3">
+                        [已认领复审]
+                    </div>
+                    <div v-if="this.status === 4" class="state4">
+                        [有效提问]
+                    </div>
+                    <div v-if="this.status === 5" class="state5">
+                        [无效提问]
+                    </div>
                 </div>
             </div>
-            <div class="content">{{this.abstract}}</div>
             <div class="subject-chapter">
             <el-row style="width: 100%">
             <el-col :span="10">
@@ -107,6 +127,10 @@ export default {
         status_trans_permit: {
             type: Array,
             default: [0, 0, 0, 0, 0 ,0, 0]
+        },
+        status: {
+            type: Number,
+            default: 0
         }
     },
     data() {
@@ -227,7 +251,7 @@ export default {
     font-size: 22px;
     letter-spacing: 1.5px;
     display: inline-block;
-    max-width: 250px;
+    max-width: 260px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -240,7 +264,7 @@ export default {
     font-size: 14px;
     letter-spacing: 1px;
     display: inline-block;
-    max-width: 400px;
+    max-width: 260px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -279,8 +303,7 @@ export default {
     font-weight: 500;
     text-align: center;
 }
-
-.time {
+.time-state {
     margin-top: 3px;
     margin-left: auto;
     margin-right: 3%;
@@ -292,6 +315,37 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center;
+}
+
+.state0 {
+    margin-top: 5px;
+    color: #332e2e;
+}
+
+.state1 {
+    margin-top: 5px;
+    color: #e1b92c;
+}
+
+.state2 {
+    margin-top: 5px;
+    color: #e69be6;
+}
+
+.state3 {
+    margin-top: 5px;
+    color: #3636da;
+}
+
+.state4 {
+    margin-top: 5px;
+    color: #4c9f4c
+}
+
+.state5 {
+    margin-top: 5px;
+    color: #d64646;
 }
 
 .like_count {

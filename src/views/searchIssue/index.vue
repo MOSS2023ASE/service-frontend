@@ -71,6 +71,7 @@
           :like_count="issue.like_count"
           :follow_count="issue.follow_count"
           :status_trans_permit="issue.status_trans_permit"
+          :status="issue.status"
           @refreshEvent="refresh" 
           />
           <el-pagination small layout="prev, pager, next"
