@@ -93,7 +93,7 @@
                 >登录
                 </el-button>
               </el-col>
-              <el-col
+              <!-- <el-col
                 style="display: flex;justify-content: end">
                 <el-button
                   :loading="loading"
@@ -102,7 +102,7 @@
                   @click="register"
                 >注册
                 </el-button>
-              </el-col>
+              </el-col> -->
             </el-row>
 
 
@@ -191,6 +191,13 @@ export default {
   },
   created() {
     // window.addEventListener('storage', this.afterQRScan)
+    const _this = this;
+    document.onkeydown = function(e) {
+      let key = window.event.keyCode;
+      if (key == 13) {
+        _this.handleLogin();
+      }
+    };
   },
   mounted() {
     if (this.loginForm.username === '') {
