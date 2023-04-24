@@ -347,6 +347,9 @@ export default {
           if (this.sort_order === null) {
             this.sort_order = 0
           }
+          if (this.user_type === 0) {
+            this.search_state = [4]
+          }
           search_issue(getToken(), this.search_keyword, this.search_tags,
             this.search_state, this.search_chapter, this.sort_order,
             this.cur_page, this.page_size).then(response => {
