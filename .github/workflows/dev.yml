@@ -1,0 +1,41 @@
+name: Build and Deploy to Tencent Cloud
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          file: Dockerfile_dev
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_NAME }}:latest
+          # tags: your-dockerhub-username/your-repo-name:latest
+
+      - name: Deploy to Tencent Cloud server
+        # 这是最后一个步骤使用的GitHub Action，这里使用appleboy/ssh-action@master来通过SSH连接到腾讯云服务器并执行命令
+        uses: appleboy/ssh-action@master
+        # 这是一些步骤需要的参数，这里需要提供腾讯云服务器的IP地址，SSH密钥，以及要执行的命令
+        with:
+          host: ${{ secrets.CLOUD_HOST}}
+          username: ${{ secrets.CLOUD_USERNAME }}
+          password: ${{ secrets.CLOUD_PASSWORD }}
+          port: ${{ secrets.CLOUD_PORT }}
+          script: |
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_NAME }}:latest # 这是一个命令，用于从DockerHub拉取构建好的镜像
+            sudo docker stop ${{ secrets.DOCKER_HUB_REPO_NAME }} || true # 这是一个命令，用于停止已经运行的容器，如果没有则忽略错误
+            sudo docker rm ${{ secrets.DOCKER_HUB_REPO_NAME }} || true # 这是一个命令，用于删除已经停止的容器，如果没有则忽略错误
+            sudo docker run -d --name ${{ secrets.DOCKER_HUB_REPO_NAME }} -p 9527:80 ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_NAME }}:latest # 这是一个命令，用于运行新的容器，并将容器的80端口映射到服务器的9527端口
