@@ -1,8 +1,8 @@
-name: Build and Deploy to Tencent Cloud
+name: Build and Deploy to Tencent Cloud Production
 on:
   push:
     branches:
-      - dev
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,10 +19,10 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          file: Dockerfile_dev
+          file: Dockerfile_prod
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_NAME }}:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_PROD_NAME }}:latest
           # tags: your-dockerhub-username/your-repo-name:latest
 
       - name: Deploy to Tencent Cloud server
@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.CLOUD_PASSWORD }}
           port: ${{ secrets.CLOUD_PORT }}
           script: |
-            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_NAME }}:latest # 这是一个命令，用于从DockerHub拉取构建好的镜像
-            sudo docker stop ${{ secrets.DOCKER_HUB_REPO_NAME }} || true # 这是一个命令，用于停止已经运行的容器，如果没有则忽略错误
-            sudo docker rm ${{ secrets.DOCKER_HUB_REPO_NAME }} || true # 这是一个命令，用于删除已经停止的容器，如果没有则忽略错误
-            sudo docker run -d --name ${{ secrets.DOCKER_HUB_REPO_NAME }} -p 9527:80 ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_NAME }}:latest # 这是一个命令，用于运行新的容器，并将容器的80端口映射到服务器的9527端口
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_PROD_NAME }}:latest # 这是一个命令，用于从DockerHub拉取构建好的镜像
+            sudo docker stop ${{ secrets.DOCKER_HUB_REPO_PROD_NAME }} || true # 这是一个命令，用于停止已经运行的容器，如果没有则忽略错误
+            sudo docker rm ${{ secrets.DOCKER_HUB_REPO_PROD_NAME }} || true # 这是一个命令，用于删除已经停止的容器，如果没有则忽略错误
+            sudo docker run -d --name ${{ secrets.DOCKER_HUB_REPO_PROD_NAME }} -p 80:80 -v ${{ secrets.CLOUD_PIC }}:/usr/share/nginx/html/pic/ ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_PROD_NAME }}:latest # 这是一个命令，用于运行新的容器，并将容器的80端口映射到服务器的80端口，同时挂载静态资源访问
