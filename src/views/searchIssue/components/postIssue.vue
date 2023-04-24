@@ -238,7 +238,6 @@ export default {
   mounted() {
     if (this.editMode) {
       console.log('editmode')
-      console.log(this.user_type)
       this.getIssueInfo()
     }
   },
