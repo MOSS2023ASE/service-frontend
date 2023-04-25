@@ -80,6 +80,7 @@
 <script>
 import { create_chapter, create_subject, delete_chapter, get_all_subjects, get_subject_all_chapters } from '@/api/subject';
 import { getToken } from '@/utils/auth';
+import { Message } from 'element-ui';
 export default {
   data() {
     return {
@@ -99,29 +100,29 @@ export default {
   methods: {
     getYear() {
       this.years = [{year_id: 1,
-                    content: '大一上学期'},
-                   {year_id: 2,
                     content: '大一下学期'}]; 
     },
     getSubject(year_id) {
       get_all_subjects(getToken(),
                       year_id).then(response => {
                         this.subjects = response.data.subject_list;
-                        console.log('获取学科成功');
                       }).catch(error => {
-                        console.log('获取学科失败');
-                        console.log(error);
+                        Message({
+                          message: '获取学科失败',
+                          type: 'error'
+                        });
                       });
     },
     getChapter(subject_id) {
       get_subject_all_chapters(getToken(),
                               subject_id).then(response => {
                                 this.chapters = response.data.chapter_list;
-                                console.log('获取章节成功');
                                 console.log(response.data.chapter_list);
                               }).catch(error => {
-                                console.log('获取章节失败');
-                                console.log(error);
+                                Message({
+                                  message: '获取章节失败',
+                                  type: 'error'
+                                });
                               });
     },
     goStep(step, target) {
@@ -144,24 +145,34 @@ export default {
                       this.newContent,
                       "",
                       this.record.year.year_id).then(response => {
-                        console.log('创建成功');
+                        Message({
+                          message: '创建成功',
+                          type: 'success'
+                        });
                         this.getSubject(this.record.year.year_id);
                         this.newContent = ""; 
                       }).catch(error => {
-                        console.log(error);
-                        console.log('创建失败');
+                        Message({
+                          message: '创建失败',
+                          type: 'error'
+                        });
                       });
       } else if (this.step === 2) {
         create_chapter(getToken(),
                       this.newContent,
                       "",
                       this.record.subject.subject_id).then(response => {
-                        console.log('创建成功');
+                        Message({
+                          message: '创建成功',
+                          type: 'success'
+                        });
                         this.getChapter(this.record.subject.subject_id);
                         this.showDialog = false; 
                       }).catch(error => {
-                        console.log(error);
-                        console.log('创建失败');
+                        Message({
+                          message: '创建失败',
+                          type: 'error'
+                        });
                       });
       }
     },
@@ -169,11 +180,16 @@ export default {
       console.log(chapter_id);
       delete_chapter(getToken(),
                     chapter_id).then(response => {
-                      console.log('删除成功');
+                      Message({
+                          message: '删除成功',
+                          type: 'success'
+                        });
                       this.getChapter(this.record.subject.subject_id);
                     }).catch(error => {
-                      console.log('删除失败');
-                      console.log(error);
+                      Message({
+                          message: '删除失败',
+                          type: 'error'
+                        });
                     });
     }
   }

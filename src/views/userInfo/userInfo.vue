@@ -51,13 +51,14 @@
 
       <v-row>
         <v-col>
-          <v-dialog v-model="showDialog" max-width="600px">
+          <v-dialog v-model="showDialog" max-width="600px" persistent>
             <v-card>
               <v-card-title class="text-h5">修改密码</v-card-title>
               <v-card-text>
                 <v-text-field
                   v-model="oldPwd"
                   label="输入旧的密码"
+                  @click:append="showOldPwd = !showOldPwd"
                   :append-icon="showOldPwd ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showOldPwd ? 'text' : 'password'"
                   outlined
@@ -66,6 +67,7 @@
                 <v-text-field
                   v-model="newPwd"
                   label="输入新的密码"
+                  @click:append="showNewPwd = !showNewPwd"
                   :append-icon="showNewPwd ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showNewPwd ? 'text' : 'password'"
                   outlined
@@ -79,7 +81,7 @@
                     <v-btn color="blue" class="white--text" @click="changePwd">提交</v-btn>
                   </v-col>
                   <v-col class="d-flex justify-center">
-                    <v-btn color="error" @click="showDialog = false">放弃</v-btn>
+                    <v-btn color="error" @click="closeDialog">放弃</v-btn>
                   </v-col>
                   <v-spacer></v-spacer>
                 </v-row>
@@ -267,6 +269,13 @@ export default {
           type: 'error'
         });
       });
+    },
+    closeDialog() {
+      this.showDialog = false;
+      this.oldPwd = "";
+      this.newPwd = "";
+      this.showOldPwd = false;
+      this.showNewPwd =false;
     }
   }
 }

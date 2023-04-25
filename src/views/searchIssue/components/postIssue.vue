@@ -41,7 +41,7 @@
           <!--            </el-form-item>-->
         </el-col>
         <el-col :span="8">
-          <el-form-item label="是否匿名">
+          <el-form-item v-if="this.editMode === false || this.user_type === 0" label="是否匿名">
             <el-select v-model="issue.anonymous" placeholder="选择是否匿名">
               <el-option label="否" value="0"/>
               <el-option label="是" value="1"/>
@@ -65,7 +65,7 @@ import {
   update_issue_info
 } from '@/api/issue'
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
-import {getToken} from '@/utils/auth'
+import {getToken, getRole} from '@/utils/auth'
 import {upload_public} from "@/api/upload";
 import { isSwitchStatement } from "@babel/types";
 
@@ -88,6 +88,7 @@ export default {
   data() {
     return {
       year_id: 1,
+      user_type: getRole(),
       all_subjects: [
         {
           subject_id: 1,

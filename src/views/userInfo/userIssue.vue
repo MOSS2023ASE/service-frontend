@@ -2,10 +2,10 @@
   <el-table
     :data="issue_list"
     style="width: 100%"
-    :default-sort = "{prop: 'create_at', order: 'descending'}"
+    :default-sort = "{prop: 'update_at', order: 'descending'}"
     >
     <el-table-column
-      prop="create_at"
+      prop="update_at"
       label="提出时间"
       sortable
       align="center">
@@ -45,12 +45,18 @@ import { getToken } from '@/utils/auth';
             this.$router.push({name: 'issueInfoDetail', params: {issue_id: issue_id}})
             //
         },
+        splitTime() {
+          for (let i = 0; i < this.issue_list.length; i++) {
+            this.issue_list[i].update_at = this.issue_list[i].update_at.split('.')[0]; 
+          }
+        },
         getAskIssue() {
           get_ask_issue(getToken(),
                         1,
                         10).then(response => {
                           console.log('查询提问issue成功');
                           this.issue_list = response.data.issue_list;
+                          this.splitTime();
                         }).catch(error => {
                           console.log(error);
                           console.log('查询提问issue失败');
@@ -62,6 +68,7 @@ import { getToken } from '@/utils/auth';
                           10).then(response => {
                             console.log('查询认领复审的issue');
                             this.issue_list = response.data.issue_list;
+                            this.splitTime();
                           }).catch(error => {
                             console.log(error);
                             console.log('查询认领复审的issue失败');
@@ -73,6 +80,7 @@ import { getToken } from '@/utils/auth';
                           10).then(response => {
                             console.log('查询认领的issue成功');
                             this.issue_list = response.data.issue_list;
+                            this.splitTime();
                           }).catch(error => {
                             console.log(error);
                             console.log('查询认领的issue失败');
@@ -84,6 +92,7 @@ import { getToken } from '@/utils/auth';
                           10).then(response => {
                             console.log('查询收藏的issue成功');
                             this.issue_list = response.data.issue_list;
+                            this.splitTime();
                           }).catch(error => {
                             console.log(error);
                             console.log('查询收藏的issue失败');

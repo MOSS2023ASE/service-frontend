@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
       <el-header height="100">
-          <el-button type="danger" v-show="user_type !== 3" @click="handleClickPost"
+          <el-button type="danger" v-show="user_type === 0" @click="handleClickPost"
                       class="post-issue-button">
               发布问题
           </el-button>
