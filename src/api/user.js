@@ -101,7 +101,7 @@ export function check_user_subject(
   })
 }
 
-export function modify_user_subject(
+export async function modify_user_subject(
   jwt, //: string,
   tutor_id, //: number,
   subject_id_list //: Array<number>
