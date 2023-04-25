@@ -72,7 +72,7 @@
           :follow_count="issue.follow_count"
           :status_trans_permit="issue.status_trans_permit"
           :status="issue.status"
-          @refreshEvent="refresh" 
+          @refreshEvent="refresh"
           />
           <el-pagination small layout="prev, pager, next"
               :page-size="this.page_size" :total="total_page * page_size" :current-page.sync="cur_page"
