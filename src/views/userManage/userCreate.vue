@@ -165,18 +165,11 @@ export default {
     },
     async uploadParse() {
       if (this.uploadFile !== null) {
-        if (['application/vnd.ms-excel', 'application/wps-office.xls'].indexOf(this.uploadFile.type) !== -1) {
-          this.canUpload = false;
-          this.parseTable = await readXlsxFile(this.uploadFile);
-          this.dataTable = await this.getDataTable(this.parseTable);
-          this.canUpload = true; 
-          this.uploadFile = null;
-        } else {
-          Message({
-            message: '不支持该类型的文件',
-            type: 'error'
-          });
-        }
+        this.canUpload = false;
+        this.parseTable = await readXlsxFile(this.uploadFile);
+        this.dataTable = await this.getDataTable(this.parseTable);
+        this.canUpload = true; 
+        this.uploadFile = null;
       } else {
         Message({
           message: '未上传文件或文件上传失败',
@@ -204,10 +197,15 @@ export default {
                     this.parseTable.student_id_list,
                     this.parseTable.password_list,
                     this.parseTable.role_list).then(response => {
-                      console.log(response)
+                      Message({
+                        message: '注册用户成功',
+                        type: 'success'
+                      });
                     }).catch(error => {
-                      console.log('注册用户失败')
-                      console.log(error)
+                      Message({
+                        message: '注册用户失败',
+                        type: 'error'
+                      });
                     })
     },
     uploadSingle() {
@@ -216,10 +214,15 @@ export default {
                     this.user.student_id,
                     this.user.password,
                     this.userType.indexOf(this.user.role)).then(response => {
-                      console.log(response)
+                      Message({
+                        message: '注册用户成功',
+                        type: 'success'
+                      });
                     }).catch(error => {
-                      console.log('注册用户失败')
-                      console.log(error)
+                      Message({
+                        message: '注册用户失败',
+                        type: 'error'
+                      });
                     })
     }
   }

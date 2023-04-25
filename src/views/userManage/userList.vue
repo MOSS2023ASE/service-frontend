@@ -28,6 +28,7 @@
           :data="user_list_fill"
           style="width: 100%;"
           :default-sort = "{prop: 'student_id', order: 'descending'}"
+          max-height="800px"
           >
           <el-table-column
             prop="student_id"
