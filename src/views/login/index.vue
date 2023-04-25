@@ -157,8 +157,8 @@ export default {
     }
     return {
       loginForm: {
-        username: '20373743', // Built-in admin account
-        password: '123456',
+        username: '', // Built-in admin account
+        password: '',
       },
       loginRules: {
         username: [{required: true, trigger: 'blur', validator: validateUsername}],
