@@ -15,7 +15,7 @@
             <div class="title-container">
               <el-row type="flex" style="display: flex;align-items: center">
                 <el-col :span="4">
-                  <img src="http://shieask.com/pic/1.png"
+                  <img src="https://shieask.com/pic/1.png"
                        style="vertical-align:middle;max-height: 160px;max-width: 80px;">
                 </el-col>
                 <el-col :span="16">
