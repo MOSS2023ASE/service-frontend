@@ -38,4 +38,4 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_NAME }}:latest # 这是一个命令，用于从DockerHub拉取构建好的镜像
             sudo docker stop ${{ secrets.DOCKER_HUB_REPO_NAME }} || true # 这是一个命令，用于停止已经运行的容器，如果没有则忽略错误
             sudo docker rm ${{ secrets.DOCKER_HUB_REPO_NAME }} || true # 这是一个命令，用于删除已经停止的容器，如果没有则忽略错误
-            sudo docker run -d --name ${{ secrets.DOCKER_HUB_REPO_NAME }} -p 9527:80 ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_NAME }}:latest # 这是一个命令，用于运行新的容器，并将容器的80端口映射到服务器的9527端口
+            sudo docker run -d --name ${{ secrets.DOCKER_HUB_REPO_NAME }} -p 9527:80 -p 9528:443 -v ${{ secrets.CLOUD_SSL}}:/usr/share/nginx/ssl/ ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_NAME }}:latest # 这是一个命令，用于运行新的容器，并将容器的80端口映射到服务器的9527端口，将容器的443端口映射到服务器的9528端口
