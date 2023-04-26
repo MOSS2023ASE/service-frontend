@@ -283,8 +283,8 @@ export default {
               // loading效果结束
               this.loading = false
               this.$notify({
-                title: '登陆成功',
-                message: '登陆成功',
+                title: '登录成功',
+                message: '登录成功',
                 type: 'success',
                 duration: 2000
               })
@@ -294,7 +294,7 @@ export default {
               this.loading = false
               console.log(error)
               this.$notify({
-                title: '登陆失败',
+                title: '登录失败',
                 message: '用户名或密码错误',
                 type: 'warning',
                 duration: 2000
