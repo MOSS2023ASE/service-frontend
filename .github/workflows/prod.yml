@@ -38,4 +38,4 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_PROD_NAME }}:latest # 这是一个命令，用于从DockerHub拉取构建好的镜像
             sudo docker stop ${{ secrets.DOCKER_HUB_REPO_PROD_NAME }} || true # 这是一个命令，用于停止已经运行的容器，如果没有则忽略错误
             sudo docker rm ${{ secrets.DOCKER_HUB_REPO_PROD_NAME }} || true # 这是一个命令，用于删除已经停止的容器，如果没有则忽略错误
-            sudo docker run -d --name ${{ secrets.DOCKER_HUB_REPO_PROD_NAME }} -p 80:80 -v ${{ secrets.CLOUD_PIC }}:/usr/share/nginx/html/pic/ ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_PROD_NAME }}:latest # 这是一个命令，用于运行新的容器，并将容器的80端口映射到服务器的80端口，同时挂载静态资源访问
+            sudo docker run -d --name ${{ secrets.DOCKER_HUB_REPO_PROD_NAME }} -p 80:80 -p 443:443 -v ${{ secrets.CLOUD_PIC }}:/usr/share/nginx/html/pic/ -v ${{ secrets.CLOUD_SSL}}:/usr/share/nginx/ssl/ ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_PROD_NAME }}:latest # 这是一个命令，用于运行新的容器，并将容器的80端口映射到服务器的80端口，同时挂载静态资源访问
