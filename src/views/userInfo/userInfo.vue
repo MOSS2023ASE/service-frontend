@@ -1,261 +1,418 @@
 <template>
-  <v-app>
-    <v-container>
-      <v-row>
-        <v-spacer></v-spacer>
-        <v-col :cols="10">
-          <v-card>
-            <v-card-title>
-              <v-icon>mdi-account-details-outline</v-icon>
-              <span class="ml-3">个人信息</span>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text>
-              <v-row no-gutters>
-                <v-col :cols="6" class="pl-16">
-                  <v-avatar size="150">
-                    <v-img :src="avatar">
-                      <template v-slot:placeholder>
-                        <v-img/>
-                      </template>
-                    </v-img>
-                  </v-avatar>
-                  <div class="mt-4">
-                    <v-btn text color="blue" @click="$refs.input.click()">
-                      <v-icon class="ml-n1 mr-1">mdi-pencil</v-icon>
-                      <span class="text-h6">修改头像</span>
-                    </v-btn>
-                  </div>
-                </v-col>
-                <v-col>
-                  <v-col v-for="item in items" :key="item.type" :cols="12" class="text-left">
-                    <v-icon>{{ item.icon }}</v-icon>
-                    <span class="ml-3">
-                      {{ item.type }}
-                      <span class="mx-3"></span>
-                      {{ item.value }}
-                    </span>
-                  </v-col>
-                  <v-col :cols="12" class="text-left mt-n2">
-                    <v-icon color="error">mdi-lock-outline</v-icon>
-                    <v-btn text class="ml-n1" color="error" @click="showDialog = true">修改密码</v-btn>
-                  </v-col>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-spacer></v-spacer>
-      </v-row>
-      <input ref="input" type="file" name="image" accept="image/*" @change="loadAvatar" style="display: none" />
-
-      <v-row>
-        <v-col>
-          <v-dialog v-model="showDialog" max-width="600px" persistent>
-            <v-card>
-              <v-card-title class="text-h5">修改密码</v-card-title>
-              <v-card-text>
-                <v-text-field
-                  v-model="oldPwd"
-                  label="输入旧的密码"
-                  @click:append="showOldPwd = !showOldPwd"
-                  :append-icon="showOldPwd ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="showOldPwd ? 'text' : 'password'"
-                  outlined
-                  dense
-                ></v-text-field>
-                <v-text-field
-                  v-model="newPwd"
-                  label="输入新的密码"
-                  @click:append="showNewPwd = !showNewPwd"
-                  :append-icon="showNewPwd ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="showNewPwd ? 'text' : 'password'"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-card-text>
-              <v-card-actions>
-                <v-row class="mb-4">
-                  <v-spacer></v-spacer>
-                  <v-col class="d-flex justify-center">
-                    <v-btn color="blue" class="white--text" @click="changePwd">提交</v-btn>
-                  </v-col>
-                  <v-col class="d-flex justify-center">
-                    <v-btn color="error" @click="closeDialog">放弃</v-btn>
-                  </v-col>
-                  <v-spacer></v-spacer>
-                </v-row>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-col>
-      </v-row>
-
-      <v-row class="mt-8" v-if="role === 0">
-        <v-spacer></v-spacer>
-        <v-col :cols="10">
-          <v-card>
-            <v-card-title>
-              <v-icon>mdi-file-question-outline</v-icon>
-              <span class="ml-3">提出的问题</span>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text class="mt-n4">
-              <user-issue :type="1"></user-issue>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-spacer></v-spacer>
-      </v-row>
-
-      <v-row class="mt-8" v-if="role === 1">
-        <v-spacer></v-spacer>
-        <v-col :cols="10">
-          <v-card>
-            <v-card-title>
-              <v-icon>mdi-file-question-outline</v-icon>
-              <span class="ml-3">回答的问题</span>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text class="mt-n4">
-              <user-issue :type="2"></user-issue>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-spacer></v-spacer>
-      </v-row>
-
-      <v-row class="mt-8" v-if="role === 1">
-        <v-spacer></v-spacer>
-        <v-col :cols="10">
-          <v-card>
-            <v-card-title>
-              <v-icon>mdi-file-question-outline</v-icon>
-              <span class="ml-3">复审的问题</span>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text class="mt-n4">
-              <user-issue :type="3"></user-issue>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-spacer></v-spacer>
-      </v-row>
-
-      <v-row class="mt-8">
-        <v-spacer></v-spacer>
-        <v-col :cols="10">
-          <v-card>
-            <v-card-title>
-              <v-icon>mdi-file-question-outline</v-icon>
-              <span class="ml-3">收藏的问题</span>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text class="mt-n4">
-              <user-issue :type="4"></user-issue>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-spacer></v-spacer>
-      </v-row>
-    </v-container>
-  </v-app>
+  <div class="issue-item" @click="toIssueDetailView()">
+    <div class="author">
+      <el-avatar v-if="this.user_avatar !== null" class="user_avatar" :src="this.user_avatar" :key="this.user_avatar" />
+      <el-avatar v-else class="user_avatar" :src="require('../../assets/images/anonymous.jpg')" />
+      <div class="user_name">{{this.user_name}}</div>
+    </div>
+    <div class="previews">
+      <div style="display: flex;">
+        <div style="display: flex; flex-direction: column;">
+          <div class="title">{{this.title}}</div>
+          <div class="content">{{this.abstract}}</div>
+        </div>
+        <div class="time-state">
+          <div>{{this.created_at.slice(0, 10)}} {{this.created_at.slice(11, 16)}}</div>
+          <div v-if="this.status === 0" class="state0">
+            [未认领回答]
+          </div>
+          <div v-if="this.status === 1" class="state1">
+            [已认领回答]
+          </div>
+          <div v-if="this.status === 2" class="state2">
+            [未认领复审]
+          </div>
+          <div v-if="this.status === 3" class="state3">
+            [已认领复审]
+          </div>
+          <div v-if="this.status === 4" class="state4">
+            [有效提问]
+          </div>
+          <div v-if="this.status === 5" class="state5">
+            [无效提问]
+          </div>
+        </div>
+      </div>
+      <div class="subject-chapter">
+        <el-row style="width: 100%">
+          <el-col :span="10">
+            <el-tag type="warning" class="square-tag">{{ this.subject }}</el-tag>
+          </el-col>
+          <el-col :span="10">
+            <el-tag type="warning" class="square-tag">{{ this.chapter }}</el-tag>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+    <div class="tags">
+      <li class="tag" v-for="tag in this.tags">{{tag}}</li>
+    </div>
+    <div class="interactions" v-if="this.user_type === 0">
+      <div class="like_count">
+        <v-icon left>
+          mdi-thumb-up-outline
+        </v-icon>
+        <span style="margin: 0px 0px 4px 5px">{{this.like_count}}</span>
+      </div>
+      <div class="follow_count">
+        <v-icon left>
+          mdi-heart-outline
+        </v-icon>
+        <span style="margin: 0px 0px 4px 5px">{{this.follow_count}}</span>
+      </div>
+    </div>
+    <div class="interactions" @click.stop="">
+      <el-button class="inter-button" type="warning" v-if="this.status_trans_permit[0] === 1"
+                 style="issue-button" @click.stop="answerDialogVisible = true">
+        认领回答
+      </el-button>
+      <el-dialog
+        title="提示"
+        :show-close="false"
+        :visible.sync="answerDialogVisible"
+        width="30%">
+        <span>确认认领回答该问题？</span>
+        <span slot="footer" class="dialog-footer">
+                    <el-button @click.stop="answerDialogVisible = false" style="color: #666666;">取 消</el-button>
+                    <el-button type="primary" @click.stop="answerIssue">确 定</el-button>
+                </span>
+      </el-dialog>
+      <el-button class="inter-button" type="warning" v-if="this.status_trans_permit[4] === 1"
+                 style="issue-button" @click.stop="verifyDialogVisible = true">
+        认领复审
+      </el-button>
+      <el-dialog
+        title="提示"
+        :show-close="false"
+        :visible.sync="verifyDialogVisible"
+        width="30%">
+        <span>确认认领复审该问题？</span>
+        <span slot="footer" class="dialog-footer">
+                    <el-button @click.stop="verifyDialogVisible = false" style="color: #666666;">取 消</el-button>
+                    <el-button type="primary" @click.stop="verifyIssue">确 定</el-button>
+                </span>
+      </el-dialog>
+    </div>
+  </div>
 </template>
 
 <script>
-import UserIssue from './userIssue'
-import { get_user_info, password_modify, modify_user_info } from '@/api/user';
-import { getToken, getRole } from '@/utils/auth';
-import { Message } from 'element-ui';
-import { upload_public } from '@/api/upload';
+import {Message} from 'element-ui'
+import {adopt_issue, review_issue} from '@/api/issue'
+import {getToken, getRole} from '@/utils/auth'
+
 export default {
-  data() {
-    return {
-      userInfo: {},
-      items: [],
-      userType: ['学生', '辅导师', '管理员'],
-      showDialog: false,
-      showOldPwd: false,
-      showNewPwd: false, 
-      oldPwd: '',
-      newPwd: '',
-      avatar: '',
-      role: 0, 
+  name: 'IssueItem',
+  props: {
+    user_type: {
+      type: Number,
+      default: 0
+    },
+    id: {
+      type: Number,
+      default: 998244353
+    },
+    title: {
+      type: String,
+      default: "(无标题)"
+    },
+    user_name: {
+      type: String,
+      default: "匿名用户"
+    },
+    user_avatar: {
+      type: String,
+      default: '../../../assets/images/anonymous.jpg'
+    },
+    abstract: {
+      type: String,
+      default: '这个人什么都没写...'
+    },
+    tags: {
+      type: Array,
+      default: () => []
+    },
+    subject: {
+      type: String,
+      default: '未定科目'
+    },
+    chapter: {
+      type: String,
+      default: '未定章节'
+    },
+    created_at: {
+      type: String,
+      default: '2022-09-01 00:00'
+    },
+    like_count: {
+      type: Number,
+      default: 0
+    },
+    follow_count: {
+      type: Number,
+      default: 0
+    },
+    status_trans_permit: {
+      type: Array,
+      default: [0, 0, 0, 0, 0 ,0, 0]
+    },
+    status: {
+      type: Number,
+      default: 0
     }
   },
-  components: {
-    UserIssue
+  data() {
+    return {
+      answerDialogVisible: false,
+      verifyDialogVisible: false
+    }
   },
-  mounted() {
-    this.getUserInfo();
+  setup() {
   },
   methods: {
-    getUserInfo() {
-      get_user_info(getToken()).then(response => {
-        this.avatar = response.data.avatar;
-        this.mail = response.data.mail;
-        this.role = getRole();
-        this.items = [
-          {
-            icon: 'mdi-fingerprint',
-            type: '学号　　',
-            value: response.data.student_id,
-          },
-          {
-            icon: 'mdi-account-outline',
-            type: '用户名　',
-            value: response.data.name,
-          },
-          {
-            icon: 'mdi-email-outline',
-            type: '个人邮箱',
-            value: response.data.mail,
-          },
-          {
-            icon: 'mdi-card-account-details-outline',
-            type: '用户类型',
-            value: this.userType[getRole()],
-          }
-        ];
+    /* async */ toIssueDetailView() {
+      //Test issueInfoDetail
+      this.$router.push({name: 'issueInfoDetail', params: {issue_id: this.id}})
+      console.log("to issue detail");
+    },
+    answerIssue() {
+      adopt_issue(getToken(), this.id).then(response => {
+        console.log(response)
+        this.verifyDialogVisible = false
+        this.$emit('refreshEvent');
+        Message({
+          message: '已认领回答问题',
+          type: 'success',
+        })
       }).catch(error => {
-        Message({message:'获取用户信息失败', type:'error'});
-      });
+        console.log(error)
+      })
+
     },
-    changePwd() {
-      password_modify(getToken(),
-                      this.oldPwd,
-                      this.newPwd).then(response => {
-                        Message({message: '修改密码成功', type: 'success'});
-                        this.showDialog = false;
-                      }).catch(error => {
-                        Message({message: '修改密码失败', type: 'error'});
-                        this.showDialog = false;
-                      });
-    },
-    async loadAvatar(element) {
-      let formData = new FormData();
-      formData.append('file', element.target.files[0]);
-      upload_public(formData).then(response => {
-        this.avatar = response.data.url;
-        modify_user_info(getToken(),
-                        this.avatar,
-                        this.mail).then(response => {
-                          this.getUserInfo();
-                          Message({message: '上传头像成功', type: 'success'});
-                        }).catch(error => {
-                          Message({message: '上传头像失败', type: 'error'});
-                        });
+    verifyIssue() {
+      review_issue(getToken(), this.id).then(response => {
+        console.log(response)
+        this.verifyDialogVisible = false
+        this.$emit('refreshEvent');
+        Message({
+          message: '已认领复审问题',
+          type: 'success',
+        })
       }).catch(error => {
-        Message({message: '上传头像失败', type: 'error'});
-      });
-    },
-    closeDialog() {
-      this.showDialog = false;
-      this.oldPwd = "";
-      this.newPwd = "";
-      this.showOldPwd = false;
-      this.showNewPwd =false;
+        console.log(error)
+      })
+
     }
   }
 }
 </script>
+
+<style scoped>
+.issue-item {
+  display: flex;
+  cursor: pointer;
+  width: 80%;
+  height: 140px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  margin-left: 10%;
+  transition: all 0.3s;
+
+  border-style: solid;
+  border-color: #666666;
+  border-width: 2px;
+  border-radius: 0.8ch;
+}
+
+.issue-item:hover {
+  box-shadow: rgba(100, 100, 111, 0.8) 0px 7px 29px 0px;
+}
+
+.author {
+  display: flex;
+  flex-direction: column;
+  padding-top: 13px;
+  padding-left: 4%;
+  width: 15%;
+  min-width: 80px;
+}
+
+.previews {
+  display: flex;
+  flex-direction: column;
+  padding-top: 18px;
+  padding-left: 2%;
+  width: 50%;
+}
+.tags {
+  display:flex;
+  flex-direction: column;
+  margin-top: 3px;
+  padding-top: 10px;
+  margin-left: 3%;
+  width: 12%;
+}
+
+.interactions {
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  margin-left: 2%;
+  width: 15%;
+}
+
+.user_avatar {
+  width: 80px;
+  height: 80px;
+  align-self: center;
+  margin-top: 4%;
+}
+
+.user_name {
+  padding-left: 10%;
+  padding-top: 5%;
+  color: #444444;
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 0.8px;
+  text-align: center;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: 1.5px;
+  display: inline-block;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content {
+  padding-top: 12px;
+  color: #666666;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 1px;
+  display: inline-block;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subject-chapter {
+  display: flex;
+  height: 40px;
+  margin-top: 12px;
+}
+
+.square-tag {
+  height: 28px;
+  margin-right: 20%;
+  display: inline-block;
+  max-width: 90px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tag {
+  width: 70px;
+  height: 30px;
+  margin-top: 5%;
+  margin-right: 5%;
+  padding-top: 3px;
+  padding-bottom: 3px;
+
+  border-style: none;
+  border-color: #76a8dd;
+  background-color: #76a8dd;
+  border-radius: 1.6ch;
+
+  color: #ffffff;
+  font-weight: 500;
+  text-align: center;
+}
+.time-state {
+  margin-top: 3px;
+  margin-left: auto;
+  margin-right: 3%;
+  color: #444444;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.state0 {
+  margin-top: 5px;
+  color: #332e2e;
+}
+
+.state1 {
+  margin-top: 5px;
+  color: #e1b92c;
+}
+
+.state2 {
+  margin-top: 5px;
+  color: #e69be6;
+}
+
+.state3 {
+  margin-top: 5px;
+  color: #3636da;
+}
+
+.state4 {
+  margin-top: 5px;
+  color: #4c9f4c
+}
+
+.state5 {
+  margin-top: 5px;
+  color: #d64646;
+}
+
+.like_count {
+  display:flex;
+  padding-top: 5px;
+  font-weight: 500;
+  font-size: 22px;
+}
+
+.follow_count {
+  display:flex;
+
+  padding-top: 30px;
+  font-weight: 500;
+  font-size: 22px;
+}
+
+.inter-button .el-button {
+  margin-top: 10%;
+  margin-bottom: 10%;
+  margin-left: 0px;
+  margin-right: 10%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inter-button .el-button--medium {
+  padding-left: 0%;
+  padding-right: 0%;
+  text-align: center;
+  color: white;
+}
+
+li {
+  list-style-type: none;
+}
+</style>
