@@ -49,7 +49,7 @@
                   </el-select>
               </div>
           </div>
-          <el-button icon="el-icon-search" style="width: 8%; height: inherit; color: #666666;"
+          <el-button icon="el-icon-search" class="search-button"
                      @click="search" v-loading.fullscreen.lock="listLoading">
               搜索
           </el-button>
@@ -371,7 +371,7 @@ export default {
                 })
             setTimeout(() => {
               this.listLoading = false
-            }, 5 * 1000)
+            }, 10 * 1000)
           })
       },
       initTags() {
@@ -476,6 +476,13 @@ export default {
 
 .search-options {
   display:flex;
+}
+
+.search-button {
+  width: 8%;
+  height: inherit;
+  color: #666666;
+  min-width: 80px;
 }
 
 .search-keyword {
