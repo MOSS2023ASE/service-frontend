@@ -277,6 +277,27 @@ export default {
       command({src: "https://66.media.tumblr.com/dcd3d24b79d78a3ee0f9192246e727f1/tumblr_o00xgqMhPM1qak053o1_400.gif"})
     },
     /* async */ postIssue() {
+      if (this.issue.subject === null) {
+        Message({
+          message: '请选择问题科目',
+          type: 'warning'
+        });
+        return
+      }
+      if (this.issue.chapter === null) {
+        Message({
+          message: '请选择问题章节',
+          type: 'warning'
+        });
+        return
+      }
+      if (this.issue.anonymous === null) {
+        Message({
+          message: '请选择是否匿名',
+          type: 'warning'
+        });
+        return
+      }
       commit_issue(getToken(), this.issue.chapter, this.issue.title,
         this.content, parseInt(this.issue.anonymous)).then(response => {
           console.log(response)

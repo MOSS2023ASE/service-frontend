@@ -49,7 +49,10 @@
                   </el-select>
               </div>
           </div>
-          <el-button icon="el-icon-search" style="width: 8%; height: inherit; color: #666666;" @click="search">搜索</el-button>
+          <el-button icon="el-icon-search" style="width: 8%; height: inherit; color: #666666;"
+                     @click="search" v-loading.fullscreen.lock="listLoading">
+              搜索
+          </el-button>
       </v-card>
       <v-card class="issues-table">
           <!--在这里应该最多传三个tag进去，不然显示不了 -->
@@ -83,6 +86,7 @@
 </template>
 
 <script>
+import {Message} from 'element-ui'
 import IssueItem from "./components/issueItem.vue";
 import PostIssue from "./components/postIssue.vue";
 import {search_issue} from '@/api/issue'
@@ -325,6 +329,7 @@ export default {
               name: '综合排序'
             },
           ],
+          listLoading: false,
           cur_page: 1,
           total_page: 2,
           page_size: 10,
@@ -351,6 +356,7 @@ export default {
           if (this.user_type === 0) {
             this.search_state = [4]
           }
+          this.listLoading = true;
           search_issue(getToken(), this.search_keyword, this.search_tags,
             this.search_state, this.search_chapter, this.sort_order,
             this.cur_page, this.page_size).then(response => {
@@ -358,9 +364,18 @@ export default {
               console.log('success')
               this.issues = response.data['issue_list']
               this.total_page = response.data['total_page']
+              this.listLoading = false
+                Message({
+                  message: '搜索完成',
+                  type: 'success',
+                })
             setTimeout(() => {
               this.listLoading = false
-            }, 1.5 * 1000)
+              Message({
+                message: '搜索超时',
+                type: 'error',
+              })
+            }, 5 * 1000)
           })
       },
       initTags() {
