@@ -89,15 +89,13 @@ export default {
       freeze_user(getToken(), 
                   id,
                   frozen).then(response => {
-                    console.log(response);
                     for (let i = 0; i < this.user_list.length; i++) {
                       if (this.user_list[i].user_id === id) {
                         this.user_list[i].frozen = frozen;
                       }
                     }
                   }).catch(error => {
-                    console.log('冻结用户失败')
-                    console.log(error)
+                    Message({message: '冻结用户失败', type: 'error'});
                   });
     },
     getUser() {
@@ -108,9 +106,8 @@ export default {
           this.user_list[i].user_role = this.userType[this.user_list[i].user_role];
           this.user_list_fill.push(this.user_list[i]);
         };
-        console.log(response);
       }).catch(error => {
-        console.log('获取用户失败');
+        Message({message: '获取用户失败', type: 'error'});
       })
     },
     fillUser() {

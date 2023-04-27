@@ -93,8 +93,10 @@ export default {
                       year_id).then(response => {
                         this.subjects = response.data.subject_list;
                       }).catch(error => {
-                        console.log('获取学科失败');
-                        console.log(error);
+                        Message({
+                          message: '获取学科失败',
+                          type: 'error'
+                        });
                       });
     },
     async parseData() {
