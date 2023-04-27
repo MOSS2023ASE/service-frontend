@@ -349,7 +349,7 @@ export default {
         this.issue.text = response.data.content
         this.issue.chapter = response.data.chapter_id
         this.issue.subject = response.data.subject_id
-        this.issue.anonymous = response.data.anonymous
+        this.issue.anonymous = String(response.data.anonymous)
       }).catch(error => {
         this.$notify({
           title: '获取失败',
