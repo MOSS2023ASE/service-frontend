@@ -371,10 +371,6 @@ export default {
                 })
             setTimeout(() => {
               this.listLoading = false
-              Message({
-                message: '搜索超时',
-                type: 'error',
-              })
             }, 5 * 1000)
           })
       },
