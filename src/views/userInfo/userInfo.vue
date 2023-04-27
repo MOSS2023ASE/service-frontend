@@ -176,24 +176,22 @@ export default {
       userType: ['学生', '辅导师', '管理员'],
       showDialog: false,
       showOldPwd: false,
-      showNewPwd: false, 
+      showNewPwd: false,
       oldPwd: '',
       newPwd: '',
       avatar: '',
-      role: 0, 
+      role: 0,
     }
   },
   components: {
     UserIssue
   },
   mounted() {
-    console.log(this.userInfo);
     this.getUserInfo();
   },
   methods: {
     getUserInfo() {
       get_user_info(getToken()).then(response => {
-        console.log(response);
         this.avatar = response.data.avatar;
         this.mail = response.data.mail;
         this.role = getRole();
@@ -219,10 +217,7 @@ export default {
             value: this.userType[getRole()],
           }
         ];
-        console.log('获取个人信息成功');
       }).catch(error => {
-        console.log('获取用户信息失败');
-        console.log(error);
       });
     },
     changePwd() {
@@ -243,10 +238,8 @@ export default {
                       });
     },
     async loadAvatar(element) {
-      console.log(element.target.files[0]);
       let formData = new FormData();
       formData.append('file', element.target.files[0]);
-      console.log(formData);
       upload_public(formData).then(response => {
         this.avatar = response.data.url;
         modify_user_info(getToken(),

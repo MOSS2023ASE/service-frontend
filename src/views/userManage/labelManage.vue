@@ -3,9 +3,9 @@
     <v-card>
       <v-card-title class="ml-4">
         章节科目管理：
-        <v-btn text class="text-h6" @click="goStep(0)">学年</v-btn> 
-        <span v-if="step > 0">/</span>  
-        <v-btn text class="text-h6" v-if="step > 0" @click="goStep(1, record.year)">科目</v-btn> 
+        <v-btn text class="text-h6" @click="goStep(0)">学年</v-btn>
+        <span v-if="step > 0">/</span>
+        <v-btn text class="text-h6" v-if="step > 0" @click="goStep(1, record.year)">科目</v-btn>
         <span v-if="step > 1">/</span>
         <v-btn text class="text-h6" v-if="step > 1">章节</v-btn>
       </v-card-title>
@@ -100,7 +100,7 @@ export default {
   methods: {
     getYear() {
       this.years = [{year_id: 1,
-                    content: '大一下学期'}]; 
+                    content: '大一下学期'}];
     },
     getSubject(year_id) {
       get_all_subjects(getToken(),
@@ -117,7 +117,7 @@ export default {
       get_subject_all_chapters(getToken(),
                               subject_id).then(response => {
                                 this.chapters = response.data.chapter_list;
-                                console.log(response.data.chapter_list);
+
                               }).catch(error => {
                                 Message({
                                   message: '获取章节失败',
@@ -150,7 +150,7 @@ export default {
                           type: 'success'
                         });
                         this.getSubject(this.record.year.year_id);
-                        this.newContent = ""; 
+                        this.newContent = "";
                       }).catch(error => {
                         Message({
                           message: '创建失败',
@@ -167,7 +167,7 @@ export default {
                           type: 'success'
                         });
                         this.getChapter(this.record.subject.subject_id);
-                        this.showDialog = false; 
+                        this.showDialog = false;
                       }).catch(error => {
                         Message({
                           message: '创建失败',
@@ -177,7 +177,7 @@ export default {
       }
     },
     removeChapter(chapter_id) {
-      console.log(chapter_id);
+
       delete_chapter(getToken(),
                     chapter_id).then(response => {
                       Message({

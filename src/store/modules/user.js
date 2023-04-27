@@ -46,7 +46,6 @@ const actions = {
   //user register
   register({commit}, userInfo) {
     const {user_name, password, password_confirmation} = userInfo
-    console.log(userInfo)
     return new Promise((resolve, reject) => {
       register({
         user_name: user_name.trim(), password: password,
@@ -78,11 +77,8 @@ const actions = {
         setToken(response.data['jwt'])
         setUserId(username.trim())
         setRole(response.data['role'])
-        console.log(getToken())
-        console.log(getRole())
         resolve()
       }).catch(error => {
-        console.log(error)
         reject(error)
       })
     })
@@ -108,7 +104,6 @@ const actions = {
     commit('SET_NAME', name)
     commit('SET_AVATAR', avatar)
     commit('SET_ROLES',  ['admin'])
-    console.log("COMMIT ROLE:" + state.roles)
     commit('SET_INTRODUCTION', introduction)
   },
 
@@ -118,7 +113,6 @@ const actions = {
       let jwt = state.token
       get_user_info(jwt).then(response=>{
         const data = response.data
-        console.log(data)
         if (!data) {
           reject('Verification failed, please Login again.')
         }
@@ -132,7 +126,6 @@ const actions = {
         let roles = [user_role]
         commit('SET_AVATAR', avatar)
         commit('SET_ROLES', roles)
-        console.log("COMMIT ROLE:" + state.roles)
         resolve(data)
       }).catch(error=>{
         reject(error)
@@ -144,7 +137,6 @@ const actions = {
   logout({commit, state, dispatch}) {
     return new Promise((resolve, reject) => {
       user_logout(state.token).then((response) => {
-        console.log(response)
         commit('SET_TOKEN', '')
         commit('SET_USER_ID', 0)
         commit('SET_ROLES', [])

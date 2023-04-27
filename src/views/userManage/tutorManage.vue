@@ -67,7 +67,7 @@ export default {
             }
           }
         }
-        
+
         await modify_user_subject(getToken(), student_id, subject_id_list).then(response => {}).catch(error => {
           err = true;
         });
@@ -76,25 +76,24 @@ export default {
         Message({
           message: '辅导师科目修改成功',
           type: 'success'
-        }); 
+        });
       } else {
         Message({
           message: '辅导师科目修改失败',
           type: 'error'
-        }); 
+        });
       }
     },
     uploadCancel() {
       this.uploadFile = null;
-      this.uploadData = new Map(); 
+      this.uploadData = new Map();
     },
     getSubject(year_id = 1) {
       get_all_subjects(getToken(),
                       year_id).then(response => {
                         this.subjects = response.data.subject_list;
                       }).catch(error => {
-                        console.log('获取学科失败');
-                        console.log(error);
+
                       });
     },
     async parseData() {
@@ -106,7 +105,7 @@ export default {
         Message({
           message: '未上传文件或文件上传失败',
           type: 'error'
-        }); 
+        });
       }
     }
   },

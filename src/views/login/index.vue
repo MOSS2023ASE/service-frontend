@@ -180,7 +180,6 @@ export default {
     $route: {
       handler: function (route) {
         const query = route.query
-        console.log(query)
         if (query) {
           this.redirect = query.redirect
           this.otherQuery = this.getOtherQuery(query)
@@ -217,7 +216,6 @@ export default {
     },
 
     onUpdateSubmit(data) { //注册
-      console.log(data.user_name, data.password, data.password_confirmation)
       this.dialogFormVisible = false;
       this.$store.dispatch('user/register', data).then(() => {
         // 登录成功进行路由的跳转
@@ -225,7 +223,6 @@ export default {
         this.loginForm.password = data.password
         this.handleLogin()
       }).catch((error) => {
-        console.log("注册失败")
         this.$notify({
           title: '注册失败',
           message: '用户名已存在',
@@ -250,7 +247,6 @@ export default {
       })
     },
     handleLogin() {
-      console.log(this.identifyCode, this.code);
       if (this.identifyCode.toLowerCase() !== this.code.toLowerCase()) {
         Message({
           message: '验证码错误',
@@ -292,7 +288,6 @@ export default {
             })
             .catch((error) => {
               this.loading = false
-              console.log(error)
               this.$notify({
                 title: '登录失败',
                 message: '用户名或密码错误',
@@ -301,7 +296,6 @@ export default {
               })
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

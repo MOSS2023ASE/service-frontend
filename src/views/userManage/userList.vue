@@ -1,4 +1,4 @@
-<template> 
+<template>
 <v-container>
   <v-row class="mb-n10">
     <v-spacer></v-spacer>
@@ -50,9 +50,9 @@
             label="操作"
             align="center">
             <template slot-scope="scope">
-              <v-btn v-if="scope.row.frozen === 0" color="error" 
+              <v-btn v-if="scope.row.frozen === 0" color="error"
               @click="freezeUser(scope.row.user_id, 1)">冻结账号</v-btn>
-              <v-btn v-if="scope.row.frozen === 1" color="blue" class="white--text" 
+              <v-btn v-if="scope.row.frozen === 1" color="blue" class="white--text"
               @click="freezeUser(scope.row.user_id, 0)">解冻账号</v-btn>
             </template>
           </el-table-column>
@@ -77,7 +77,7 @@ export default {
         name: "",
         user_role: ""
       },
-      userType:["学生","辅导师","管理员"] 
+      userType:["学生","辅导师","管理员"]
     }
   },
   mounted() {
@@ -86,18 +86,17 @@ export default {
   },
   methods: {
     freezeUser(id, frozen) {
-      freeze_user(getToken(), 
+      freeze_user(getToken(),
                   id,
                   frozen).then(response => {
-                    console.log(response);
+
                     for (let i = 0; i < this.user_list.length; i++) {
                       if (this.user_list[i].user_id === id) {
                         this.user_list[i].frozen = frozen;
                       }
                     }
                   }).catch(error => {
-                    console.log('冻结用户失败')
-                    console.log(error)
+
                   });
     },
     getUser() {
@@ -108,9 +107,9 @@ export default {
           this.user_list[i].user_role = this.userType[this.user_list[i].user_role];
           this.user_list_fill.push(this.user_list[i]);
         };
-        console.log(response);
+
       }).catch(error => {
-        console.log('获取用户失败');
+
       })
     },
     fillUser() {

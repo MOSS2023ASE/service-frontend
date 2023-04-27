@@ -237,7 +237,6 @@ export default {
   },
   mounted() {
     if (this.editMode) {
-      console.log('editmode')
       this.getIssueInfo()
     }
   },
@@ -300,7 +299,6 @@ export default {
       }
       commit_issue(getToken(), this.issue.chapter, this.issue.title,
         this.content, parseInt(this.issue.anonymous)).then(response => {
-          console.log(response)
         this.clearAllItems();
         this.$emit('closeDialogEvent', true);
         Message({
@@ -312,7 +310,6 @@ export default {
           message: '发布问题失败',
           type: 'error',
         })
-        console.log(error);
       })
     },
     initChapters() {
@@ -330,14 +327,10 @@ export default {
               this.all_chapters[this.all_subjects[tmpI].subject_id] = response.data['chapter_list']
             }
           ).catch(error => {
-            console.log('获取章节失败')
-            console.log(error)
+
           })
         }
-        console.log('获取科目章节成功')
       }).catch(error => {
-        console.log('获取科目失败')
-        console.log(error)
       })
     },
     getIssueInfo() {
