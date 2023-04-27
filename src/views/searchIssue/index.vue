@@ -345,8 +345,6 @@ export default {
           search_issue(getToken(), this.search_keyword, this.search_tags,
             this.search_state, this.search_chapter, this.sort_order,
             this.cur_page, this.page_size).then(response => {
-              console.log(response)
-              console.log('success')
               this.issues = response.data['issue_list']
               this.total_page = response.data['total_page']
               this.listLoading = false
@@ -361,16 +359,12 @@ export default {
       },
       initTags() {
           get_all_tags(getToken()).then(response => {
-            console.log('获取标签成功')
             this.all_tags = response.data['tag_list']
           }).catch(error => {
-            console.log('获取标签失败')
-            console.log(error)
           })
       },
       initChapters() {
         get_all_subjects(getToken(), this.year_id).then(response => {
-          console.log(response)
           // why should JSON? see https://blog.csdn.net/weixin_46331416/article/details/123262798
           this.all_subjects = JSON.parse(JSON.stringify(response.data['subject_list']));
           // this.all_subjects = response.data['subject_list']
@@ -384,14 +378,9 @@ export default {
                 this.all_chapters[this.all_subjects[tmpI].subject_id] = response.data['chapter_list']
               }
             ).catch(error => {
-              console.log('获取章节失败')
-              console.log(error)
             })
           }
-          console.log('获取科目章节成功')
         }).catch(error => {
-          console.log('获取科目失败')
-          console.log(error)
         })
       },
 
