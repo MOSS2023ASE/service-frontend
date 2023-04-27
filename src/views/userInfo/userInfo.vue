@@ -187,13 +187,11 @@ export default {
     UserIssue
   },
   mounted() {
-    console.log(this.userInfo);
     this.getUserInfo();
   },
   methods: {
     getUserInfo() {
       get_user_info(getToken()).then(response => {
-        console.log(response);
         this.avatar = response.data.avatar;
         this.mail = response.data.mail;
         this.role = getRole();
@@ -219,55 +217,36 @@ export default {
             value: this.userType[getRole()],
           }
         ];
-        console.log('获取个人信息成功');
       }).catch(error => {
-        console.log('获取用户信息失败');
-        console.log(error);
+        Message({message:'获取用户信息失败', type:'error'});
       });
     },
     changePwd() {
       password_modify(getToken(),
                       this.oldPwd,
                       this.newPwd).then(response => {
-                        Message({
-                          message: '修改密码成功',
-                          type: 'success'
-                        });
+                        Message({message: '修改密码成功', type: 'success'});
                         this.showDialog = false;
                       }).catch(error => {
-                        Message({
-                          message: '修改密码失败',
-                          type: 'error'
-                        });
+                        Message({message: '修改密码失败', type: 'error'});
                         this.showDialog = false;
                       });
     },
     async loadAvatar(element) {
-      console.log(element.target.files[0]);
       let formData = new FormData();
       formData.append('file', element.target.files[0]);
-      console.log(formData);
       upload_public(formData).then(response => {
         this.avatar = response.data.url;
         modify_user_info(getToken(),
                         this.avatar,
                         this.mail).then(response => {
                           this.getUserInfo();
-                          Message({
-                            message: '上传头像成功',
-                            type: 'success'
-                          });
+                          Message({message: '上传头像成功', type: 'success'});
                         }).catch(error => {
-                          Message({
-                            message: '上传头像失败',
-                            type: 'error'
-                          });
+                          Message({message: '上传头像失败', type: 'error'});
                         });
       }).catch(error => {
-        Message({
-          message: '上传头像失败',
-          type: 'error'
-        });
+        Message({message: '上传头像失败', type: 'error'});
       });
     },
     closeDialog() {

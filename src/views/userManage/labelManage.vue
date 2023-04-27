@@ -117,12 +117,8 @@ export default {
       get_subject_all_chapters(getToken(),
                               subject_id).then(response => {
                                 this.chapters = response.data.chapter_list;
-                                console.log(response.data.chapter_list);
                               }).catch(error => {
-                                Message({
-                                  message: '获取章节失败',
-                                  type: 'error'
-                                });
+                                Message({message: '获取章节失败', type: 'error'});
                               });
     },
     goStep(step, target) {
@@ -177,7 +173,6 @@ export default {
       }
     },
     removeChapter(chapter_id) {
-      console.log(chapter_id);
       delete_chapter(getToken(),
                     chapter_id).then(response => {
                       Message({

@@ -31,6 +31,7 @@
 <script>
 import { get_adopt_issue, get_ask_issue, get_follow_issue, get_review_issue } from '@/api/user';
 import { getToken } from '@/utils/auth';
+import { Message } from 'element-ui';
   export default {
     data() {
       return {
@@ -54,48 +55,40 @@ import { getToken } from '@/utils/auth';
           get_ask_issue(getToken(),
                         1,
                         10).then(response => {
-                          console.log('查询提问issue成功');
                           this.issue_list = response.data.issue_list;
                           this.splitTime();
                         }).catch(error => {
-                          console.log(error);
-                          console.log('查询提问issue失败');
+                          Message({message: '查询提问issue失败', type: 'error'});
                         });
         },
         getReviewIssue() {
           get_review_issue(getToken(),
                           1,
                           10).then(response => {
-                            console.log('查询认领复审的issue');
                             this.issue_list = response.data.issue_list;
                             this.splitTime();
                           }).catch(error => {
-                            console.log(error);
-                            console.log('查询认领复审的issue失败');
+                            Message({message: '查询提问issue失败', type: 'error'});
                           });
         },
         getAdoptIssue() {
           get_adopt_issue(getToken(),
                           1,
                           10).then(response => {
-                            console.log('查询认领的issue成功');
                             this.issue_list = response.data.issue_list;
                             this.splitTime();
                           }).catch(error => {
-                            console.log(error);
-                            console.log('查询认领的issue失败');
+                            Message({message: '查询认领的issue失败', type: 'error'});
                           });
         },
         getFollowIssue() {
           get_follow_issue(getToken(),
                           1,
                           10).then(response => {
-                            console.log('查询收藏的issue成功');
                             this.issue_list = response.data.issue_list;
                             this.splitTime();
                           }).catch(error => {
-                            console.log(error);
-                            console.log('查询收藏的issue失败');
+                            Message({message: '查询收藏的issue失败', type: 'error'});
                           });
         }
     },
