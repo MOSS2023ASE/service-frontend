@@ -61,9 +61,37 @@
                 <span style="margin: 0px 0px 4px 5px">{{this.follow_count}}</span>
             </div>
         </div>
-        <div class="interactions" >
-            <el-button type="warning" v-if="this.status_trans_permit[0] === 1" style="issue-button" @click.stop="answerIssue">认领回答</el-button>
-            <el-button type="warning" v-if="this.status_trans_permit[4] === 1" style="issue-button" @click.stop="verifyIssue">认领复审</el-button>
+        <div class="interactions" @click.stop="">
+            <el-button class="inter-button" type="warning" v-if="this.status_trans_permit[0] === 1"
+                       style="issue-button" @click.stop="answerDialogVisible = true">
+                认领回答
+            </el-button>
+            <el-dialog
+                title="提示"
+                :show-close="false"
+                :visible.sync="answerDialogVisible"
+                width="30%">
+                <span>确认认领回答该问题？</span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click.stop="answerDialogVisible = false" style="color: #666666;">取 消</el-button>
+                    <el-button type="primary" @click.stop="answerIssue">确 定</el-button>
+                </span>
+            </el-dialog>
+            <el-button class="inter-button" type="warning" v-if="this.status_trans_permit[4] === 1"
+                       style="issue-button" @click.stop="verifyDialogVisible = true">
+                认领复审
+            </el-button>
+            <el-dialog
+                title="提示"
+                :show-close="false"
+                :visible.sync="verifyDialogVisible" 
+                width="30%">
+                <span>确认认领复审该问题？</span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click.stop="verifyDialogVisible = false" style="color: #666666;">取 消</el-button>
+                    <el-button type="primary" @click.stop="verifyIssue">确 定</el-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -135,7 +163,9 @@ export default {
     },
     data() {
         return {
-            }
+            answerDialogVisible: false,
+            verifyDialogVisible: false
+        }
     },
     setup() {
     },
@@ -148,9 +178,10 @@ export default {
         answerIssue() {
             adopt_issue(getToken(), this.id).then(response => {
                 console.log(response)
+                this.verifyDialogVisible = false
                 this.$emit('refreshEvent');
                 Message({
-                  message: '回答问题',
+                  message: '已认领回答问题',
                   type: 'success',
                 })
             }).catch(error => {
@@ -161,9 +192,10 @@ export default {
         verifyIssue() {
             review_issue(getToken(), this.id).then(response => {
               console.log(response)
+              this.verifyDialogVisible = false
               this.$emit('refreshEvent');
               Message({
-                message: '复审问题',
+                message: '已认领复审问题',
                 type: 'success',
               })
             }).catch(error => {
@@ -363,7 +395,7 @@ export default {
     font-size: 22px;
 }
 
-.el-button {
+.inter-button .el-button {
     margin-top: 10%;
     margin-bottom: 10%;
     margin-left: 0px;
@@ -373,7 +405,7 @@ export default {
     text-overflow: ellipsis;
 }
 
-.el-button--medium {
+.inter-button .el-button--medium {
     padding-left: 0%;
     padding-right: 0%;
     text-align: center;

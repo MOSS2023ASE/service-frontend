@@ -72,7 +72,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'search',
-        name: 'Search',
+        name: 'search',
         component: () => import('@/views/searchIssue/index'),
         meta: {title: '搜索问题', icon: 'el-icon-search'},
       }
@@ -81,6 +81,18 @@ export const constantRoutes = [
 ]
 
 export const asyncRoutes = [
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      {
+        path: 'post',
+        name: 'post',
+        component: () => import('@/views/postIssue/index'),
+        meta: {title: '发布问题', icon: 'el-icon-plus',roles:[0]}
+      }
+    ]
+  },
   {
     path: '/',
     component: Layout,
