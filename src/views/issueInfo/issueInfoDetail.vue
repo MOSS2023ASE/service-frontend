@@ -185,7 +185,7 @@
 //数字
 import MarkdownEditor from '@/components/MarkdownEditor'
 import MyRichText from "@/views/issueInfo/components/MyRichText";
-import postIssue from "@/views/searchIssue/components/postIssue";
+import postIssue from "@/views/postIssue/components/postIssue";
 import marked from 'marked';
 import {
   get_issue_detail,

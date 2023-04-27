@@ -279,7 +279,7 @@ export default {
             .then(() => {
               // 登录成功进行路由的跳转
               // console.log("we would login success")
-              this.$router.push({name: 'Search', query: this.otherQuery})
+              this.$router.push({name: 'search', query: this.otherQuery})
               // loading效果结束
               this.loading = false
               this.$notify({

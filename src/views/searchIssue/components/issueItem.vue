@@ -73,7 +73,7 @@
                 width="30%">
                 <span>确认认领回答该问题？</span>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click.stop="answerDialogVisible = false">取 消</el-button>
+                    <el-button @click.stop="answerDialogVisible = false" style="color: #666666;">取 消</el-button>
                     <el-button type="primary" @click.stop="answerIssue">确 定</el-button>
                 </span>
             </el-dialog>
@@ -88,7 +88,7 @@
                 width="30%">
                 <span>确认认领复审该问题？</span>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click.stop="verifyDialogVisible = false">取 消</el-button>
+                    <el-button @click.stop="verifyDialogVisible = false" style="color: #666666;">取 消</el-button>
                     <el-button type="primary" @click.stop="verifyIssue">确 定</el-button>
                 </span>
             </el-dialog>

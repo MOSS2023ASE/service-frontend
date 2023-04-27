@@ -1,18 +1,5 @@
 <template>
   <div class="app-container">
-      <el-header height="100">
-          <el-button type="danger" v-show="user_type === 0" @click="handleClickPost"
-                      class="post-issue-button">
-              发布问题
-          </el-button>
-      </el-header>
-      <div>
-          <PostIssue
-              v-show="dialogVisible"
-              :dialogVisible="dialogVisible"
-              :editMode="false"
-              @closeDialogEvent="closeDialog" />
-      </div>
       <v-card class="search-bar">
           <div class="search-info">
               <el-input v-model="search_keyword"
@@ -49,7 +36,7 @@
                   </el-select>
               </div>
           </div>
-          <el-button icon="el-icon-search" style="width: 8%; height: inherit; color: #666666;"
+          <el-button icon="el-icon-search" class="search-button"
                      @click="search" v-loading.fullscreen.lock="listLoading">
               搜索
           </el-button>
@@ -88,7 +75,6 @@
 <script>
 import {Message} from 'element-ui'
 import IssueItem from "./components/issueItem.vue";
-import PostIssue from "./components/postIssue.vue";
 import {search_issue} from '@/api/issue'
 import {get_all_tags} from '@/api/tag'
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
@@ -98,7 +84,6 @@ export default {
   name: "Search",
   components: {
       IssueItem,
-      PostIssue
   },
   props: {
   },
@@ -365,13 +350,13 @@ export default {
               this.issues = response.data['issue_list']
               this.total_page = response.data['total_page']
               this.listLoading = false
-                Message({
-                  message: '搜索完成',
-                  type: 'success',
-                })
+              Message({
+                message: '搜索完成',
+                type: 'success',
+              })
             setTimeout(() => {
               this.listLoading = false
-            }, 5 * 1000)
+            }, 10 * 1000)
           })
       },
       initTags() {
@@ -476,6 +461,13 @@ export default {
 
 .search-options {
   display:flex;
+}
+
+.search-button {
+  width: 8%;
+  height: inherit;
+  color: #666666;
+  min-width: 80px;
 }
 
 .search-keyword {
