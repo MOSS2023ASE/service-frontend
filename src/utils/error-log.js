@@ -29,7 +29,7 @@ if (checkNeed()) {
         info,
         url: window.location.href
       })
-      console.error(err, info)
+
     })
   }
 }

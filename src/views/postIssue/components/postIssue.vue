@@ -237,7 +237,6 @@ export default {
   },
   mounted() {
     if (this.editMode) {
-      console.log('editmode')
       this.getIssueInfo()
     }
   },
@@ -277,9 +276,29 @@ export default {
       command({src: "https://66.media.tumblr.com/dcd3d24b79d78a3ee0f9192246e727f1/tumblr_o00xgqMhPM1qak053o1_400.gif"})
     },
     /* async */ postIssue() {
+      if (this.issue.subject === null) {
+        Message({
+          message: '请选择问题科目',
+          type: 'warning'
+        });
+        return
+      }
+      if (this.issue.chapter === null) {
+        Message({
+          message: '请选择问题章节',
+          type: 'warning'
+        });
+        return
+      }
+      if (this.issue.anonymous === null) {
+        Message({
+          message: '请选择是否匿名',
+          type: 'warning'
+        });
+        return
+      }
       commit_issue(getToken(), this.issue.chapter, this.issue.title,
         this.content, parseInt(this.issue.anonymous)).then(response => {
-          console.log(response)
         this.clearAllItems();
         this.$emit('closeDialogEvent', true);
         Message({
@@ -291,7 +310,6 @@ export default {
           message: '发布问题失败',
           type: 'error',
         })
-        console.log(error);
       })
     },
     initChapters() {
@@ -309,14 +327,10 @@ export default {
               this.all_chapters[this.all_subjects[tmpI].subject_id] = response.data['chapter_list']
             }
           ).catch(error => {
-            console.log('获取章节失败')
-            console.log(error)
+
           })
         }
-        console.log('获取科目章节成功')
       }).catch(error => {
-        console.log('获取科目失败')
-        console.log(error)
       })
     },
     getIssueInfo() {
@@ -328,7 +342,7 @@ export default {
         this.issue.text = response.data.content
         this.issue.chapter = response.data.chapter_id
         this.issue.subject = response.data.subject_id
-        this.issue.anonymous = response.data.anonymous
+        this.issue.anonymous = String(response.data.anonymous)
       }).catch(error => {
         this.$notify({
           title: '获取失败',

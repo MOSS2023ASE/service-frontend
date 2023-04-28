@@ -15,7 +15,7 @@
             <div class="title-container">
               <el-row type="flex" style="display: flex;align-items: center">
                 <el-col :span="4">
-                  <img src="http://shieask.com/pic/1.png"
+                  <img src="https://shieask.com/pic/1.png"
                        style="vertical-align:middle;max-height: 160px;max-width: 80px;">
                 </el-col>
                 <el-col :span="16">
@@ -158,8 +158,8 @@ export default {
     }
     return {
       loginForm: {
-        username: '20373743', // Built-in admin account
-        password: '123456',
+        username: '', // Built-in admin account
+        password: '',
       },
       loginRules: {
         username: [{required: true, trigger: 'blur', validator: validateUsername}],
@@ -181,7 +181,6 @@ export default {
     $route: {
       handler: function (route) {
         const query = route.query
-        console.log(query)
         if (query) {
           this.redirect = query.redirect
           this.otherQuery = this.getOtherQuery(query)
@@ -218,7 +217,6 @@ export default {
     },
 
     onUpdateSubmit(data) { //注册
-      console.log(data.user_name, data.password, data.password_confirmation)
       this.dialogFormVisible = false;
       this.$store.dispatch('user/register', data).then(() => {
         // 登录成功进行路由的跳转
@@ -226,7 +224,6 @@ export default {
         this.loginForm.password = data.password
         this.handleLogin()
       }).catch((error) => {
-        console.log("注册失败")
         this.$notify({
           title: '注册失败',
           message: '用户名已存在',
@@ -251,7 +248,6 @@ export default {
       })
     },
     handleLogin() {
-      console.log(this.identifyCode, this.code);
       if (this.identifyCode.toLowerCase() !== this.code.toLowerCase()) {
         Message({
           message: '验证码错误',
@@ -280,12 +276,12 @@ export default {
             .then(() => {
               // 登录成功进行路由的跳转
               // console.log("we would login success")
-              this.$router.push({name: 'Search', query: this.otherQuery})
+              this.$router.push({name: 'search', query: this.otherQuery})
               // loading效果结束
               this.loading = false
               this.$notify({
-                title: '登陆成功',
-                message: '登陆成功',
+                title: '登录成功',
+                message: '登录成功',
                 type: 'success',
                 duration: 2000
               })
@@ -293,16 +289,14 @@ export default {
             })
             .catch((error) => {
               this.loading = false
-              console.log(error)
               this.$notify({
-                title: '登陆失败',
+                title: '登录失败',
                 message: '用户名或密码错误',
                 type: 'warning',
                 duration: 2000
               })
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

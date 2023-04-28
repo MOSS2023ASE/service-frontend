@@ -72,7 +72,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'search',
-        name: 'Search',
+        name: 'search',
         component: () => import('@/views/searchIssue/index'),
         meta: {title: '搜索问题', icon: 'el-icon-search'},
       }
@@ -86,10 +86,22 @@ export const asyncRoutes = [
     component: Layout,
     children: [
       {
+        path: 'post',
+        name: 'post',
+        component: () => import('@/views/postIssue/index'),
+        meta: {title: '发布问题', icon: 'el-icon-plus',roles:[0]}
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      {
         path: 'manage',
         name: 'manage',
         component: () => import('@/views/userManage/userCreate'),
-        meta: {title: '用户管理', icon: 'el-icon-s-tools',roles:[1,2]}
+        meta: {title: '用户管理', icon: 'el-icon-s-tools',roles:[2]}
       }
     ]
   },

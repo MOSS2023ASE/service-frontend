@@ -1,18 +1,5 @@
 <template>
   <div class="app-container">
-      <el-header height="100">
-          <el-button type="danger" v-show="user_type === 0" @click="handleClickPost"
-                      class="post-issue-button">
-              发布问题
-          </el-button>
-      </el-header>
-      <div>
-          <PostIssue
-              v-show="dialogVisible"
-              :dialogVisible="dialogVisible"
-              :editMode="false"
-              @closeDialogEvent="closeDialog" />
-      </div>
       <v-card class="search-bar">
           <div class="search-info">
               <el-input v-model="search_keyword"
@@ -49,7 +36,10 @@
                   </el-select>
               </div>
           </div>
-          <el-button icon="el-icon-search" style="width: 8%; height: inherit; color: #666666;" @click="search">搜索</el-button>
+          <el-button icon="el-icon-search" class="search-button"
+                     @click="search" v-loading.fullscreen.lock="listLoading">
+              搜索
+          </el-button>
       </v-card>
       <v-card class="issues-table">
           <!--在这里应该最多传三个tag进去，不然显示不了 -->
@@ -72,7 +62,7 @@
           :follow_count="issue.follow_count"
           :status_trans_permit="issue.status_trans_permit"
           :status="issue.status"
-          @refreshEvent="refresh" 
+          @refreshEvent="refresh"
           />
           <el-pagination small layout="prev, pager, next"
               :page-size="this.page_size" :total="total_page * page_size" :current-page.sync="cur_page"
@@ -83,8 +73,8 @@
 </template>
 
 <script>
+import {Message} from 'element-ui'
 import IssueItem from "./components/issueItem.vue";
-import PostIssue from "./components/postIssue.vue";
 import {search_issue} from '@/api/issue'
 import {get_all_tags} from '@/api/tag'
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
@@ -94,7 +84,6 @@ export default {
   name: "Search",
   components: {
       IssueItem,
-      PostIssue
   },
   props: {
   },
@@ -325,6 +314,7 @@ export default {
               name: '综合排序'
             },
           ],
+          listLoading: false,
           cur_page: 1,
           total_page: 2,
           page_size: 10,
@@ -351,30 +341,30 @@ export default {
           if (this.user_type === 0) {
             this.search_state = [4]
           }
+          this.listLoading = true;
           search_issue(getToken(), this.search_keyword, this.search_tags,
             this.search_state, this.search_chapter, this.sort_order,
             this.cur_page, this.page_size).then(response => {
-              console.log(response)
-              console.log('success')
               this.issues = response.data['issue_list']
               this.total_page = response.data['total_page']
+              this.listLoading = false
+              Message({
+                message: '搜索完成',
+                type: 'success',
+              })
             setTimeout(() => {
               this.listLoading = false
-            }, 1.5 * 1000)
+            }, 10 * 1000)
           })
       },
       initTags() {
           get_all_tags(getToken()).then(response => {
-            console.log('获取标签成功')
             this.all_tags = response.data['tag_list']
           }).catch(error => {
-            console.log('获取标签失败')
-            console.log(error)
           })
       },
       initChapters() {
         get_all_subjects(getToken(), this.year_id).then(response => {
-          console.log(response)
           // why should JSON? see https://blog.csdn.net/weixin_46331416/article/details/123262798
           this.all_subjects = JSON.parse(JSON.stringify(response.data['subject_list']));
           // this.all_subjects = response.data['subject_list']
@@ -388,14 +378,9 @@ export default {
                 this.all_chapters[this.all_subjects[tmpI].subject_id] = response.data['chapter_list']
               }
             ).catch(error => {
-              console.log('获取章节失败')
-              console.log(error)
             })
           }
-          console.log('获取科目章节成功')
         }).catch(error => {
-          console.log('获取科目失败')
-          console.log(error)
         })
       },
 
@@ -465,6 +450,13 @@ export default {
 
 .search-options {
   display:flex;
+}
+
+.search-button {
+  width: 8%;
+  height: inherit;
+  color: #666666;
+  min-width: 80px;
 }
 
 .search-keyword {
