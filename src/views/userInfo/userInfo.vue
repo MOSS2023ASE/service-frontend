@@ -184,6 +184,7 @@ export default {
       oldPwd: '',
       newPwd: '',
       avatar: '',
+      valid: true,
       role: 0, 
       pwdRules: [(v) => v.length >= 6 || '密码至少需要6位']
     }
@@ -229,8 +230,8 @@ export default {
     changePwd() {
       if (this.$refs.form.validate()) {
         password_modify(getToken(),
-                      this.sha256(this.oldPwd),
-                      this.sha256(this.newPwd)).then(response => {
+                      sha256(this.oldPwd),
+                      sha256(this.newPwd)).then(response => {
                         Message({
                           message: '修改密码成功',
                           type: 'success'
