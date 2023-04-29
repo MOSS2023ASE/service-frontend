@@ -80,7 +80,7 @@ export default {
         admin_id: this.$store.state.user.user_id,
         notify_text: this.content
       }
-      console.log(query)
+
       createNotify(query).then((response) => {
         setTimeout(() => {
           this.listLoading = false
