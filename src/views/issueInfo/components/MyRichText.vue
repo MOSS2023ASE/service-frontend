@@ -1,6 +1,6 @@
 <template>
   <div class="rich-text">
-    <div style="margin-top: 10px" v-html="sanitizedHtml"></div>
+    <div style="margin-top: 10px" v-html="this.content"></div>
   </div>
 </template>
 
@@ -16,14 +16,11 @@ export default {
   },
   data(){
     return {
-      sanitizedHtml:''
+
     }
   },
   mounted() {
-    this.sanitizedHtml = DOMPurify.sanitize(this.content, {
-      ALLOWED_TAGS: ['p', 'a', 'b', 'i', 'strong', 'em', 'br', 'img','blockquote'],
-      ALLOWED_ATTR: ['href', 'target', 'src']
-    });
+
   }
 }
 </script>

@@ -36,12 +36,13 @@
               </v-list-item-avatar>
             </v-list-item>
             <v-card-text>
-              <MyRichText :content="this.html_content"></MyRichText>
+              <MyRichText :content="this.santinize(this.html_content)"></MyRichText>
             </v-card-text>
 
             <v-row style="margin-left: 1px">
               <v-card-actions>
-                <v-btn v-for="(tag, index) in tag_list" :key="index" outlined color="orange lighten-2">{{ tag }}</v-btn>
+                <v-btn text color="blue">{{this.subject_name}}</v-btn>
+                <v-btn text color="blue">{{this.chapter_name}}</v-btn>
               </v-card-actions>
             </v-row>
             <v-row justify="end" style="margin-right: 10px">
@@ -61,25 +62,25 @@
                   {{ this.follows }}
                 </v-btn>
                 <v-btn v-show="this.allow_comment === 1" outlined @click="edit()" color="green">编辑</v-btn>
-                <v-btn v-show="this.status_trans_permit[1] === 1" outlined @click="close()" color="deep-orange">关闭
+                <v-btn v-show="this.status_trans_permit[1] === 1" outlined @click="openConfirm(confirmText.close,close)" color="deep-orange">关闭
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[2] === 1" outlined @click="reject()" color="red">
+                <v-btn v-show="this.status_trans_permit[2] === 1" outlined @click="openConfirm(confirmText.reject,reject)" color="red">
                   拒绝辅导师回答
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[3] === 1" outlined @click="agree()" color="blue">
+                <v-btn v-show="this.status_trans_permit[3] === 1" outlined @click="openConfirm(confirmText.agree,agree)" color="blue">
                   同意辅导师回答
                 </v-btn>
 
-                <v-btn v-show="this.status_trans_permit[0] === 1" outlined @click="adopt()" color="blue">认领问题
+                <v-btn v-show="this.status_trans_permit[0] === 1" outlined @click="openConfirm(confirmText.adopt,adopt)" color="blue">认领问题
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[4] === 1" outlined @click="review()" color="green">复审问题
+                <v-btn v-show="this.status_trans_permit[4] === 1" outlined @click="openConfirm(confirmText.review,review)" color="green">复审问题
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[5] === 1" outlined @click="readopt()" color="cyan">重新认领
+                <v-btn v-show="this.status_trans_permit[5] === 1" outlined @click="readopt(confirmText.readopt,readopt)" color="cyan">重新认领
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[6] === 1" outlined @click="validIssue()" color="green">
+                <v-btn v-show="this.status_trans_permit[6] === 1" outlined @click="validIssue(confirmText.validIssue,validIssue)" color="green">
                   有效问题
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[6] === 1" outlined @click="invalidIssue()" color="red">
+                <v-btn v-show="this.status_trans_permit[6] === 1" outlined @click="invalidIssue(confirmText.invalidIssue,invalidIssue)" color="red">
                   无效问题
                 </v-btn>
               </v-card-actions>
@@ -131,8 +132,7 @@
                   </v-list-item-avatar>
 
                   <v-list-item-content>
-                    <v-list-item-title v-html="item.user_name"></v-list-item-title>
-                    <v-list-item-subtitle v-html="item.avatar"></v-list-item-subtitle>
+                    <v-list-item-title>{{item.user_name}}</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </template>
@@ -190,6 +190,9 @@
         @closeDialogEvent="closeDialog"
       >
       </post-issue>
+      <Confirm ref="confirm">
+
+      </Confirm>
     </v-app>
   </div>
 </template>
@@ -201,6 +204,7 @@ import MarkdownEditor from '@/components/MarkdownEditor'
 import MyRichText from "@/views/issueInfo/components/MyRichText";
 import postIssue from "@/views/postIssue/components/postIssue";
 import marked from 'marked';
+import Confirm from "@/views/issueInfo/components/Confirm";
 import {
   get_issue_detail,
   like_issue,
@@ -218,14 +222,26 @@ import {
 import {get_issue_all_comments, create_comment, delete_comment} from "@/api/forum";
 import {upload_public} from "@/api/upload";
 import {getRole} from "@/utils/auth";
+import DOMPurify from "dompurify";
 
 export default {
   name: "issueInfoDetail",
-  components: {MarkdownEditor, MyRichText, postIssue, marked},
+  components: {MarkdownEditor, MyRichText, postIssue, marked,Confirm},
   props: {},
   data() {
     return {
+
       isLoading: true,
+      confirmText : {
+        close:"确认关闭该问题吗？该操作不可逆，请您确认操作。",
+        reject:'确认拒绝辅导师回答吗？该操作不可逆，请您确认操作。',
+        agree:'确认同意辅导师回答吗？该操作不可逆，请您确认操作。',
+        adopt:'确认认领该问题吗？该操作不可逆，请您确认操作。',
+        review:'确认复审该问题吗？该操作不可逆，请您确认操作。',
+        readopt:'确认重新认领该问题吗？该操作不可逆，请您确认操作。',
+        validIssue:'确认判定问题为有效问题吗？该操作不可逆，请您确认操作。',
+        invalidIssue:'确认判定问题为无效问题吗？该操作不可逆，请您确认操作。'
+      },
       status_trans_permit: [0, 0, 0, 0, 0, 0, 0],
       allow_comment: 0,
       user_type: getRole(),
@@ -283,6 +299,18 @@ export default {
     }
   },
   methods: {
+    santinize(html){
+      return DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: ['p', 'a', 'b', 'i', 'strong', 'em', 'br', 'img','blockquote'],
+        ALLOWED_ATTR: ['src']
+      });
+    },
+    openConfirm(inText,confirm){
+      this.$refs.confirm.open({
+        text: inText,
+        onConfirm: confirm
+      })
+    },
     initIssueId() {
       this.issue_id = this.$route.params.issue_id
     },
