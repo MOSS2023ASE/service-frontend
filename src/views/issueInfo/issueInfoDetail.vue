@@ -131,8 +131,7 @@
                   </v-list-item-avatar>
 
                   <v-list-item-content>
-                    <v-list-item-title v-html="item.user_name"></v-list-item-title>
-                    <v-list-item-subtitle v-html="item.avatar"></v-list-item-subtitle>
+                    <v-list-item-title>{{item.user_name}}</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </template>
@@ -218,6 +217,7 @@ import {
 import {get_issue_all_comments, create_comment, delete_comment} from "@/api/forum";
 import {upload_public} from "@/api/upload";
 import {getRole} from "@/utils/auth";
+import DOMPurify from "dompurify";
 
 export default {
   name: "issueInfoDetail",
@@ -283,6 +283,12 @@ export default {
     }
   },
   methods: {
+    sanitize(html){
+      return DOMPurify.sanitize(this.html, {
+        ALLOWED_TAGS: ['p', 'a', 'b', 'i', 'strong', 'em', 'br', 'img','blockquote'],
+        ALLOWED_ATTR: ['href', 'target', 'src']
+      });
+    },
     initIssueId() {
       this.issue_id = this.$route.params.issue_id
     },
@@ -418,6 +424,9 @@ export default {
     //下面是各种状态转换
     close() {
       let jwt = this.$store.state.user.token
+      if(window.confirm("确认关闭该issue吗？")){
+        console.log('关闭')
+      }
       cancel_issue(jwt, this.issue_id).then(response => {
         this.initAll(this.issue_id)
         this.$notify({
