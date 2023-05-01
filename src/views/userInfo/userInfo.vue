@@ -259,6 +259,7 @@ export default {
                             message: '上传头像成功',
                             type: 'success'
                           });
+                          this.$router.go(0);
                         }).catch(error => {
                           Message({
                             message: '上传头像失败',
