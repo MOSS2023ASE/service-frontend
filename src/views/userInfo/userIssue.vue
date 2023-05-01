@@ -3,10 +3,11 @@
     :data="issue_list"
     style="width: 100%"
     :default-sort = "{prop: 'update_at', order: 'descending'}"
+    max-height="500px"
   >
     <el-table-column
       prop="update_at"
-      label="提出时间"
+      label="更新时间"
       sortable
       align="center">
     </el-table-column>
@@ -54,7 +55,7 @@ export default {
     getAskIssue() {
       get_ask_issue(getToken(),
         1,
-        10).then(response => {
+        2e9).then(response => {
         this.issue_list = response.data.issue_list;
         this.splitTime();
       }).catch(error => {
@@ -64,7 +65,7 @@ export default {
     getReviewIssue() {
       get_review_issue(getToken(),
         1,
-        10).then(response => {
+        2e9).then(response => {
         this.issue_list = response.data.issue_list;
         this.splitTime();
       }).catch(error => {
@@ -74,7 +75,7 @@ export default {
     getAdoptIssue() {
       get_adopt_issue(getToken(),
         1,
-        10).then(response => {
+        2e9).then(response => {
         this.issue_list = response.data.issue_list;
         this.splitTime();
       }).catch(error => {
@@ -84,7 +85,7 @@ export default {
     getFollowIssue() {
       get_follow_issue(getToken(),
         1,
-        10).then(response => {
+        2e9).then(response => {
         this.issue_list = response.data.issue_list;
         this.splitTime();
       }).catch(error => {
