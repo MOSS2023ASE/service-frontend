@@ -186,7 +186,7 @@ export default {
       avatar: '',
       valid: true,
       role: 0, 
-      pwdRules: [(v) => v.length >= 6 || '密码至少需要6位']
+      pwdRules: [(v) => v.length >= 6 && v.length <= 30 || '密码需要为6~30位']
     }
   },
   components: {
@@ -259,6 +259,7 @@ export default {
                             message: '上传头像成功',
                             type: 'success'
                           });
+                          this.$router.go(0);
                         }).catch(error => {
                           Message({
                             message: '上传头像失败',

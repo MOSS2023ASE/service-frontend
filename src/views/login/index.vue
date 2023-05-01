@@ -271,11 +271,13 @@ export default {
           // TODO 在前后端对接阶段，将下面的注释取消，在 store/user 中的 login 中已经实现 api 的调用
           //如果后端支持权限，注释上面三行，取消下列代码的注释
           //派发一个action:user/login,带着用户名与密码的载荷
+          let temp_pwd = this.loginForm.password;
           this.loginForm.password = sha256(this.loginForm.password);
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               // 登录成功进行路由的跳转
               // console.log("we would login success")
+              this.loginForm.password = temp_pwd;
               this.$router.push({name: 'search', query: this.otherQuery})
               // loading效果结束
               this.loading = false
@@ -288,6 +290,7 @@ export default {
               //this.$store.dispatch('user/getInfo')
             })
             .catch((error) => {
+              this.loginForm.password = temp_pwd;
               this.loading = false
               this.$notify({
                 title: '登录失败',
