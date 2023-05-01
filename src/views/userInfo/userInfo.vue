@@ -55,24 +55,27 @@
             <v-card>
               <v-card-title class="text-h5">修改密码</v-card-title>
               <v-card-text>
-                <v-text-field
-                  v-model="oldPwd"
-                  label="输入旧的密码"
-                  @click:append="showOldPwd = !showOldPwd"
-                  :append-icon="showOldPwd ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="showOldPwd ? 'text' : 'password'"
-                  outlined
-                  dense
-                ></v-text-field>
-                <v-text-field
-                  v-model="newPwd"
-                  label="输入新的密码"
-                  @click:append="showNewPwd = !showNewPwd"
-                  :append-icon="showNewPwd ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="showNewPwd ? 'text' : 'password'"
-                  outlined
-                  dense
-                ></v-text-field>
+                <v-form ref="form" v-model="valid" class="px-12" lazy-validation @keyup.enter.native="changePwd">
+                  <v-text-field
+                    v-model="oldPwd"
+                    label="输入旧的密码"
+                    @click:append="showOldPwd = !showOldPwd"
+                    :append-icon="showOldPwd ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="showOldPwd ? 'text' : 'password'"
+                    outlined
+                    dense
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="newPwd"
+                    label="输入新的密码"
+                    @click:append="showNewPwd = !showNewPwd"
+                    :append-icon="showNewPwd ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="showNewPwd ? 'text' : 'password'"
+                    :rules="pwdRules"
+                    outlined
+                    dense
+                  ></v-text-field>
+                </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-row class="mb-4">
@@ -168,6 +171,7 @@ import { get_user_info, password_modify, modify_user_info } from '@/api/user';
 import { getToken, getRole } from '@/utils/auth';
 import { Message } from 'element-ui';
 import { upload_public } from '@/api/upload';
+import { sha256 } from 'js-sha256';
 export default {
   data() {
     return {
@@ -180,7 +184,9 @@ export default {
       oldPwd: '',
       newPwd: '',
       avatar: '',
+      valid: true,
       role: 0, 
+      pwdRules: [(v) => v.length >= 6 || '密码至少需要6位']
     }
   },
   components: {
@@ -218,19 +224,27 @@ export default {
           }
         ];
       }).catch(error => {
-        Message({message:'获取用户信息失败', type:'error'});
+        Message({message: '获取个人信息失败', type: 'error'});
       });
     },
     changePwd() {
-      password_modify(getToken(),
-                      this.oldPwd,
-                      this.newPwd).then(response => {
-                        Message({message: '修改密码成功', type: 'success'});
+      if (this.$refs.form.validate()) {
+        password_modify(getToken(),
+                      sha256(this.oldPwd),
+                      sha256(this.newPwd)).then(response => {
+                        Message({
+                          message: '修改密码成功',
+                          type: 'success'
+                        });
                         this.showDialog = false;
                       }).catch(error => {
-                        Message({message: '修改密码失败', type: 'error'});
+                        Message({
+                          message: '修改密码失败',
+                          type: 'error'
+                        });
                         this.showDialog = false;
                       });
+      }
     },
     async loadAvatar(element) {
       let formData = new FormData();
@@ -241,12 +255,21 @@ export default {
                         this.avatar,
                         this.mail).then(response => {
                           this.getUserInfo();
-                          Message({message: '上传头像成功', type: 'success'});
+                          Message({
+                            message: '上传头像成功',
+                            type: 'success'
+                          });
                         }).catch(error => {
-                          Message({message: '上传头像失败', type: 'error'});
+                          Message({
+                            message: '上传头像失败',
+                            type: 'error'
+                          });
                         });
       }).catch(error => {
-        Message({message: '上传头像失败', type: 'error'});
+        Message({
+          message: '上传头像失败',
+          type: 'error'
+        });
       });
     },
     closeDialog() {
