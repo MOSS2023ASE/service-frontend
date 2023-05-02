@@ -43,7 +43,7 @@
             <i class="el-icon-caret-bottom"/>
           </div>
           <el-dropdown-menu slot="dropdown">
-            <router-link to="/userInfo">
+            <router-link to="/userInfo/index">
               <el-dropdown-item>我的信息</el-dropdown-item>
             </router-link>
             <el-dropdown-item divided @click.native="logout">
