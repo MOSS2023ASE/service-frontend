@@ -42,25 +42,24 @@ export const constantRoutes = [
   },
   // 新增放在下面
   {
-    path: '/',
+    path: '/issueInfoDetail',
     component: Layout,
-    // hidden: true,
     children: [
       {
-        path: 'issueInfoDetail',
-        name:'issueInfoDetail',
+        path: 'index',
+        name: 'issueInfoDetail',
         component: () => import('@/views/issueInfo/issueInfoDetail')
       },
     ]
   },
   {
-    path: '/',
+    path: '/userInfo',
     component: Layout,
-    // hidden: true,
+    redirect: '/userInfo/index',
     children: [
       {
-        path: 'userInfo',
-        name:'userInfo',
+        path: 'index',
+        name: 'userInfo',
         component: () => import('@/views/userInfo/userInfo'),
         meta: {title: '个人信息', icon: 'el-icon-user'}
       }
@@ -69,6 +68,7 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
+    redirect: '/search',
     children: [
       {
         path: 'search',
@@ -82,14 +82,15 @@ export const constantRoutes = [
 
 export const asyncRoutes = [
   {
-    path: '/',
+    path: '/post',
     component: Layout,
+    redirect: '/path/index',
     children: [
       {
-        path: 'post',
+        path: 'index',
         name: 'post',
         component: () => import('@/views/postIssue/index'),
-        meta: {title: '发布问题', icon: 'el-icon-plus',roles:[0]}
+        meta: {title: '发布问题', icon: 'el-icon-plus', roles: [0]}
       }
     ]
   },
@@ -101,7 +102,7 @@ export const asyncRoutes = [
         path: 'manage',
         name: 'manage',
         component: () => import('@/views/userManage/userCreate'),
-        meta: {title: '用户管理', icon: 'el-icon-s-tools',roles:[2]}
+        meta: {title: '用户管理', icon: 'el-icon-s-tools', roles: [2]}
       }
     ]
   },
