@@ -4,9 +4,9 @@
       <!--    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container"-->
       <!--               @toggleClick="toggleSideBar"/>-->
       <v-row dense>
-        <v-col cols="2">
+        <v-col>
 <!--          <v-img src="https://shieask.com/pic/1.png" style="vertical-align:middle;max-height: 100px;max-width: 50px;"></v-img>-->
-          <v-img src="logo07.svg" style="vertical-align:middle;max-height: 300px;max-width: 150px;"></v-img>
+          <v-img src="logo07.svg" style="max-height: 250px;max-width: 125px;"></v-img>
         </v-col>
       </v-row>
       <!--    <breadcrumb id="breadcrumb-container" class="breadcrumb-container"/>-->
