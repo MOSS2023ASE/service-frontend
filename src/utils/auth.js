@@ -23,7 +23,6 @@ export function getUserId() {
 }
 
 export function setUserId(user_id) {
-  console.log("user_id is:" + user_id)
   return Cookies.set(UserIdKey, user_id)
 }
 

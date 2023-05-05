@@ -143,6 +143,7 @@ import LabelManage from './labelManage';
 import tutorManage from './tutorManage';
 import { batch_register, single_register } from '@/api/admin';
 import { getToken } from '@/utils/auth';
+import { sha256 } from 'js-sha256'
 export default {
   data() {
     return {
@@ -186,6 +187,7 @@ export default {
           password: table.password_list[i],
           role: table.role_list[i],
         };
+        table.password_list[i] = sha256(table.password_list[i]);
         table.role_list[i] = this.userType.indexOf(table.role_list[i]);
         data.push(elm);
       }
@@ -212,7 +214,7 @@ export default {
       single_register(getToken(),
                     this.user.name,
                     this.user.student_id,
-                    this.user.password,
+                    sha256(this.user.password),
                     this.userType.indexOf(this.user.role)).then(response => {
                       Message({
                         message: '注册用户成功',

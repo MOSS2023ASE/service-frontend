@@ -136,6 +136,7 @@ import {validUsername} from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
 import editModal from './components/registerPanel.vue'
 import Captcha from './components/captcha.vue'
+import { sha256 } from 'js-sha256'
 
 export default {
   name: 'Login',
@@ -180,7 +181,6 @@ export default {
     $route: {
       handler: function (route) {
         const query = route.query
-        console.log(query)
         if (query) {
           this.redirect = query.redirect
           this.otherQuery = this.getOtherQuery(query)
@@ -217,7 +217,6 @@ export default {
     },
 
     onUpdateSubmit(data) { //注册
-      console.log(data.user_name, data.password, data.password_confirmation)
       this.dialogFormVisible = false;
       this.$store.dispatch('user/register', data).then(() => {
         // 登录成功进行路由的跳转
@@ -225,7 +224,6 @@ export default {
         this.loginForm.password = data.password
         this.handleLogin()
       }).catch((error) => {
-        console.log("注册失败")
         this.$notify({
           title: '注册失败',
           message: '用户名已存在',
@@ -250,7 +248,6 @@ export default {
       })
     },
     handleLogin() {
-      console.log(this.identifyCode, this.code);
       if (this.identifyCode.toLowerCase() !== this.code.toLowerCase()) {
         Message({
           message: '验证码错误',
@@ -274,11 +271,13 @@ export default {
           // TODO 在前后端对接阶段，将下面的注释取消，在 store/user 中的 login 中已经实现 api 的调用
           //如果后端支持权限，注释上面三行，取消下列代码的注释
           //派发一个action:user/login,带着用户名与密码的载荷
-
+          let temp_pwd = this.loginForm.password;
+          this.loginForm.password = sha256(this.loginForm.password);
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               // 登录成功进行路由的跳转
               // console.log("we would login success")
+              this.loginForm.password = temp_pwd;
               this.$router.push({name: 'search', query: this.otherQuery})
               // loading效果结束
               this.loading = false
@@ -291,8 +290,8 @@ export default {
               //this.$store.dispatch('user/getInfo')
             })
             .catch((error) => {
+              this.loginForm.password = temp_pwd;
               this.loading = false
-              console.log(error)
               this.$notify({
                 title: '登录失败',
                 message: '用户名或密码错误',
@@ -301,7 +300,6 @@ export default {
               })
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

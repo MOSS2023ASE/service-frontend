@@ -4,20 +4,9 @@
       <!--    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container"-->
       <!--               @toggleClick="toggleSideBar"/>-->
       <v-row dense>
-        <v-col cols="2">
-          <v-row>
-            <span class="title ml-3 mr-5" style="margin-top: 8px;">
-              士问
-            </span>
-          </v-row>
-          <v-row>
-            <span class="title ml-3 mr-5" style="margin-left: 20px !important;">
-              士答
-            </span>
-          </v-row>
-        </v-col>
-        <v-col cols="2" style="margin-left: -60px">
-          <v-img src="https://shieask.com/pic/1.png" style="vertical-align:middle;max-height: 100px;max-width: 50px;"></v-img>
+        <v-col>
+<!--          <v-img src="https://shieask.com/pic/1.png" style="vertical-align:middle;max-height: 100px;max-width: 50px;"></v-img>-->
+          <v-img src="logo07.svg" style="max-height: 250px;max-width: 125px;"></v-img>
         </v-col>
       </v-row>
       <!--    <breadcrumb id="breadcrumb-container" class="breadcrumb-container"/>-->
@@ -43,7 +32,7 @@
             <i class="el-icon-caret-bottom"/>
           </div>
           <el-dropdown-menu slot="dropdown">
-            <router-link to="/userInfo">
+            <router-link to="/userInfo/index">
               <el-dropdown-item>我的信息</el-dropdown-item>
             </router-link>
             <el-dropdown-item divided @click.native="logout">
@@ -53,59 +42,6 @@
         </el-dropdown>
       </div>
 
-
-      <v-app id="inspire">
-        <v-dialog v-model="notify" width="600px">
-          <v-card
-            max-width="600"
-            class="mx-auto"
-          >
-            <v-toolbar
-              color="orange lighten-2"
-              dark
-            >
-              <v-app-bar-nav-icon></v-app-bar-nav-icon>
-
-              <v-toolbar-title>通知</v-toolbar-title>
-
-              <v-spacer></v-spacer>
-
-              <v-btn icon>
-                <v-icon>mdi-magnify</v-icon>
-              </v-btn>
-            </v-toolbar>
-
-            <v-list three-line dense>
-              <template v-for="(item, index) in items">
-                <v-divider
-                  v-if="item.divider"
-                  :key="index"
-                  :inset="item.inset"
-                ></v-divider>
-
-                <v-list-item
-                  v-else
-                  :key="item.admin_name"
-                >
-                  <v-list-item-avatar>
-                    <v-img :src="item.admin_pic"></v-img>
-                  </v-list-item-avatar>
-
-                  <v-list-item-content>
-                    <v-list-item-title v-html="item.admin_name"></v-list-item-title>
-                    <v-list-item-subtitle>{{ slicecreate_time(item.create_time) }}</v-list-item-subtitle>
-                    <v-list-item-subtitle v-html="item.notify_text"></v-list-item-subtitle>
-                    <v-list-item-action style="margin-left: 400px;margin-top: -20px">
-                      <v-btn text color="orange lighten-2" @click="read(item.notify_id)">已读</v-btn>
-                    </v-list-item-action>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </v-list>
-
-          </v-card>
-        </v-dialog>
-      </v-app>
     </v-app-bar>
   </v-app>
 </template>
@@ -168,7 +104,7 @@ export default {
       // })
     },
     showNotify() {
-      console.log("haha")
+
       this.notify = true
     },
     async logout() {
@@ -214,7 +150,7 @@ export default {
   position: relative;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
-  background: linear-gradient(to right, #FF9C00 0%, #E2D41F 100%);
+  background: linear-gradient(to right, #87CEFA 0%, 	#2196F3 100%);
   .hamburger-container {
     line-height: 46px;
     height: 100%;
