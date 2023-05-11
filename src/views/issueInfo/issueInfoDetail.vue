@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app id="inspire" v-if="isLoading === false">
+    <v-app id="inspire">
       <v-card flat>
         <v-container fluid>
           <v-card
@@ -8,7 +8,7 @@
             class="mx-auto"
           >
             <v-card-title>
-              <v-btn text color="green" @click="back()">
+              <v-btn text color="#1687A7" @click="back()">
                 <v-icon
                   large
                   left
@@ -142,7 +142,7 @@
         </v-container>
         <v-divider></v-divider>
         <v-container fluid>
-          <v-timeline>
+          <v-timeline align-top dense>
             <v-timeline-item
               v-for="(comment, index) in currentPageItems"
               :key="index"
@@ -153,11 +153,9 @@
                   <img :src="comment.avatar">
                 </v-avatar>
               </template>
-              <template v-slot:opposite>
-                <span>{{ comment.time.slice(0, 10) }} {{ comment.time.slice(11, 19) }}</span>
-              </template>
               <v-card class="elevation-2">
                 <v-card-title class="headline">{{ comment.name }}</v-card-title>
+                <v-card-subtitle class="subtitle-1" ><span>{{ comment.time.slice(0, 10) }} {{ comment.time.slice(11, 16) }}</span></v-card-subtitle>
                 <v-card-text>
                   <MyRichText :content="comment.content"></MyRichText>
                 </v-card-text>
@@ -172,6 +170,7 @@
         </v-container>
         <v-divider></v-divider>
       </v-card>
+
       <div>
         <markdown-editor v-if="this.allow_comment === 1" ref="editor" v-model="editor_content" height="500px"
                          :hooks="this.hooks"/>
@@ -230,7 +229,18 @@ export default {
   props: {},
   data() {
     return {
-
+      items2: [
+        {
+          id: 1,
+          color: 'info',
+          icon: 'mdi-information',
+        },
+        {
+          id: 2,
+          color: 'error',
+          icon: 'mdi-alert-circle',
+        },
+      ],
       isLoading: true,
       confirmText : {
         close:"确认关闭该问题吗？该操作不可逆，请您确认操作。",

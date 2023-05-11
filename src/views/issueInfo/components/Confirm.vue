@@ -14,14 +14,14 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-              color="green-darken-1"
+              color="#1687A7"
               variant="text"
               @click="confirm()"
             >
               确认
             </v-btn>
             <v-btn
-              color="green-darken-1"
+              color="#D3E0EA"
               variant="text"
               @click="cancel()"
             >

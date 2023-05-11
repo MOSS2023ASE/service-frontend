@@ -1,28 +1,17 @@
 <template>
   <v-app>
     <v-app-bar clipped app class="navbar" color="deep orange">
-      <!--    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container"-->
-      <!--               @toggleClick="toggleSideBar"/>-->
       <v-row dense>
         <v-col>
-<!--          <v-img src="https://shieask.com/pic/1.png" style="vertical-align:middle;max-height: 100px;max-width: 50px;"></v-img>-->
           <v-img src="logo07.svg" style="max-height: 250px;max-width: 125px;"></v-img>
         </v-col>
       </v-row>
-      <!--    <breadcrumb id="breadcrumb-container" class="breadcrumb-container"/>-->
       <v-spacer></v-spacer>
       <div class="right-menu">
         <template v-if="device!=='mobile'">
 
-<!--          <search id="header-search" class="right-menu-item"/>-->
 
           <error-log class="errLog-container right-menu-item hover-effect"/>
-
-<!--          <screenfull id="screenfull" class="right-menu-item hover-effect"/>-->
-
-<!--          <el-tooltip content="Global Size" effect="light" placement="bottom">-->
-<!--            <size-select id="size-select" class="right-menu-item hover-effect"/>-->
-<!--          </el-tooltip>-->
 
         </template>
 
@@ -94,19 +83,6 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    read(id){
-      let Did = {
-        user_id: this.$store.state.user.user_id,
-        notify_id:id
-      }
-      // readNotify(Did).then(response => {
-      //   this.getList()
-      // })
-    },
-    showNotify() {
-
-      this.notify = true
-    },
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
@@ -114,31 +90,6 @@ export default {
     slicecreate_time(str) {
       return str.substring(0, 10)
     },
-
-    getList() {
-      let Did = {
-        user_id:this.$store.state.user.user_id
-      }
-      // fetchNotify(Did).then(response => {
-      //   this.list_length = response.data.list_length
-      //   let originData = response.data.notify_list
-      //   console.log(originData)
-      //   let divide = {divider: true, inset: true}
-      //   let o
-      //   this.$nextTick(() => {
-      //     this.items = []
-      //     for (o in originData) {
-      //       this.items.push(originData[o])
-      //       this.items.push(divide)
-      //     }
-      //     console.log(this.items)
-      //     setTimeout(() => {
-      //       this.listLoading = false
-      //     }, 1.5 * 1000)
-      //   })
-      // })
-    },
-
   }
 }
 </script>
@@ -150,7 +101,7 @@ export default {
   position: relative;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
-  background: linear-gradient(to right, #87CEFA 0%, 	#2196F3 100%);
+  background: linear-gradient(to right, #1687A7 0%, 	#276678 100%);
   .hamburger-container {
     line-height: 46px;
     height: 100%;
@@ -187,7 +138,7 @@ export default {
       padding: 0 8px;
       height: 100%;
       font-size: 18px;
-      color: #5a5e66;
+      color: #F6F5F5;
       vertical-align: text-bottom;
 
       &.hover-effect {
