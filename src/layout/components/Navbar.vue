@@ -77,7 +77,7 @@ export default {
     }
   },
   created() {
-    this.getList()
+    
   },
   methods: {
     toggleSideBar() {
