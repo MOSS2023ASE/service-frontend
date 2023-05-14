@@ -17,6 +17,11 @@
       align="center">
     </el-table-column>
     <el-table-column
+      prop="status"
+      label="问题状态"
+      align="center">
+    </el-table-column>
+    <el-table-column
       label="操作"
       align="center">
       <template slot-scope="scope">
@@ -47,9 +52,11 @@ export default {
       this.$router.push({name: 'issueInfoDetail', params: {issue_id: issue_id}})
       //
     },
-    splitTime() {
+    processIssue() {
+      let status_list = ['未认领', '已认领', '未认领复审', '已认领复审', '有效提问', '无效提问'];
       for (let i = 0; i < this.issue_list.length; i++) {
         this.issue_list[i].update_at = this.issue_list[i].update_at.split('.')[0];
+        this.issue_list[i].status = status_list[this.issue_list[i].status];
       }
     },
     getAskIssue() {
@@ -57,7 +64,7 @@ export default {
         1,
         2e9).then(response => {
         this.issue_list = response.data.issue_list;
-        this.splitTime();
+        this.processIssue();
       }).catch(error => {
         Message({message: '查询提问issue失败', type: 'error'});
       });
@@ -67,9 +74,9 @@ export default {
         1,
         2e9).then(response => {
         this.issue_list = response.data.issue_list;
-        this.splitTime();
+        this.processIssue();
       }).catch(error => {
-        Message({message: '查询提问issue失败', type: 'error'});
+        Message({message: '查询复审的issue失败', type: 'error'});
       });
     },
     getAdoptIssue() {
@@ -77,7 +84,7 @@ export default {
         1,
         2e9).then(response => {
         this.issue_list = response.data.issue_list;
-        this.splitTime();
+        this.processIssue();
       }).catch(error => {
         Message({message: '查询认领的issue失败', type: 'error'});
       });
@@ -87,7 +94,7 @@ export default {
         1,
         2e9).then(response => {
         this.issue_list = response.data.issue_list;
-        this.splitTime();
+        this.processIssue();
       }).catch(error => {
         Message({message: '查询收藏的issue失败', type: 'error'});
       });

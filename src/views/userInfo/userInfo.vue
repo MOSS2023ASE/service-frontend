@@ -54,6 +54,7 @@
           <v-dialog v-model="showDialog" max-width="600px" persistent>
             <v-card>
               <v-card-title class="text-h5">修改密码</v-card-title>
+              <v-card-text>密码长度为6~30位</v-card-text>
               <v-card-text>
                 <v-form ref="form" v-model="valid" class="px-12" lazy-validation @keyup.enter.native="changePwd">
                   <v-text-field
@@ -72,6 +73,16 @@
                     :append-icon="showNewPwd ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="showNewPwd ? 'text' : 'password'"
                     :rules="pwdRules"
+                    outlined
+                    dense
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="repeatPwd"
+                    label="重复新的密码"
+                    @click:append="showRepeatPwd = !showRepeatPwd"
+                    :append-icon="showRepeatPwd ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="showRepeatPwd ? 'text' : 'password'"
+                    :rules="repeatRules"
                     outlined
                     dense
                   ></v-text-field>
@@ -181,12 +192,15 @@ export default {
       showDialog: false,
       showOldPwd: false,
       showNewPwd: false, 
+      showRepeatPwd: false,
       oldPwd: '',
       newPwd: '',
+      repeatPwd: '', 
       avatar: '',
       valid: true,
       role: 0, 
-      pwdRules: [(v) => v.length >= 6 && v.length <= 30 || '密码需要为6~30位']
+      pwdRules: [(v) => v.length >= 6 && v.length <= 30 || '密码需要为6~30位'],
+      repeatRules: [(v) => v === this.newPwd || '请与新密码保持一致']
     }
   },
   components: {
