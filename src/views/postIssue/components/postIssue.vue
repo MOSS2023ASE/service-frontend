@@ -51,6 +51,8 @@
       </el-row>
     </el-form>
     <span slot="footer" class="dialog-footer">
+            <el-button id="cancel-button" @click="saveDraft">保存草稿</el-button>
+            <el-button id="cancel-button" @click="loadDraft">恢复草稿</el-button>
             <el-button id="confirm-button" type="primary" @click="editMode?upadteIssue():postIssue()">确认</el-button>
             <el-button id="cancel-button" @click="closeDialog">取消</el-button>
         </span>
@@ -67,6 +69,7 @@ import {
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
 import {getToken, getRole} from '@/utils/auth'
 import {upload_public} from "@/api/upload";
+import {save_draft, load_draft} from '@/api/draft'
 import { isSwitchStatement } from "@babel/types";
 
 export default {
@@ -309,6 +312,37 @@ export default {
         Message({
           message: '发布问题失败',
           type: 'error',
+        })
+      })
+    },
+    saveDraft() {
+      save_draft(getToken(), this.issue.chapter, this.issue.title,
+        this.content, parseInt(this.issue.anonymous)).then(response => {
+        Message({
+          message: '草稿保存成功',
+          type: 'success'
+        });
+      }).catch(error => {
+        Message({
+          message: '草稿保存失败',
+          type: 'error',
+        })
+      })
+    },
+    loadDraft() {
+      load_draft(getToken()).then(response => {
+        this.issue.title = response.data.title
+        this.content = response.data.content
+        this.issue.text = response.data.content
+        this.issue.chapter = response.data.chapter_id
+        // this.issue.subject = response.data.subject_id
+        this.issue.anonymous = String(response.data.anonymous)
+      }).catch(error => {
+        this.$notify({
+          title: '草稿加载失败',
+          message: '草稿加载失败',
+          type: 'warning',
+          duration: 2000
         })
       })
     },

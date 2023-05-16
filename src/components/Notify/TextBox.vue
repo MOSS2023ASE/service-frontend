@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import {createNotify} from "@/api/Notify";
+import {createNotify} from "@/api/draft";
 import {
   // 需要的 extensions
   Doc,
