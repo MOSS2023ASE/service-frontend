@@ -218,8 +218,8 @@ export default {
   transition: all 0.3s;
 
   border-style: solid;
-  border-color: #666666;
-  border-width: 2px;
+  border-color: #AAAAAA;
+  border-width: 1px;
   border-radius: 0.8ch;
 }
 

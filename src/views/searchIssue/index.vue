@@ -1,5 +1,13 @@
 <template>
   <div class="app-container">
+      <el-switch style="float: right; margin-bottom: 30px;"
+          v-model="year"
+          active-text="本学期问题"
+          inactive-text="以往学期问题"
+          active-color="#146c94"
+          inactive-color="#afd3e2"
+          @change="changeYear">
+      </el-switch>
       <v-card class="search-bar">
           <div class="search-info">
               <el-input v-model="search_keyword"
@@ -93,6 +101,7 @@ export default {
       return {
           dialogVisible: false,
           user_type: getRole(),
+          year: true,
           search_keyword: '',
           search_tags: [],
           search_state: null,
@@ -333,6 +342,9 @@ export default {
           if (refresh === true) {
             this.search()
           }
+      },
+      changeYear() {
+          this.search()
       },
       search() {
           if (this.sort_order === null) {
