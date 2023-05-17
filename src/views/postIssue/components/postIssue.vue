@@ -7,7 +7,7 @@
              :close-on-press-escape="false">
     <el-form :model="issue">
       <el-form-item label="标题">
-        <el-input v-model="issue.title" placeholder="点此输入标题..."/>
+        <el-input v-model="issue.title" placeholder=""/>
       </el-form-item>
       <el-form-item label="问题描述">
         <el-col :span="24">
@@ -51,10 +51,10 @@
       </el-row>
     </el-form>
     <span slot="footer" class="dialog-footer">
-            <el-button id="cancel-button" @click="saveDraft">保存草稿</el-button>
-            <el-button id="cancel-button" @click="loadDraft">恢复草稿</el-button>
-            <el-button id="confirm-button" type="primary" @click="editMode?upadteIssue():postIssue()">确认</el-button>
-            <el-button id="cancel-button" @click="closeDialog">取消</el-button>
+            <el-button class="cancel-button" @click="saveDraft">保存草稿</el-button>
+            <el-button class="cancel-button" @click="loadDraft">恢复草稿</el-button>
+            <el-button class="confirm-button" @click="editMode?upadteIssue():postIssue()">确认</el-button>
+            <el-button class="cancel-button" @click="closeDialog">取消</el-button>
         </span>
   </el-dialog>
 </template>
@@ -212,7 +212,7 @@ export default {
         chapter: null,
         anonymous: null,
       },
-      content: '点此输入问题...',
+      content: '',
       hooks:{
         addImageBlobHook: async (blob, callback) => {
           let jwt = this.$store.state.user.token
@@ -262,7 +262,7 @@ export default {
       this.issue.subject = null;
       this.issue.chapter = null;
       this.issue.anonymous = null;
-      this.content = '点此输入问题...';
+      this.content = '';
     },
     clearSubject() {
       this.issue.chapter = null
@@ -421,7 +421,11 @@ export default {
 
 <style scoped>
 ::v-deep .el-dialog__header {
-  background-color: #689add !important;
+  background-color: #276678 !important;
+}
+
+::v-deep .el-dialog__title {
+  color: white !important;
 }
 
 ::v-deep .el-dialog__footer {
@@ -429,11 +433,15 @@ export default {
   margin-bottom: 30px !important;
 }
 
-#confirm-button {
+.confirm-button {
+  background-color: #1687A7;
+  border-color: #1687A7;
   color: white;
 }
 
-#cancel-button {
+.cancel-button {
+  background-color: #D3E0EA;
+  border-color: #D3E0EA;
   color: black;
 }
 

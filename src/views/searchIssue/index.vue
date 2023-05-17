@@ -19,11 +19,11 @@
                       <el-option v-for="tag in all_tags"
                           :key="tag.tag_id" :label="tag.content" :value="tag.tag_id"/>
                   </el-select> -->
-                <el-select v-model="sort_order" class="search-select"
-                           placeholder="排序方式">
-                  <el-option v-for="order in all_orders"
-                             :key="order.order_id" :label="order.name" :value="order.order_id"/>
-                </el-select>
+                  <el-select v-model="sort_order" class="search-select"
+                            placeholder="排序方式">
+                    <el-option v-for="order in all_orders"
+                              :key="order.order_id" :label="order.name" :value="order.order_id"/>
+                  </el-select>
                   <el-select v-model="search_state" v-if="this.user_type !== 0"
                              class="search-select" filterable multiple collapse-tags
                              :multiple-limit="6" placeholder="问题状态">

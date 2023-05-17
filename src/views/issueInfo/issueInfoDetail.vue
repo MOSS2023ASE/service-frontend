@@ -196,6 +196,25 @@
 
       </Confirm>
       <RelateDialog :relate="relate" @close-dialog="onCloseRelate"></RelateDialog>
+      
+      <el-dialog
+        title="选择问题标签"
+        :show-close="false"
+        :visible.sync="tag_dialog"
+        :closeOnClickModal="false"
+        :closeOnPressEscape="false"
+        :closeOnHashChange="false"
+        width="30%">
+        <el-select v-model="added_tags"
+                    class="added_tags" filterable multiple collapse-tags
+                    :multiple-limit="5" placeholder="选择标签">
+          <el-option v-for="tag in all_tags"
+                      :key="tag.tag_id" :label="tag.content" :value="tag.tag_id"/>
+        </el-select>
+        <span slot="footer" class="dialog-footer">
+                    <el-button class="confirm-button" @click.stop="addTags">确 认</el-button>
+                </span>
+      </el-dialog>
     </v-app>
   </div>
 </template>
@@ -224,8 +243,9 @@ import {
   classify_issue
 } from "@/api/issue";
 import {get_issue_all_comments, create_comment, delete_comment} from "@/api/forum";
+import {get_all_tags} from '@/api/tag';
+import {getToken, getRole} from '@/utils/auth';
 import {upload_public} from "@/api/upload";
-import {getRole} from "@/utils/auth";
 import DOMPurify from "dompurify";
 
 export default {
@@ -285,6 +305,9 @@ export default {
       update_at: '',
       score: 0,
       tag_list: [],
+      tag_dialog: false,
+      all_tags: [],
+      added_tags: [],
       editorText: "发布你的回答",
       editorOptions: {},
       pageSize: 10,
@@ -584,6 +607,23 @@ export default {
           type: 'success',
           duration: 2000
         })
+        get_all_tags(getToken()).then(response => {
+          this.all_tags = response.data['tag_list']
+          this.tag_dialog = true
+          this.$notify({
+            title: '添加标签',
+            message: '添加标签成功',
+            type: 'success',
+            duration: 2000
+          })
+        }).catch(error => {
+          this.$notify({
+            title: '添加标签',
+            message: '添加标签失败',
+            type: 'error',
+            duration: 2000
+          })
+        })
       }).catch(err => {
         this.$notify({
           title: '有效问题',
@@ -629,6 +669,10 @@ export default {
     },
     closeDialog() {
       this.dialogVisible = false;
+    },
+    addTags() {
+      // TODO: call backend
+      this.tag_dialog = false;
     },
     initAll(id) {
       // this.initLike(id)
@@ -704,5 +748,16 @@ export default {
 <style scoped>
 [v-cloak] {
   display: none;
+}
+
+.added_tags {
+  width: 90%;
+  margin-left: 5%;
+}
+
+.confirm-button {
+  background-color: #1687A7;
+  border-color: #1687A7;
+  color: white;
 }
 </style>
