@@ -20,8 +20,8 @@
             </v-card-title>
             <v-list-item three-line>
               <v-list-item-content>
-                <v-list-item-title class="headline mb-1">{{ this.title }}</v-list-item-title>
-                <v-list-item-subtitle>
+                <v-list-item-title class="headline">{{ this.title }}    (id:{{this.issue_id}})</v-list-item-title>
+                <v-list-item-subtitle class="headline">
                   {{ this.user_name }}
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -82,6 +82,9 @@
                 </v-btn>
                 <v-btn v-show="this.status_trans_permit[6] === 1" outlined @click="invalidIssue(confirmText.invalidIssue,invalidIssue)" color="red">
                   无效问题
+                </v-btn>
+                <v-btn v-show="true" outlined @click="showRealte" color="orange">
+                  相关问题
                 </v-btn>
               </v-card-actions>
             </v-row>
@@ -192,6 +195,7 @@
       <Confirm ref="confirm">
 
       </Confirm>
+      <RelateDialog :relate="relate" @close-dialog="onCloseRelate"></RelateDialog>
     </v-app>
   </div>
 </template>
@@ -204,6 +208,7 @@ import MyRichText from "@/views/issueInfo/components/MyRichText";
 import postIssue from "@/views/postIssue/components/postIssue";
 import marked from 'marked';
 import Confirm from "@/views/issueInfo/components/Confirm";
+import RelateDialog from "@/components/RelateIssue/RelateDialog";
 import {
   get_issue_detail,
   like_issue,
@@ -225,7 +230,7 @@ import DOMPurify from "dompurify";
 
 export default {
   name: "issueInfoDetail",
-  components: {MarkdownEditor, MyRichText, postIssue, marked,Confirm},
+  components: {MarkdownEditor, MyRichText, postIssue, marked,Confirm,RelateDialog},
   props: {},
   data() {
     return {
@@ -284,6 +289,7 @@ export default {
       editorOptions: {},
       pageSize: 10,
       currentPage: 1,
+      relate:false,
       hooks: {
         addImageBlobHook: async (blob, callback) => {
           let jwt = this.$store.state.user.token
@@ -642,6 +648,13 @@ export default {
             duration: 2000
           })
         })
+    },
+    //beta
+    showRealte() {
+      this.relate= true
+    },
+    onCloseRelate() {
+      this.relate = false
     }
   },
   computed: {

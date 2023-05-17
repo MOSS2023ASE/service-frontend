@@ -3,7 +3,7 @@ import Vue from 'vue'
 import Cookies from 'js-cookie'
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
-
+import '@mdi/font/css/materialdesignicons.min.css'
 import Element from 'element-ui'
 // import { ElementTiptapPlugin } from 'element-tiptap'
 import './styles/element-variables.scss'
@@ -27,6 +27,7 @@ import dayjs from 'dayjs'
 Vue.prototype.dayjs = dayjs;
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
+import Vuelidate from 'vuelidate'
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -46,6 +47,7 @@ Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   locale: enLang // 如果使用中文，无需设置，请删除
 })
+Vue.use(Vuelidate)
 
 // Vue.use(ElementTiptapPlugin, {
 //   lang: 'zh'

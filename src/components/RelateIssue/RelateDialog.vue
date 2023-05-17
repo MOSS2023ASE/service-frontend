@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-dialog v-model="notify" width="700px" persistent verlay-opacity="0.1">
+    <v-dialog v-model="relate" width="700px" persistent overlay-opacity="0.1">
       <v-card
         max-width="700"
         class="mx-auto"
@@ -13,17 +13,17 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
 
-          <v-toolbar-title>通知</v-toolbar-title>
+          <v-toolbar-title>关联问题</v-toolbar-title>
 
           <v-spacer></v-spacer>
 
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon @click="readAll" v-bind="attrs" v-on="on">
-                <v-icon>mdi-check</v-icon>
+              <v-btn icon @click="showAddDialog()" v-bind="attrs" v-on="on">
+                <v-icon>mdi-brush</v-icon>
               </v-btn>
             </template>
-            <span>全部已读</span>
+            <span>添加关联问题</span>
           </v-tooltip>
 
         </v-toolbar>
@@ -60,7 +60,7 @@
                       color="#1687A7"
                     >
                       <v-icon >
-                        mdi-check
+                        mdi-delete
                       </v-icon>
                     </v-btn>
                   </v-col>
@@ -77,21 +77,24 @@
         ></v-pagination>
       </v-card>
     </v-dialog>
+    <AddRelateDialog :show="showAdd" @close-dialog="onCloseDialog"></AddRelateDialog>
   </v-app>
 </template>
 
 <script>
 import {read_one, get_all, clear} from "@/api/notify";
 import DOMPurify from "dompurify";
-
+import AddRelateDialog from "@/components/RelateIssue/AddRelateDialog";
 export default {
-  name: "NotifyDialog",
-  props: {notify:Boolean},
+  name: "RelateDialog",
+  props: {relate:Boolean},
+  components:{AddRelateDialog},
   data() {
     return {
+      showAdd:false,
       items: [{
         "id": 6,
-        "title": "退学通知",
+        "title": "相关问题",
         "content": "congratulations!你被退学啦哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
         "time": "2023-05-13 10:18:22",
         "category": 1,
@@ -99,7 +102,7 @@ export default {
       },
         {
           "id": 6,
-          "title": "退学通知",
+          "title": "相关问题",
           "content": "congratulations!你被退学啦哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
           "time": "2023-05-13 10:18:22",
           "category": 1,
@@ -107,7 +110,7 @@ export default {
         },
         {
           "id": 6,
-          "title": "退学通知",
+          "title": "相关问题",
           "content": "congratulations!你被退学啦哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
           "time": "2023-05-13 10:18:22",
           "category": 1,
@@ -162,6 +165,12 @@ export default {
     closeDialog() {
       this.$emit('close-dialog');
     },
+    showAddDialog() {
+      this.showAdd = true
+    },
+    onCloseDialog() {
+      this.showAdd = false;
+    }
   },
   created() {
     //this.getList()
