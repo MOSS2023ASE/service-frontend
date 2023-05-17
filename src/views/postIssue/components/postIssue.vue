@@ -51,10 +51,10 @@
       </el-row>
     </el-form>
     <span slot="footer" class="dialog-footer">
-            <el-button id="cancel-button" @click="saveDraft">保存草稿</el-button>
-            <el-button id="cancel-button" @click="loadDraft">恢复草稿</el-button>
-            <el-button id="confirm-button" type="primary" @click="editMode?upadteIssue():postIssue()">确认</el-button>
-            <el-button id="cancel-button" @click="closeDialog">取消</el-button>
+            <el-button class="cancel-button" @click="saveDraft">保存草稿</el-button>
+            <el-button class="cancel-button" @click="loadDraft">恢复草稿</el-button>
+            <el-button class="confirm-button" @click="editMode?upadteIssue():postIssue()">确认</el-button>
+            <el-button class="cancel-button" @click="closeDialog">取消</el-button>
         </span>
   </el-dialog>
 </template>
@@ -433,11 +433,15 @@ export default {
   margin-bottom: 30px !important;
 }
 
-#confirm-button {
+.confirm-button {
+  background-color: #1687A7;
+  border-color: #1687A7;
   color: white;
 }
 
-#cancel-button {
+.cancel-button {
+  background-color: #D3E0EA;
+  border-color: #D3E0EA;
   color: black;
 }
 

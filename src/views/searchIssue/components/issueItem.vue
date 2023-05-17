@@ -62,7 +62,7 @@
       </div>
     </div>
     <div class="interactions" @click.stop="">
-      <el-button class="inter-button" type="warning" v-if="this.status_trans_permit[0] === 1"
+      <el-button class="inter-button" v-if="this.status_trans_permit[0] === 1"
                  style="issue-button" @click.stop="answerDialogVisible = true">
         认领回答
       </el-button>
@@ -73,11 +73,11 @@
         width="30%">
         <span>确认认领回答该问题？</span>
         <span slot="footer" class="dialog-footer">
-                    <el-button @click.stop="answerDialogVisible = false" style="color: #666666;">取 消</el-button>
-                    <el-button type="primary" @click.stop="answerIssue">确 定</el-button>
+                    <el-button class="confirm-button" @click.stop="answerIssue">确 认</el-button>
+                    <el-button class="cancel-button" @click.stop="answerDialogVisible = false" style="color: #666666;">取 消</el-button>
                 </span>
       </el-dialog>
-      <el-button class="inter-button" type="warning" v-if="this.status_trans_permit[4] === 1"
+      <el-button class="inter-button" v-if="this.status_trans_permit[4] === 1"
                  style="issue-button" @click.stop="verifyDialogVisible = true">
         认领复审
       </el-button>
@@ -394,7 +394,7 @@ export default {
   font-size: 22px;
 }
 
-.inter-button .el-button {
+.inter-button {
   margin-top: 10%;
   margin-bottom: 10%;
   margin-left: 0px;
@@ -402,16 +402,28 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  background-color: #19A7CE;
+  border-color: #19A7CE;
+  color: white;
 }
 
-.inter-button .el-button--medium {
-  padding-left: 0%;
-  padding-right: 0%;
-  text-align: center;
-  color: white;
+.inter-button:hover {
+  color: black;
 }
 
 li {
   list-style-type: none;
+}
+
+.confirm-button {
+  background-color: #1687A7;
+  border-color: #1687A7;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #D3E0EA;
+  border-color: #D3E0EA;
+  color: black;
 }
 </style>

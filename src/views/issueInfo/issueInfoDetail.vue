@@ -212,7 +212,7 @@
                       :key="tag.tag_id" :label="tag.content" :value="tag.tag_id"/>
         </el-select>
         <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" style="color: white;" @click.stop="addTags">确 定</el-button>
+                    <el-button class="confirm-button" @click.stop="addTags">确 认</el-button>
                 </span>
       </el-dialog>
     </v-app>
@@ -550,12 +550,6 @@ export default {
           type: 'success',
           duration: 2000
         })
-        // TODO: uncomment these
-        // get_all_tags(getToken()).then(response => {
-        //   this.all_tags = response.data['tag_list']
-        //   this.tag_dialog = true
-        // }).catch(error => {
-        // })
       }).catch(err => {
         this.$notify({
           title: '同意回答',
@@ -612,6 +606,23 @@ export default {
           message: '判定有效问题',
           type: 'success',
           duration: 2000
+        })
+        get_all_tags(getToken()).then(response => {
+          this.all_tags = response.data['tag_list']
+          this.tag_dialog = true
+          this.$notify({
+            title: '添加标签',
+            message: '添加标签成功',
+            type: 'success',
+            duration: 2000
+          })
+        }).catch(error => {
+          this.$notify({
+            title: '添加标签',
+            message: '添加标签失败',
+            type: 'error',
+            duration: 2000
+          })
         })
       }).catch(err => {
         this.$notify({
@@ -739,16 +750,14 @@ export default {
   display: none;
 }
 
-::v-deep .el-dialog__header {
-  background-color: #276678 !important;
-}
-
-::v-deep .el-dialog__title {
-  color: white !important;
-}
-
 .added_tags {
   width: 90%;
   margin-left: 5%;
+}
+
+.confirm-button {
+  background-color: #1687A7;
+  border-color: #1687A7;
+  color: white;
 }
 </style>
