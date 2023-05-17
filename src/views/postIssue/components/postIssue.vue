@@ -331,11 +331,12 @@ export default {
     },
     loadDraft() {
       load_draft(getToken()).then(response => {
+        // console.log(response.data.anonymous)
         this.issue.title = response.data.title
         this.content = response.data.content
         this.issue.text = response.data.content
         this.issue.chapter = response.data.chapter_id
-        // this.issue.subject = response.data.subject_id
+        this.issue.subject = response.data.subject_id
         this.issue.anonymous = String(response.data.anonymous)
       }).catch(error => {
         this.$notify({
