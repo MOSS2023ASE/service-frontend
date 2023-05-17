@@ -24,13 +24,14 @@
             <router-link to="/userInfo/index">
               <el-dropdown-item>我的信息</el-dropdown-item>
             </router-link>
+            <el-dropdown-item divided @click.native="showNotify">我的通知</el-dropdown-item>
             <el-dropdown-item divided @click.native="logout">
               <span style="display:block;">退出登录</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
-
+      <NotifyDialog :notify="notify" @close-dialog="onCloseDialog"></NotifyDialog>
     </v-app-bar>
   </v-app>
 </template>
@@ -45,7 +46,7 @@ import variables from '@/styles/variables.scss'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import SidebarItem from '@/layout/components/Sidebar/SidebarItem'
-
+import NotifyDialog from "@/components/Notify/NotifyDialog";
 export default {
   components: {
     Breadcrumb,
@@ -54,7 +55,8 @@ export default {
     Screenfull,
     SizeSelect,
     Search,
-    SidebarItem
+    SidebarItem,
+    NotifyDialog
   },
   data() {
     return {
@@ -77,7 +79,7 @@ export default {
     }
   },
   created() {
-    
+
   },
   methods: {
     toggleSideBar() {
@@ -90,6 +92,12 @@ export default {
     slicecreate_time(str) {
       return str.substring(0, 10)
     },
+    showNotify() {
+      this.notify = true
+    },
+    onCloseDialog() {
+      this.notify = false;
+    }
   }
 }
 </script>

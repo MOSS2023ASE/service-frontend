@@ -17,8 +17,12 @@
     "server": "nodemon index.js --ignore client"
   },
   "dependencies": {
+    "@mdi/js": "^7.2.96",
     "@toast-ui/editor": "^2.2.0",
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",
+    "@vue/composition-api": "^1.7.1",
+    "@vuelidate/core": "^2.0.2",
+    "@vuelidate/validators": "^2.0.2",
     "ant-design-vue": "^1.7.8",
     "axios": "0.18.1",
     "clipboard": "2.0.4",
@@ -49,12 +53,13 @@
     "vue-router": "3.0.2",
     "vue-splitpane": "1.0.4",
     "vuedraggable": "2.20.0",
+    "vuelidate": "^0.7.7",
     "vuetify": "^2.6.15",
     "vuex": "3.1.0",
     "xlsx": "0.14.1"
   },
   "devDependencies": {
-    "@mdi/font": "^7.0.96",
+    "@mdi/font": "^7.2.96",
     "@vue/cli-plugin-babel": "4.4.4",
     "@vue/cli-plugin-eslint": "4.4.4",
     "@vue/cli-plugin-unit-jest": "4.4.4",
