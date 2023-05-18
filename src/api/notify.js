@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function clear(
+export function clear_all_notification(
   jwt, //: string
 ) {
   return request({
@@ -12,7 +12,7 @@ export function clear(
   })
 }
 
-export function read_one(
+export function read_one_notification(
   jwt, //: string
   id,
 ) {
@@ -26,19 +26,32 @@ export function read_one(
   })
 }
 
-export function get_all(
+export function get_all_notification(
   jwt, //: string
-  page_no,
-  notification_per_page,
 ) {
   return request({
     url: '/notification/user_receive',
     method: 'post',
     data: {
       jwt: jwt,
-      page_no:page_no,
-      notification_per_page:notification_per_page
     }
   })
 }
 
+export function admin_broadcast(
+  jwt, //: string
+  title, //: string
+  content, //: string
+  category, //: number
+) {
+  return request({
+    url: '/notification/broadcast',
+    method: 'post',
+    data: {
+      jwt: jwt,
+      title: title,
+      content: content,
+      category: category
+    }
+  })
+}

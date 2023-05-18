@@ -196,7 +196,7 @@
 
       </Confirm>
       <RelateDialog :relate="relate" @close-dialog="onCloseRelate"></RelateDialog>
-      
+
       <el-dialog
         title="选择问题标签"
         :show-close="false"

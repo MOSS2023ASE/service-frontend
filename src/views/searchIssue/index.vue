@@ -87,6 +87,7 @@ import {search_issue} from '@/api/issue'
 import {get_all_tags} from '@/api/tag'
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
 import {getToken, getRole} from '@/utils/auth'
+import {get_active_users, get_popular_issues} from '@/api/hot_list'
 
 export default {
   name: "Search",
