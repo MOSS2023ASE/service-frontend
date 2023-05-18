@@ -81,8 +81,9 @@
 </template>
 
 <script>
-import {read_one, get_all, clear} from "@/api/notify";
+import {read_one_notification, get_all_notification, clear_all_notification} from "@/api/notify";
 import DOMPurify from "dompurify";
+import {getToken} from "@/utils/auth";
 
 export default {
   name: "NotifyDialog",
@@ -90,7 +91,7 @@ export default {
   data() {
     return {
       items: [{
-        "id": 6,
+        "id": 1,
         "title": "退学通知",
         "content": "congratulations!你被退学啦哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
         "time": "2023-05-13 10:18:22",
@@ -98,7 +99,7 @@ export default {
         "status": 0
       },
         {
-          "id": 6,
+          "id": 2,
           "title": "退学通知",
           "content": "congratulations!你被退学啦哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
           "time": "2023-05-13 10:18:22",
@@ -119,11 +120,13 @@ export default {
   },
   methods: {
     getList() {
-      //TODO 页数现在不确定
+      // TODO 目前 API 已对接，一次性传回了所有通知。下面分页的代码没太看懂，所以没改。
+      // TODO 建议增加展示通知是否已读、通知类型、时间等字段，内容反而可以不展示
       let jwt = this.$store.state.user.token
-      get_all(jwt).then(response => {
-        this.list_length = response.data.list_length
-        let originData = response.data.notify_list
+      get_all_notification(getToken()).then(response => {
+        console.log(response)
+        this.list_length = response.data.notification_list.length
+        let originData = response.data.notification_list
         console.log(originData)
         let divide = {divider: true, inset: true}
         let o
@@ -144,17 +147,15 @@ export default {
       return str.substring(0, 10)
     },
     readAll() {
-      //TODO 等待getList写好
       let jwt = this.$store.state.user.token
-      clear(jwt).then(response => {
+      clear_all_notification(jwt).then(response => {
         console.log('clear')
       })
     },
     read(id) {
-      //TODO 等待getList写好
       let jwt = this.$store.state.user.token
-      read_one(jwt,id).then(response=>{
-
+      read_one_notification(jwt, id).then(response=>{
+        console.log(response)
       }).catch(err=>{
 
       })
@@ -164,7 +165,7 @@ export default {
     },
   },
   created() {
-    //this.getList()
+    this.getList()
   },
 
 }

@@ -82,7 +82,8 @@
 </template>
 
 <script>
-import {read_one, get_all, clear} from "@/api/notify";
+import {read_one_notification, get_all_notification, clear_all_notification} from "@/api/notify";
+import {add_association, delete_association, get_association} from '@/api/issue_connect';
 import DOMPurify from "dompurify";
 import AddRelateDialog from "@/components/RelateIssue/AddRelateDialog";
 export default {
@@ -124,7 +125,7 @@ export default {
     getList() {
       //TODO 页数现在不确定
       let jwt = this.$store.state.user.token
-      get_all(jwt).then(response => {
+      get_all_notification(jwt).then(response => {
         this.list_length = response.data.list_length
         let originData = response.data.notify_list
         console.log(originData)
@@ -149,14 +150,14 @@ export default {
     readAll() {
       //TODO 等待getList写好
       let jwt = this.$store.state.user.token
-      clear(jwt).then(response => {
+      clear_all_notification(jwt).then(response => {
         console.log('clear')
       })
     },
     read(id) {
       //TODO 等待getList写好
       let jwt = this.$store.state.user.token
-      read_one(jwt,id).then(response=>{
+      read_one_notification(jwt,id).then(response=>{
 
       }).catch(err=>{
 
