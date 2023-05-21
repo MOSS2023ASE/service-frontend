@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function add_association(
   jwt, //: string
-  issue_id, // : number
+  issue_ids, // : array
   issue_associate_id, // : number
 ) {
   return request({
@@ -10,7 +10,7 @@ export function add_association(
     method: 'post',
     data: {
       jwt: jwt,
-      issue_id: issue_id,
+      issue_id: issue_ids,
       issue_associate_id: issue_associate_id
     }
   })

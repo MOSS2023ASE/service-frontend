@@ -172,7 +172,7 @@ export default {
   methods: {
     /* async */ toIssueDetailView() {
       //Test issueInfoDetail
-      this.$router.push({name: 'issueInfoDetail', params: {issue_id: this.id}})
+      this.$router.push({name: 'issueInfoDetail', query: {issue_id: this.id}})
     },
     answerIssue() {
       adopt_issue(getToken(), this.id).then(response => {

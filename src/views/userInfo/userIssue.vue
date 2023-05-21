@@ -49,7 +49,7 @@ export default {
     /* async */ toIssueDetailView(issue_id) {
       // TODO: call backend API
       // Test issueInfoDetail
-      this.$router.push({name: 'issueInfoDetail', params: {issue_id: issue_id}})
+      this.$router.push({name: 'issueInfoDetail', query: {issue_id: issue_id}})
       //
     },
     processIssue() {

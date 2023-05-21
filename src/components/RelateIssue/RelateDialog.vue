@@ -17,7 +17,7 @@
 
           <v-spacer></v-spacer>
 
-          <v-tooltip top>
+          <v-tooltip top v-if="this.allow_relate === 1">
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon @click="showAddDialog()" v-bind="attrs" v-on="on">
                 <v-icon>mdi-brush</v-icon>
@@ -38,29 +38,41 @@
 
             <v-list-item
               v-else
-              :key="item.id"
+              :key="item.issue_id"
             >
               <template v-slot:default="{ active, toggle }">
                 <v-list-item-content>
-                  <v-col cols="10" class="mr-3">
+                  <v-col cols="9" class="mr-3">
                     <v-row>
-                      <v-list-item-title v-text="item.title"></v-list-item-title>
+                      <v-list-item-title>{{ item.issue_title }} (id:{{ item.issue_id }})</v-list-item-title>
                     </v-row>
 
                     <v-row>
-                    <v-list-item-subtitle v-html="item.content"></v-list-item-subtitle>
+                      <v-list-item-subtitle v-text="getAbstrct(item.content)"></v-list-item-subtitle>
                     </v-row>
                   </v-col>
 
-                  <v-col cols="1">
+                  <v-col cols="1" v-if="allow_relate === 1">
                     <v-btn
-                      @click="read(item.id)"
+                      @click="deleteOne(item.issue_id)"
                       depressed
                       text
                       color="#1687A7"
                     >
-                      <v-icon >
+                      <v-icon>
                         mdi-delete
+                      </v-icon>
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="1">
+                    <v-btn
+                      @click="goTo(item.issue_id)"
+                      depressed
+                      text
+                      color="#1687A7"
+                    >
+                      <v-icon>
+                        mdi-magnify
                       </v-icon>
                     </v-btn>
                   </v-col>
@@ -72,94 +84,46 @@
         </v-list>
         <v-pagination
           v-model="page_no"
-          :length="notification_per_page"
+          :length="totalPages"
           :total-visible="7"
         ></v-pagination>
       </v-card>
     </v-dialog>
-    <AddRelateDialog :show="showAdd" @close-dialog="onCloseDialog"></AddRelateDialog>
+    <AddRelateDialog :show="showAdd" :id="this.id" @close-dialog="onCloseDialog"
+                     @update-dialog="update"></AddRelateDialog>
   </v-app>
 </template>
 
 <script>
-import {read_one_notification, get_all_notification, clear_all_notification} from "@/api/notify";
 import {add_association, delete_association, get_association} from '@/api/issue_connect';
 import DOMPurify from "dompurify";
 import AddRelateDialog from "@/components/RelateIssue/AddRelateDialog";
+
 export default {
   name: "RelateDialog",
-  props: {relate:Boolean},
-  components:{AddRelateDialog},
+  props: {relate: Boolean, id: Number, allow_relate: Number, items: Array},
+  components: {AddRelateDialog},
   data() {
     return {
-      showAdd:false,
-      items: [{
-        "id": 6,
-        "title": "相关问题",
-        "content": "congratulations!你被退学啦哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
-        "time": "2023-05-13 10:18:22",
-        "category": 1,
-        "status": 0
-      },
-        {
-          "id": 6,
-          "title": "相关问题",
-          "content": "congratulations!你被退学啦哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
-          "time": "2023-05-13 10:18:22",
-          "category": 1,
-          "status": 0
-        },
-        {
-          "id": 6,
-          "title": "相关问题",
-          "content": "congratulations!你被退学啦哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
-          "time": "2023-05-13 10:18:22",
-          "category": 1,
-          "status": 0
-        }],
+      showAdd: false,
       page_no: 1,
-      notification_per_page: 5
+      list_length: 0,
+      pageSize: 5,
     }
   },
   methods: {
-    getList() {
-      //TODO 页数现在不确定
-      let jwt = this.$store.state.user.token
-      get_all_notification(jwt).then(response => {
-        this.list_length = response.data.list_length
-        let originData = response.data.notify_list
-        console.log(originData)
-        let divide = {divider: true, inset: true}
-        let o
-        this.$nextTick(() => {
-          this.items = []
-          for (o in originData) {
-            this.items.push(originData[o])
-            this.items.push(divide)
-          }
-          console.log(this.items)
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
-        })
-      })
-    },
+
+
     slicecreate_time(str) {
       return str.substring(0, 10)
     },
-    readAll() {
-      //TODO 等待getList写好
-      let jwt = this.$store.state.user.token
-      clear_all_notification(jwt).then(response => {
-        console.log('clear')
-      })
-    },
-    read(id) {
-      //TODO 等待getList写好
-      let jwt = this.$store.state.user.token
-      read_one_notification(jwt,id).then(response=>{
 
-      }).catch(err=>{
+    deleteOne(relate_id) {
+
+      let jwt = this.$store.state.user.token
+      delete_association(jwt, this.id, relate_id).then(response => {
+        this.$emit('update-dialog');
+      }).catch(err => {
 
       })
     },
@@ -169,13 +133,30 @@ export default {
     showAddDialog() {
       this.showAdd = true
     },
+
     onCloseDialog() {
       this.showAdd = false;
+    },
+    getAbstrct(content) {
+      return content.length > 16 ?
+        content.slice(0, 15) + '...' :
+        content
+    },
+    goTo(id) {
+      console.log(id)
+      this.$emit('close-dialog');
+      this.$router.push({name: 'issueInfoDetail', query: {issue_id: id}})
+    },
+    update(){
+      this.$emit('update-dialog');
     }
   },
-  created() {
-    //this.getList()
-  },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.list_length / this.pageSize); // 总页数
+    },
+
+  }
 
 }
 </script>

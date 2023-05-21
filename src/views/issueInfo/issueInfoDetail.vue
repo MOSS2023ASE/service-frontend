@@ -20,7 +20,7 @@
             </v-card-title>
             <v-list-item three-line>
               <v-list-item-content>
-                <v-list-item-title class="headline">{{ this.title }}    (id:{{this.issue_id}})</v-list-item-title>
+                <v-list-item-title class="headline">{{ this.title }} (id:{{ this.issue_id }})</v-list-item-title>
                 <v-list-item-subtitle class="headline">
                   {{ this.user_name }}
                 </v-list-item-subtitle>
@@ -41,8 +41,8 @@
 
             <v-row style="margin-left: 1px">
               <v-card-actions>
-                <v-btn text color="blue">{{this.subject_name}}</v-btn>
-                <v-btn text color="blue">{{this.chapter_name}}</v-btn>
+                <v-btn text color="blue">{{ this.subject_name }}</v-btn>
+                <v-btn text color="blue">{{ this.chapter_name }}</v-btn>
               </v-card-actions>
             </v-row>
             <v-row justify="end" style="margin-right: 10px">
@@ -62,25 +62,33 @@
                   {{ this.follows }}
                 </v-btn>
                 <v-btn v-show="this.allow_comment === 1" outlined @click="edit()" color="green">编辑</v-btn>
-                <v-btn v-show="this.status_trans_permit[1] === 1" outlined @click="openConfirm(confirmText.close,close)" color="deep-orange">关闭
+                <v-btn v-show="this.status_trans_permit[1] === 1" outlined @click="openConfirm(confirmText.close,close)"
+                       color="deep-orange">关闭
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[2] === 1" outlined @click="openConfirm(confirmText.reject,reject)" color="red">
+                <v-btn v-show="this.status_trans_permit[2] === 1" outlined
+                       @click="openConfirm(confirmText.reject,reject)" color="red">
                   拒绝辅导师回答
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[3] === 1" outlined @click="openConfirm(confirmText.agree,agree)" color="blue">
+                <v-btn v-show="this.status_trans_permit[3] === 1" outlined @click="openConfirm(confirmText.agree,agree)"
+                       color="blue">
                   同意辅导师回答
                 </v-btn>
 
-                <v-btn v-show="this.status_trans_permit[0] === 1" outlined @click="openConfirm(confirmText.adopt,adopt)" color="blue">认领问题
+                <v-btn v-show="this.status_trans_permit[0] === 1" outlined @click="openConfirm(confirmText.adopt,adopt)"
+                       color="blue">认领问题
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[4] === 1" outlined @click="openConfirm(confirmText.review,review)" color="green">复审问题
+                <v-btn v-show="this.status_trans_permit[4] === 1" outlined
+                       @click="openConfirm(confirmText.review,review)" color="green">复审问题
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[5] === 1" outlined @click="readopt(confirmText.readopt,readopt)" color="cyan">重新认领
+                <v-btn v-show="this.status_trans_permit[5] === 1" outlined @click="readopt(confirmText.readopt,readopt)"
+                       color="cyan">重新认领
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[6] === 1" outlined @click="validIssue(confirmText.validIssue,validIssue)" color="green">
+                <v-btn v-show="this.status_trans_permit[6] === 1" outlined
+                       @click="validIssue(confirmText.validIssue,validIssue)" color="green">
                   有效问题
                 </v-btn>
-                <v-btn v-show="this.status_trans_permit[6] === 1" outlined @click="invalidIssue(confirmText.invalidIssue,invalidIssue)" color="red">
+                <v-btn v-show="this.status_trans_permit[6] === 1" outlined
+                       @click="invalidIssue(confirmText.invalidIssue,invalidIssue)" color="red">
                   无效问题
                 </v-btn>
                 <v-btn v-show="true" outlined @click="showRealte" color="orange">
@@ -135,7 +143,7 @@
                   </v-list-item-avatar>
 
                   <v-list-item-content>
-                    <v-list-item-title>{{item.user_name}}</v-list-item-title>
+                    <v-list-item-title>{{ item.user_name }}</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </template>
@@ -158,7 +166,9 @@
               </template>
               <v-card class="elevation-2">
                 <v-card-title class="headline">{{ comment.name }}</v-card-title>
-                <v-card-subtitle class="subtitle-1" ><span>{{ comment.time.slice(0, 10) }} {{ comment.time.slice(11, 16) }}</span></v-card-subtitle>
+                <v-card-subtitle class="subtitle-1"><span>{{ comment.time.slice(0, 10) }} {{
+                    comment.time.slice(11, 16)
+                  }}</span></v-card-subtitle>
                 <v-card-text>
                   <MyRichText :content="comment.content"></MyRichText>
                 </v-card-text>
@@ -195,7 +205,11 @@
       <Confirm ref="confirm">
 
       </Confirm>
-      <RelateDialog :relate="relate" @close-dialog="onCloseRelate"></RelateDialog>
+      <RelateDialog :relate="relate" :id="Number(issue_id)" @close-dialog="onCloseRelate"
+                    :allow_relate="allow_relate"
+                    :items="asitems"
+                    @update-dialog="getAsList"
+      ></RelateDialog>
 
       <el-dialog
         title="选择问题标签"
@@ -206,10 +220,10 @@
         :closeOnHashChange="false"
         width="30%">
         <el-select v-model="added_tags"
-                    class="added_tags" filterable multiple collapse-tags
-                    :multiple-limit="5" placeholder="选择标签">
+                   class="added_tags" filterable multiple collapse-tags
+                   :multiple-limit="5" placeholder="选择标签">
           <el-option v-for="tag in all_tags"
-                      :key="tag.tag_id" :label="tag.content" :value="tag.tag_id"/>
+                     :key="tag.tag_id" :label="tag.content" :value="tag.tag_id"/>
         </el-select>
         <span slot="footer" class="dialog-footer">
                     <el-button class="confirm-button" @click.stop="addTags">确 认</el-button>
@@ -247,10 +261,11 @@ import {get_all_tags} from '@/api/tag';
 import {getToken, getRole} from '@/utils/auth';
 import {upload_public} from "@/api/upload";
 import DOMPurify from "dompurify";
+import {get_association} from "@/api/issue_connect";
 
 export default {
   name: "issueInfoDetail",
-  components: {MarkdownEditor, MyRichText, postIssue, marked,Confirm,RelateDialog},
+  components: {MarkdownEditor, MyRichText, postIssue, marked, Confirm, RelateDialog},
   props: {},
   data() {
     return {
@@ -267,15 +282,15 @@ export default {
         },
       ],
       isLoading: true,
-      confirmText : {
-        close:"确认关闭该问题吗？该操作不可逆，请您确认操作。",
-        reject:'确认拒绝辅导师回答吗？该操作不可逆，请您确认操作。',
-        agree:'确认同意辅导师回答吗？该操作不可逆，请您确认操作。',
-        adopt:'确认认领该问题吗？该操作不可逆，请您确认操作。',
-        review:'确认复审该问题吗？该操作不可逆，请您确认操作。',
-        readopt:'确认重新认领该问题吗？该操作不可逆，请您确认操作。',
-        validIssue:'确认判定问题为有效问题吗？该操作不可逆，请您确认操作。',
-        invalidIssue:'确认判定问题为无效问题吗？该操作不可逆，请您确认操作。'
+      confirmText: {
+        close: "确认关闭该问题吗？该操作不可逆，请您确认操作。",
+        reject: '确认拒绝辅导师回答吗？该操作不可逆，请您确认操作。',
+        agree: '确认同意辅导师回答吗？该操作不可逆，请您确认操作。',
+        adopt: '确认认领该问题吗？该操作不可逆，请您确认操作。',
+        review: '确认复审该问题吗？该操作不可逆，请您确认操作。',
+        readopt: '确认重新认领该问题吗？该操作不可逆，请您确认操作。',
+        validIssue: '确认判定问题为有效问题吗？该操作不可逆，请您确认操作。',
+        invalidIssue: '确认判定问题为无效问题吗？该操作不可逆，请您确认操作。'
       },
       status_trans_permit: [0, 0, 0, 0, 0, 0, 0],
       allow_comment: 0,
@@ -308,11 +323,13 @@ export default {
       tag_dialog: false,
       all_tags: [],
       added_tags: [],
+      asitems:[],
       editorText: "发布你的回答",
       editorOptions: {},
       pageSize: 10,
       currentPage: 1,
-      relate:false,
+      relate: false,
+      allow_relate: 0,
       hooks: {
         addImageBlobHook: async (blob, callback) => {
           let jwt = this.$store.state.user.token
@@ -338,20 +355,20 @@ export default {
     }
   },
   methods: {
-    santinize(html){
+    santinize(html) {
       return DOMPurify.sanitize(html, {
-        ALLOWED_TAGS: ['p', 'a', 'b', 'i', 'strong', 'em', 'br', 'img','blockquote'],
+        ALLOWED_TAGS: ['p', 'a', 'b', 'i', 'strong', 'em', 'br', 'img', 'blockquote'],
         ALLOWED_ATTR: ['src']
       });
     },
-    openConfirm(inText,confirm){
+    openConfirm(inText, confirm) {
       this.$refs.confirm.open({
         text: inText,
         onConfirm: confirm
       })
     },
     initIssueId() {
-      this.issue_id = this.$route.params.issue_id
+      this.issue_id = this.$route.query.issue_id
     },
     initLike(id) {
       let jwt = this.$store.state.user.token
@@ -404,6 +421,7 @@ export default {
         this.status_trans_permit = response.data.status_trans_permit
         this.score = response.data.score
         this.tag_list = response.data.tag_list
+        this.allow_relate = response.data.allow_relate
         let divide = {divider: true, inset: true}
         let counselor_head = {header: '回答者'}
         let reviewer_head = {header: '复审者'}
@@ -680,7 +698,7 @@ export default {
       // this.initissueInfo(id)
       // this.initissueComment(id)
       this.isLoading = true
-      Promise.all([this.initLike(id), this.initFollow(id), this.initissueInfo(id), this.initissueComment(id)])
+      Promise.all([this.initLike(id), this.initFollow(id), this.initissueInfo(id), this.initissueComment(id),this.getAsList(id)])
         .then(() => {
           this.isLoading = false
         })
@@ -695,11 +713,31 @@ export default {
     },
     //beta
     showRealte() {
-      this.relate= true
+      this.relate = true
     },
     onCloseRelate() {
       this.relate = false
-    }
+    },
+    getAsList() {
+      console.log('upadte as')
+      let jwt = this.$store.state.user.token
+      get_association(jwt, this.issue_id).then(response => {
+        this.list_length = response.data.issue_list.length
+        let originData = response.data.issue_list
+        let divide = {divider: true, inset: true}
+        let o
+        this.$nextTick(() => {
+          this.asitems = []
+          for (o in originData) {
+            this.asitems.push(originData[o])
+            this.asitems.push(divide)
+          }
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1.5 * 1000)
+        })
+      })
+    },
   },
   computed: {
     likeIconColor() {
@@ -729,11 +767,12 @@ export default {
     let id = -1
     if (!localStorage.getItem('issue_id')) {
       this.initIssueId()
-      id = this.$route.params.issue_id
-      localStorage.setItem('issue_id', this.$route.params.issue_id)
+      id = this.$route.query.issue_id
+      console.log(id)
+      localStorage.setItem('issue_id', this.$route.query.issue_id)
     } else {
       id = localStorage.getItem('issue_id')
-      this.issue_id = localStorage.getItem('issue_id')
+      this.issue_id = Number(localStorage.getItem('issue_id'))
     }
 
     this.initAll(id)
@@ -741,6 +780,17 @@ export default {
   beforeDestroy() {
     // 从LocalStorage中移除数据
     localStorage.removeItem('issue_id')
+  },
+  watch: {
+    $route(to, from) {
+      // 当路由发生变化时，执行你需要的操作
+      console.log('路由参数变化：', this.$route.query.issue_id);
+      localStorage.removeItem('issue_id')
+      let anid = this.$route.query.issue_id
+      localStorage.setItem('issue_id', this.$route.query.issue_id)
+      this.initIssueId()
+      this.initAll(anid)
+    },
   },
 }
 </script>
