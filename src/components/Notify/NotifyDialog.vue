@@ -48,7 +48,7 @@
                     </v-row>
 
                     <v-row>
-                    <v-list-item-subtitle v-html="item.content"></v-list-item-subtitle>
+                      <v-list-item-subtitle v-html="item.content"></v-list-item-subtitle>
                     </v-row>
                   </v-col>
 
@@ -59,7 +59,7 @@
                       text
                       color="#1687A7"
                     >
-                      <v-icon >
+                      <v-icon>
                         mdi-check
                       </v-icon>
                     </v-btn>
@@ -72,7 +72,7 @@
         </v-list>
         <v-pagination
           v-model="page_no"
-          :length="notification_per_page"
+          :length="totalPages"
           :total-visible="7"
         ></v-pagination>
       </v-card>
@@ -87,7 +87,7 @@ import {getToken} from "@/utils/auth";
 
 export default {
   name: "NotifyDialog",
-  props: {notify:Boolean},
+  props: {notify: Boolean},
   data() {
     return {
       items: [{
@@ -115,19 +115,16 @@ export default {
           "status": 0
         }],
       page_no: 1,
-      notification_per_page: 5
+      list_length: 0,
+      pageSize: 5,
     }
   },
   methods: {
     getList() {
-      // TODO 目前 API 已对接，一次性传回了所有通知。下面分页的代码没太看懂，所以没改。
-      // TODO 建议增加展示通知是否已读、通知类型、时间等字段，内容反而可以不展示
       let jwt = this.$store.state.user.token
-      get_all_notification(getToken()).then(response => {
-        console.log(response)
+      get_all_notification(jwt).then(response => {
         this.list_length = response.data.notification_list.length
         let originData = response.data.notification_list
-        console.log(originData)
         let divide = {divider: true, inset: true}
         let o
         this.$nextTick(() => {
@@ -136,27 +133,32 @@ export default {
             this.items.push(originData[o])
             this.items.push(divide)
           }
-          console.log(this.items)
           setTimeout(() => {
             this.listLoading = false
           }, 1.5 * 1000)
         })
       })
     },
+
     slicecreate_time(str) {
       return str.substring(0, 10)
     },
+
     readAll() {
+
       let jwt = this.$store.state.user.token
       clear_all_notification(jwt).then(response => {
-        console.log('clear')
+        this.getList()
+      }).catch(err => {
+
       })
     },
     read(id) {
+
       let jwt = this.$store.state.user.token
-      read_one_notification(jwt, id).then(response=>{
-        console.log(response)
-      }).catch(err=>{
+      read_one_notification(jwt, id).then(response => {
+        this.getList()
+      }).catch(err => {
 
       })
     },
@@ -167,6 +169,11 @@ export default {
   created() {
     this.getList()
   },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.list_length / this.pageSize); // 总页数
+    },
+  }
 
 }
 </script>

@@ -16,10 +16,10 @@
           <v-container>
             <form>
               <v-text-field
-                v-model="本问题"
+                v-model="ids"
                 :counter="20"
                 :rules="idRules"
-                label="添加关联问题(请以分号;隔开你想添加的关联问题)"
+                label="添加关联问题id(请以分号;隔开你想添加的关联问题)"
                 required
               ></v-text-field>
               <v-row justify="end">
@@ -45,15 +45,14 @@
 </template>
 
 <script>
-
+import {add_association, delete_association, get_association} from '@/api/issue_connect';
 export default {
-  props: {show: Boolean},
+  props: {show: Boolean,id:Number},
 
 
   data: () => ({
-    name: '',
-    email: '',
-    select: null,
+    ids: '',
+    listLoading:false,
     idRules: [
       v => !!v || 'relate issue id is required',
       v => (v && v.length <= 20) || 'string must be less than 10 characters',
@@ -62,22 +61,27 @@ export default {
         return pattern.test(v) || 'id must be a semicolon-separated list of numbers';
       },
     ],
-    items: [
-      'Item 1',
-      'Item 2',
-      'Item 3',
-      'Item 4',
-    ],
   }),
 
 
   methods: {
     submit() {
-    //TODO 等待接口
-      this.closeDialog()
+      let jwt = this.$store.state.user.token
+      let associate_id = Number(this.ids);
+      console.log(associate_id)
+      add_association(jwt,this.id,associate_id).then(response=>{
+        this.closeDialog()
+        this.$emit('update-dialog');
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+        this.$emit('close-dialog');
+      }).catch(err=>{
+
+      })
     },
     clear() {
-      this.name = ''
+      this.ids = ''
     },
     closeDialog() {
       this.$emit('close-dialog');
