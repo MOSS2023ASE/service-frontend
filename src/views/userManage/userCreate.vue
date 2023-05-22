@@ -123,11 +123,16 @@
           <tutor-manage></tutor-manage>
         </v-col>
       </v-row>
+      <v-row v-if="page === 5">
+        <v-col>
+          <post-message></post-message>
+        </v-col>
+      </v-row>
       <v-row>
         <v-col>
           <v-pagination
             v-model="page"
-            :length="4">
+            :length="5">
           </v-pagination>
         </v-col>
       </v-row>
@@ -141,6 +146,7 @@ import { readXlsxFile } from '@/utils/file';
 import { Message } from 'element-ui';
 import LabelManage from './labelManage';
 import tutorManage from './tutorManage';
+import postMessage from './postMessage';
 import { batch_register, single_register } from '@/api/admin';
 import { getToken } from '@/utils/auth';
 import { sha256 } from 'js-sha256'
@@ -156,7 +162,7 @@ export default {
       dataTable: []
     }
   },
-  components: { UserList, LabelManage, tutorManage },
+  components: { UserList, LabelManage, tutorManage, postMessage },
   methods: {
     uploadCancel() {
       this.canUpload = true;
