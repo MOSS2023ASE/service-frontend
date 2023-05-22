@@ -68,7 +68,6 @@ export default {
     submit() {
       let jwt = this.$store.state.user.token
       let associate_id = Number(this.ids);
-      console.log(associate_id)
       add_association(jwt,this.id,associate_id).then(response=>{
         this.closeDialog()
         this.$emit('update-dialog');
