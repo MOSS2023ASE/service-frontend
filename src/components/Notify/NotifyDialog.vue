@@ -29,7 +29,7 @@
         </v-toolbar>
 
         <v-list three-line dense>
-          <template v-for="(item, index) in items">
+          <template v-for="(item, index) in currentPageItems">
             <v-divider
               v-if="item.divider"
               :key="index"
@@ -43,7 +43,7 @@
               <template v-slot:default="{ active, toggle }">
                 <v-list-item-content>
                   <v-col cols="10" class="mr-3">
-                    <v-row>
+                    <v-row class="mb-3">
                       <v-list-item-title v-text="item.title"></v-list-item-title>
                     </v-row>
 
@@ -172,6 +172,11 @@ export default {
   computed: {
     totalPages() {
       return Math.ceil(this.list_length / this.pageSize); // 总页数
+    },
+    currentPageItems() {
+      const start = (this.page_no - 1) * this.pageSize; // 当前页的起始项索引
+      const end = start + this.pageSize; // 当前页的结束项索引
+      return this.items.slice(start*2, end*2); // 返回当前页的时间线项
     },
   }
 

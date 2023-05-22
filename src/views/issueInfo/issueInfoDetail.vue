@@ -130,12 +130,11 @@
                 <v-divider
                   v-else-if="item.divider"
                   :key="index"
-                  :inset="item.inset"
                 ></v-divider>
 
                 <v-list-item
                   v-else
-                  :key="item.user_id"
+                  :key="index"
                   @click=""
                 >
                   <v-list-item-avatar>
@@ -209,6 +208,7 @@
                     :allow_relate="allow_relate"
                     :items="asitems"
                     @update-dialog="getAsList"
+                    :list_length="asListLen"
       ></RelateDialog>
 
       <el-dialog
@@ -324,6 +324,7 @@ export default {
       all_tags: [],
       added_tags: [],
       asitems:[],
+      asListLen:0,
       editorText: "发布你的回答",
       editorOptions: {},
       pageSize: 10,
@@ -482,6 +483,9 @@ export default {
     back() {
       //localStorage.removeItem('issue_id')
       this.$router.go(-1)
+      this.$nextTick(() => {
+        window.scrollTo(0, 0);
+      });
     },
     collect() {
       let jwt = this.$store.state.user.token
@@ -719,10 +723,9 @@ export default {
       this.relate = false
     },
     getAsList() {
-      console.log('upadte as')
       let jwt = this.$store.state.user.token
       get_association(jwt, this.issue_id).then(response => {
-        this.list_length = response.data.issue_list.length
+        this.asListLen = response.data.issue_list.length
         let originData = response.data.issue_list
         let divide = {divider: true, inset: true}
         let o
@@ -768,7 +771,6 @@ export default {
     if (!localStorage.getItem('issue_id')) {
       this.initIssueId()
       id = this.$route.query.issue_id
-      console.log(id)
       localStorage.setItem('issue_id', this.$route.query.issue_id)
     } else {
       id = localStorage.getItem('issue_id')
@@ -784,7 +786,6 @@ export default {
   watch: {
     $route(to, from) {
       // 当路由发生变化时，执行你需要的操作
-      console.log('路由参数变化：', this.$route.query.issue_id);
       localStorage.removeItem('issue_id')
       let anid = this.$route.query.issue_id
       localStorage.setItem('issue_id', this.$route.query.issue_id)

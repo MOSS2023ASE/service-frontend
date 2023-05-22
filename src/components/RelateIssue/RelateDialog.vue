@@ -29,26 +29,31 @@
         </v-toolbar>
 
         <v-list three-line dense>
-          <template v-for="(item, index) in items">
+          <template v-for="(item, index) in currentPageItems">
             <v-divider
               v-if="item.divider"
               :key="index"
-              :inset="item.inset"
+
             ></v-divider>
 
             <v-list-item
               v-else
-              :key="item.issue_id"
+              :key="index"
             >
               <template v-slot:default="{ active, toggle }">
                 <v-list-item-content>
-                  <v-col cols="9" class="mr-3">
-                    <v-row>
-                      <v-list-item-title>{{ item.issue_title }} (id:{{ item.issue_id }})</v-list-item-title>
+                  <v-col :cols="col" class="mr-3">
+                    <v-row class="mb-3">
+                      <v-list-item-title class="text-subtitle-1">{{ item.issue_title }} (id:{{ item.issue_id }})</v-list-item-title>
                     </v-row>
 
-                    <v-row>
-                      <v-list-item-subtitle v-text="getAbstrct(item.content)"></v-list-item-subtitle>
+                    <v-row class="mb-3">
+                      <v-list-item-subtitle v-text="getAbstrct(item.content)" class="text-subtitle-2"></v-list-item-subtitle>
+                    </v-row>
+
+                    <v-row style="margin-left: -30px;">
+                      <v-btn text color="blue">{{ item.subject_name }}</v-btn>
+                      <v-btn text color="blue">{{ item.chapter_name }}</v-btn>
                     </v-row>
                   </v-col>
 
@@ -101,13 +106,12 @@ import AddRelateDialog from "@/components/RelateIssue/AddRelateDialog";
 
 export default {
   name: "RelateDialog",
-  props: {relate: Boolean, id: Number, allow_relate: Number, items: Array},
+  props: {relate: Boolean, id: Number, allow_relate: Number, items: Array,list_length:Number},
   components: {AddRelateDialog},
   data() {
     return {
       showAdd: false,
       page_no: 1,
-      list_length: 0,
       pageSize: 5,
     }
   },
@@ -143,7 +147,6 @@ export default {
         content
     },
     goTo(id) {
-      console.log(id)
       this.$emit('close-dialog');
       this.$router.push({name: 'issueInfoDetail', query: {issue_id: id}})
     },
@@ -155,7 +158,14 @@ export default {
     totalPages() {
       return Math.ceil(this.list_length / this.pageSize); // 总页数
     },
-
+    col(){
+      return this.allow_relate === 1? 9:10;
+    },
+    currentPageItems() {
+      const start = (this.page_no - 1) * this.pageSize; // 当前页的起始项索引
+      const end = start + this.pageSize; // 当前页的结束项索引
+      return this.items.slice(start*2, end*2); // 返回当前页的时间线项
+    },
   }
 
 }
