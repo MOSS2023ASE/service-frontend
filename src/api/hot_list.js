@@ -20,7 +20,7 @@ export function get_popular_issues(
   top_k, //: number
 ) {
   return request({
-    url: '/issue/popular_issues',
+    url: '/user/get_popular_issue',
     method: 'post',
     data: {
       jwt: jwt,
