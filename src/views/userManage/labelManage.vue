@@ -73,12 +73,54 @@
           </v-card>
         </v-dialog>
       </v-card-actions>
+      <v-card-actions>
+        <v-row>
+          <v-spacer></v-spacer>
+          <v-col :cols="2">
+            <v-btn color="blue" class="white--text" v-if="step===0" @click="showDialog = true">
+              添加标签
+            </v-btn>
+          </v-col>
+          <v-col :cols="2">
+            <v-btn color="red" class="white--text" v-if="step===0" click="canRemove = !canRemove" >
+              删除标签
+            </v-btn>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+        <v-dialog v-model="showDialog" max-width="300px">
+          <v-card>
+            <v-card-title>添加标签</v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="newContent"
+                label="新建内容"
+                outlined
+                dense
+              ></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <v-row class="mb-4">
+                <v-spacer></v-spacer>
+                <v-col class="d-flex justify-center">
+                  <v-btn color="blue" class="white--text" @click="createTag">提交</v-btn>
+                </v-col>
+                <v-col class="d-flex justify-center">
+                  <v-btn color="error" @click="showDialog = false">放弃</v-btn>
+                </v-col>
+                <v-spacer></v-spacer>
+              </v-row>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-card-actions>
     </v-card>
   </v-container>
 </template>
 
 <script>
 import { create_chapter, create_subject, delete_chapter, get_all_subjects, get_subject_all_chapters } from '@/api/subject';
+import {create_tag, delete_tag, update_tag, get_all_tags} from '@/api/tag'
 import { getToken } from '@/utils/auth';
 import { Message } from 'element-ui';
 export default {
@@ -134,6 +176,21 @@ export default {
         this.record.subject = target;
         this.getChapter(target.subject_id);
       }
+    },
+    createTag() {
+      create_tag(getToken(), this.newContent).then(response => {
+        console.log(response)
+        Message({
+          message: '创建成功',
+          type: 'success'
+        });
+      }).catch(error => {
+        console.log(error)
+        Message({
+          message: '创建失败',
+          type: 'error'
+        });
+      });
     },
     submitContent() {
       if (this.step === 1) {

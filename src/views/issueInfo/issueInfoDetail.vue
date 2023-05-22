@@ -94,6 +94,9 @@
                 <v-btn v-show="true" outlined @click="showRealte" color="orange">
                   相关问题
                 </v-btn>
+                <v-btn v-show="true" outlined @click="showTagManage" color="orange">
+                  标签管理
+                </v-btn>
               </v-card-actions>
             </v-row>
             <br/>
@@ -228,6 +231,9 @@
         <span slot="footer" class="dialog-footer">
                     <el-button class="confirm-button" @click.stop="addTags">确 认</el-button>
                 </span>
+        <span slot="footer" class="dialog-footer">
+                    <el-button class="confirm-button" @click.stop="closeTagManage">取 消</el-button>
+                </span>
       </el-dialog>
     </v-app>
   </div>
@@ -254,7 +260,9 @@ import {
   agree_issue,
   review_issue,
   readopt_issue,
-  classify_issue
+  classify_issue,
+  update_issue_tag,
+  get_issue_tag
 } from "@/api/issue";
 import {get_issue_all_comments, create_comment, delete_comment} from "@/api/forum";
 import {get_all_tags} from '@/api/tag';
@@ -371,6 +379,18 @@ export default {
     initIssueId() {
       this.issue_id = this.$route.query.issue_id
     },
+    initTags() {
+      get_all_tags(getToken()).then(response => {
+        this.all_tags = response.data['tag_list']
+      }).catch(error => {
+        this.$notify({
+          title: '获取标签',
+          message: '获取全部标签失败',
+          type: 'error',
+          duration: 2000
+        })
+      })
+    },
     initLike(id) {
       let jwt = this.$store.state.user.token
       check_like_issue(jwt, id).then(response => {
@@ -404,6 +424,7 @@ export default {
     initissueInfo(id) {
       let jwt = this.$store.state.user.token
       get_issue_detail(jwt, id).then(response => {
+        // console.log(response)
         this.title = response.data.title
         this.content = response.data.content
         this.html_content = marked.parse(this.content)
@@ -629,23 +650,6 @@ export default {
           type: 'success',
           duration: 2000
         })
-        get_all_tags(getToken()).then(response => {
-          this.all_tags = response.data['tag_list']
-          this.tag_dialog = true
-          this.$notify({
-            title: '添加标签',
-            message: '添加标签成功',
-            type: 'success',
-            duration: 2000
-          })
-        }).catch(error => {
-          this.$notify({
-            title: '添加标签',
-            message: '添加标签失败',
-            type: 'error',
-            duration: 2000
-          })
-        })
       }).catch(err => {
         this.$notify({
           title: '有效问题',
@@ -693,8 +697,23 @@ export default {
       this.dialogVisible = false;
     },
     addTags() {
-      // TODO: call backend
-      this.tag_dialog = false;
+      update_issue_tag(getToken(), this.issue_id, this.added_tags).then(response => {
+        console.log(response);
+        this.$notify({
+          title: '标签添加成功',
+          message: '标签添加成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.tag_dialog = false;
+      }).catch(() => {
+        this.$notify({
+          title: '标签添加失败',
+          message: '标签添加失败',
+          type: 'warning',
+          duration: 2000
+        })
+      })
     },
     initAll(id) {
       // this.initLike(id)
@@ -702,7 +721,7 @@ export default {
       // this.initissueInfo(id)
       // this.initissueComment(id)
       this.isLoading = true
-      Promise.all([this.initLike(id), this.initFollow(id), this.initissueInfo(id), this.initissueComment(id),this.getAsList(id)])
+      Promise.all([this.initLike(id), this.initFollow(id), this.initissueInfo(id), this.initissueComment(id),this.getAsList(id), this.initTags()])
         .then(() => {
           this.isLoading = false
         })
@@ -721,6 +740,28 @@ export default {
     },
     onCloseRelate() {
       this.relate = false
+    },
+    showTagManage() {
+      get_issue_tag(getToken(), this.issue_id).then(response => {
+        let tag_list = response.data['tag_list']
+        let i
+        for (i in tag_list) {
+          this.added_tags.push(tag_list[i].tag_id)
+        }
+        this.tag_dialog = true;
+        console.log(this.added_tags)
+      }).catch(err => {
+        this.$notify({
+          title: '获取问题标签',
+          message: '获取问题标签失败',
+          type: 'warning',
+          duration: 2000
+        })
+      })
+
+    },
+    closeTagManage() {
+      this.tag_dialog = false
     },
     getAsList() {
       let jwt = this.$store.state.user.token
