@@ -81,7 +81,83 @@
                   <Captcha :identifyCode="identifyCode"></Captcha>
                 </div>
               </el-col>
+              <el-col :span="14">
+                <el-form-item prop="captcha">
+                    <span class="svg-container">
+                      <svg-icon icon-class="lock"/>
+                    </span>
+                  <el-input
+                    placeholder="输入发送邮箱地址"
+                    v-model="sendMail"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="10">
+                <div class="login-code" style="float: right;" @click="refreshCode">
+                  <Captcha :identifyCode="identifyCode"></Captcha>
+                </div>
+              </el-col>
+              <el-col :span="14">
+                <el-form-item prop="captcha">
+                    <span class="svg-container">
+                      <svg-icon icon-class="lock"/>
+                    </span>
+                  <el-input
+                    placeholder="输入验证邮箱地址"
+                    v-model="confirmMail"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="10">
+                <div class="login-code" style="float: right;" @click="refreshCode">
+                  <Captcha :identifyCode="identifyCode"></Captcha>
+                </div>
+              </el-col>
+              <el-col :span="14">
+                <el-form-item prop="captcha">
+                    <span class="svg-container">
+                      <svg-icon icon-class="lock"/>
+                    </span>
+                  <el-input
+                    placeholder="输入验证学号"
+                    v-model="confirmStudentId"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="10">
+                <div class="login-code" style="float: right;" @click="refreshCode">
+                  <Captcha :identifyCode="identifyCode"></Captcha>
+                </div>
+              </el-col>
+              <el-col :span="14">
+                <el-form-item prop="captcha">
+                    <span class="svg-container">
+                      <svg-icon icon-class="lock"/>
+                    </span>
+                  <el-input
+                    placeholder="输入验证密码"
+                    v-model="confirmPassword"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="10">
+                <div class="login-code" style="float: right;" @click="refreshCode">
+                  <Captcha :identifyCode="identifyCode"></Captcha>
+                </div>
+              </el-col>
+              <el-col :span="14">
+                <el-form-item prop="captcha">
+                    <span class="svg-container">
+                      <svg-icon icon-class="lock"/>
+                    </span>
+                  <el-input
+                    placeholder="输入邮箱中的验证码"
+                    v-model="confirmVCode"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="10">
+                <div class="login-code" style="float: right;" @click="refreshCode">
+                  <Captcha :identifyCode="identifyCode"></Captcha>
+                </div>
+              </el-col>
             </el-row>
+
 
             <el-row type="flex" justify="space-around">
               <el-col>
@@ -91,6 +167,24 @@
                   style="width:90%;margin-bottom:30px;justify-content: flex-start"
                   @click.native.prevent="handleLogin"
                 >登录
+                </el-button>
+              </el-col>
+              <el-col>
+                <el-button
+                  :loading="loading"
+                  type="primary"
+                  style="width:90%;margin-bottom:30px;justify-content: flex-start"
+                  @click.native.prevent="sendMailEnter"
+                >发送邮件
+                </el-button>
+              </el-col>
+              <el-col>
+                <el-button
+                  :loading="loading"
+                  type="primary"
+                  style="width:90%;margin-bottom:30px;justify-content: flex-start"
+                  @click.native.prevent="confirmMailVCode"
+                >验证邮件
                 </el-button>
               </el-col>
               <!-- <el-col
@@ -137,6 +231,7 @@ import SocialSign from './components/SocialSignin'
 import editModal from './components/registerPanel.vue'
 import Captcha from './components/captcha.vue'
 import { sha256 } from 'js-sha256'
+import {send_mail, confirm_mail} from '@/api/send_email'
 
 export default {
   name: 'Login',
@@ -175,6 +270,11 @@ export default {
       redirect: undefined,
       otherQuery: {},
       dialogFormVisible: false,
+      sendMail: '',
+      confirmMail: '',
+      confirmStudentId: '',
+      confirmPassword: '',
+      confirmVCode: '',
     }
   },
   watch: {
@@ -212,6 +312,20 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    sendMailEnter() {
+      send_mail(this.sendMail).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    confirmMailVCode() {
+      confirm_mail(this.confirmMail, this.confirmStudentId, sha256(this.confirmPassword), this.confirmVCode).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     register() {
       this.dialogFormVisible = true;
     },
