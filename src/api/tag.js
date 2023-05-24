@@ -22,7 +22,7 @@ export function delete_tag(
 ) {
   return request({
     url: '/tag/delete',
-    method: 'post',
+    method: 'delete',
     data: {
       jwt: jwt,
       tag_id: tag_id,
