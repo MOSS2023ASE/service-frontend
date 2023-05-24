@@ -130,10 +130,15 @@
         </v-col>
       </v-row>
       <v-row>
+        <v-col v-if="page === 6">
+          <work-stat></work-stat>
+        </v-col>
+      </v-row>
+      <v-row>
         <v-col>
           <v-pagination
             v-model="page"
-            :length="5">
+            :length="6">
           </v-pagination>
         </v-col>
       </v-row>
@@ -152,6 +157,7 @@ import { batch_register, single_register } from '@/api/admin';
 import { getToken } from '@/utils/auth';
 import { sha256 } from 'js-sha256';
 import labelManage from './labelManage';
+import workStat from './workStat';
 export default {
   data() {
     return {
@@ -164,7 +170,7 @@ export default {
       dataTable: []
     }
   },
-  components: { UserList, LabelView, tutorManage, postMessage, labelManage },
+  components: { UserList, LabelView, tutorManage, postMessage, labelManage, workStat },
   methods: {
     uploadCancel() {
       this.canUpload = true;
