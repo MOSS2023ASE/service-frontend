@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import {create_tag, delete_tag, update_tag, get_all_tags} from '@/api/tag'
+import {create_tag, delete_tag, get_all_tags} from '@/api/tag'
 import { getToken } from '@/utils/auth'
 import { Message } from 'element-ui'
 export default {
@@ -55,7 +55,6 @@ export default {
     getTags() {
       get_all_tags(getToken()).then(response => {
         this.label_list = response.data.tag_list;
-        console.log(this.label_list);
       }).catch(error => {
         Message({
             message: '获取标签失败', 
@@ -67,7 +66,6 @@ export default {
       delete_tag(getToken(), label.tag_id).then(response => {
         this.getTags();
       }).catch(error => {
-        console.log(error);
         Message({
           message: '删除标签失败',
           type: 'error'
