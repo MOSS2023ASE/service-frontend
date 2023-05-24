@@ -1,88 +1,123 @@
 <template>
   <div class="app-container">
-      <el-switch style="float: right; margin-bottom: 30px;"
-          v-model="year"
-          active-text="本学期问题"
-          inactive-text="以往学期问题"
-          active-color="#146c94"
-          inactive-color="#afd3e2"
-          @change="changeYear">
-      </el-switch>
-      <v-card class="search-bar">
-          <div class="search-info">
-              <el-input v-model="search_keyword"
-                      placeholder="请输入关键词" class="search-keyword"/>
-              <div class="search-options">
-                  <!-- <el-select v-model="search_tags" class="search-tags"
-                      filterable multiple collapse-tags :multiple-limit="3"
-                      placeholder="请输入标签" style="width: 100%;">
-                      <el-option v-for="tag in all_tags"
-                          :key="tag.tag_id" :label="tag.content" :value="tag.tag_id"/>
-                  </el-select> -->
-                  <el-select v-model="sort_order" class="search-select"
-                            placeholder="排序方式">
-                    <el-option v-for="order in all_orders"
-                              :key="order.order_id" :label="order.name" :value="order.order_id"/>
-                  </el-select>
-                  <el-select v-model="search_state" v-if="this.user_type !== 0"
-                             class="search-select" filterable multiple collapse-tags
-                             :multiple-limit="6" placeholder="问题状态">
-                    <el-option v-for="state in all_status"
-                               :key="state.status_id" :label="state.name" :value="state.status_id"/>
-                  </el-select>
-                  <el-select v-model="search_subject" class="search-select"
-                             placeholder="科目" @change="clearSubject">
-                    <el-option v-for="subject in all_subjects"
-                               :key="subject.subject_id" :label="subject.name" :value="subject.subject_id"/>
-                  </el-select>
-                  <el-select v-show="this.search_subject !== 0 && this.search_subject !== null"
-                             v-model="search_chapter"
-                             filterable multiple collapse-tags :multiple-limit="6"
-                             class="search-select" placeholder="章节">
-                    <el-option v-for="chapter in all_chapters[this.search_subject]"
-                               :key="chapter.chapter_id" :label="chapter.name" :value="chapter.chapter_id"/>
-                  </el-select>
-              </div>
+      <el-row>
+        <el-col :span="19">
+        <el-switch style="float: right; margin-bottom: 30px;"
+            v-model="year"
+            active-text="本学期问题"
+            inactive-text="以往学期问题"
+            active-color="#146c94"
+            inactive-color="#afd3e2"
+            @change="changeYear">
+        </el-switch>
+        <v-card class="search-bar">
+            <div class="search-info">
+                <el-input v-model="search_keyword"
+                        placeholder="请输入关键词" class="search-keyword"/>
+                <div class="search-options">
+                    <!-- <el-select v-model="search_tags" class="search-tags"
+                        filterable multiple collapse-tags :multiple-limit="3"
+                        placeholder="请输入标签" style="width: 100%;">
+                        <el-option v-for="tag in all_tags"
+                            :key="tag.tag_id" :label="tag.content" :value="tag.tag_id"/>
+                    </el-select> -->
+                    <el-select v-model="sort_order" class="search-select"
+                              placeholder="排序方式">
+                      <el-option v-for="order in all_orders"
+                                :key="order.order_id" :label="order.name" :value="order.order_id"/>
+                    </el-select>
+                    <el-select v-model="search_state" v-if="this.user_type !== 0"
+                              class="search-select" filterable multiple collapse-tags
+                              :multiple-limit="6" placeholder="问题状态">
+                      <el-option v-for="state in all_status"
+                                :key="state.status_id" :label="state.name" :value="state.status_id"/>
+                    </el-select>
+                    <el-select v-model="search_subject" class="search-select"
+                              placeholder="科目" @change="clearSubject">
+                      <el-option v-for="subject in all_subjects"
+                                :key="subject.subject_id" :label="subject.name" :value="subject.subject_id"/>
+                    </el-select>
+                    <el-select v-show="this.search_subject !== 0 && this.search_subject !== null"
+                              v-model="search_chapter"
+                              filterable multiple collapse-tags :multiple-limit="6"
+                              class="search-select" placeholder="章节">
+                      <el-option v-for="chapter in all_chapters[this.search_subject]"
+                                :key="chapter.chapter_id" :label="chapter.name" :value="chapter.chapter_id"/>
+                    </el-select>
+                </div>
+            </div>
+            <el-button icon="el-icon-search" class="search-button"
+                      @click="search" v-loading.fullscreen.lock="listLoading">
+                搜索
+            </el-button>
+        </v-card>
+        <v-card class="issues-table">
+            <!--在这里应该最多传三个tag进去，不然显示不了 -->
+            <!-- tags 目前还没有 -->
+            <IssueItem
+            v-for="issue in issues"
+            :user_type="user_type"
+            :id="issue.issue_id"
+            :title="issue.issue_title"
+            :user_name="issue.user_name"
+            :user_avatar="issue.user_avatar"
+            :abstract="issue.content.length > 16 ?
+                      issue.content.slice(0, 15) + '...' :
+                      issue.content"
+            :created_at="issue.created_at.slice(0, 16)"
+            :subject="issue.subject_name"
+            :chapter="issue.chapter_name"
+            :tags="issue.tags"
+            :like_count="issue.like_count"
+            :follow_count="issue.follow_count"
+            :status_trans_permit="issue.status_trans_permit"
+            :status="issue.status"
+            @refreshEvent="refresh"
+            />
+            <el-pagination small layout="prev, pager, next"
+                :page-size="this.page_size" :total="total_page * page_size" :current-page.sync="cur_page"
+                @prev-click="toPrevPage" @next-click="toNextPage" @current-change="toSomePage">
+            </el-pagination>
+        </v-card>
+        </el-col>
+        <el-col :span="5">
+          <h2>热门列表</h2>
+          <el-divider></el-divider>
+          <div style="display: flex;">
+            <v-icon left style="margin-bottom: 0px; color: #9fc3d2;">mdi-poll</v-icon>
+            <h3>热搜问题</h3>
           </div>
-          <el-button icon="el-icon-search" class="search-button"
-                     @click="search" v-loading.fullscreen.lock="listLoading">
-              搜索
-          </el-button>
-      </v-card>
-      <v-card class="issues-table">
-          <!--在这里应该最多传三个tag进去，不然显示不了 -->
-          <!-- tags 目前还没有 -->
-          <IssueItem
-          v-for="issue in issues"
-          :user_type="user_type"
-          :id="issue.issue_id"
-          :title="issue.issue_title"
-          :user_name="issue.user_name"
-          :user_avatar="issue.user_avatar"
-          :abstract="issue.content.length > 16 ?
-                     issue.content.slice(0, 15) + '...' :
-                     issue.content"
-          :created_at="issue.created_at.slice(0, 16)"
-          :subject="issue.subject_name"
-          :chapter="issue.chapter_name"
-          :tags="issue.tags"
-          :like_count="issue.like_count"
-          :follow_count="issue.follow_count"
-          :status_trans_permit="issue.status_trans_permit"
-          :status="issue.status"
-          @refreshEvent="refresh"
-          />
-          <el-pagination small layout="prev, pager, next"
-              :page-size="this.page_size" :total="total_page * page_size" :current-page.sync="cur_page"
-              @prev-click="toPrevPage" @next-click="toNextPage" @current-change="toSomePage">
-          </el-pagination>
-      </v-card>
+          <v-card class="top-list">
+          <TopIssue
+            v-for="issue in top_issues"
+            :id="issue.issue_id"
+            :title="issue.title"
+            :subject="issue.subject_name"
+            :chapter="issue.chapter_name"
+            :rank="issue.rank"></TopIssue>
+          </v-card>
+          <div style="display: flex; margin-top: 60px;">
+            <v-icon left style="margin-bottom: 0px; color: #9fc3d2;">mdi-poll</v-icon>
+            <h3>活跃用户</h3>
+          </div>
+          <v-card class="top-list">
+          <TopUser
+            v-for="user in top_users"
+            :id="user.user_id"
+            :name="user.name"
+            :avatar="user.avatar"
+            :rank="user.rank"></TopUser>
+          </v-card>
+        </el-col>
+      </el-row>
 </div>
 </template>
 
 <script>
 import {Message} from 'element-ui'
 import IssueItem from "./components/issueItem.vue";
+import TopIssue from "./components/topIssue.vue";
+import TopUser from "./components/topUser.vue";
 import {search_issue} from '@/api/issue'
 import {get_all_tags} from '@/api/tag'
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
@@ -93,6 +128,8 @@ export default {
   name: "Search",
   components: {
       IssueItem,
+      TopIssue,
+      TopUser
   },
   props: {
   },
@@ -329,6 +366,9 @@ export default {
           total_page: 2,
           page_size: 10,
           issues: [],
+          top_k : 5,
+          top_issues: [],
+          top_users: [],
       };
   },
   methods: {
@@ -397,6 +437,24 @@ export default {
         })
       },
 
+      getTops() {
+        get_popular_issues(getToken(), this.top_k).then(response => {
+          this.top_issues = response.data['issue_list'];
+          console.log(this.top_issues)
+          for (var i = 0; i < this.top_issues.length; ++i) {
+            this.top_issues[i].rank = i + 1;
+          }
+        }).catch(error => {
+        })
+        get_active_users(getToken(), this.top_k).then(response =>{
+          this.top_users = response.data['user_list'];
+          for (var i = 0; i < this.top_users.length; ++i) {
+            this.top_users[i].rank = i + 1;
+          }
+        }).catch(error => {
+        })
+      },
+
       refresh() {
         this.search();
       },
@@ -424,9 +482,9 @@ export default {
       }
   },
   created() {
-      // TODO: get user_type
       this.initTags();
       this.initChapters();
+      this.getTops();
       this.getIssues();
   },
   computed: {
@@ -436,18 +494,9 @@ export default {
 
 <style scoped>
 
-.post-issue-button {
-  float: right;
-  height: 50px;
-  width: 80px;
-  padding: 0px;
-  font-size: 15px;
-  color: white;
-}
-
 .search-bar {
   display: flex;
-  width: 80%;
+  width: 84%;
   margin-left: 10%;
   margin-top: 30px;
   margin-bottom: 20px;
@@ -513,10 +562,29 @@ export default {
 }
 
 .issues-table {
-  width: 80%;
+  width: 84%;
   padding-top: 10px;
   padding-bottom: 10px;
   margin-left: 10%;
   margin-top: 30px;
+}
+
+.top-list {
+  height: 410px;
+  width: 100%;
+  padding-top: 5px;
+}
+
+h2 {
+  margin-top: 150px;
+  font-weight: 800;
+  font-size: 24px;
+}
+
+h3 {
+  margin: 10px 0px 10px 0px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 18px;
 }
 </style>

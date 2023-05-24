@@ -334,6 +334,7 @@ export default {
   font-weight: 500;
   text-align: center;
 }
+
 .time-state {
   margin-top: 3px;
   margin-left: auto;
