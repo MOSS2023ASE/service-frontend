@@ -23,7 +23,7 @@
                 <v-icon>mdi-check</v-icon>
               </v-btn>
             </template>
-            <span>全部已读</span>
+            <span>全部删除</span>
           </v-tooltip>
 
         </v-toolbar>
@@ -58,6 +58,7 @@
                       depressed
                       text
                       color="#1687A7"
+                      v-show="item.status === 0"
                     >
                       <v-icon>
                         mdi-check
