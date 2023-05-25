@@ -440,7 +440,6 @@ export default {
       getTops() {
         get_popular_issues(getToken(), this.top_k).then(response => {
           this.top_issues = response.data['issue_list'];
-          console.log(this.top_issues)
           for (var i = 0; i < this.top_issues.length; ++i) {
             this.top_issues[i].rank = i + 1;
           }
