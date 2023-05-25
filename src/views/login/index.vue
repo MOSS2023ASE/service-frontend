@@ -68,11 +68,11 @@
             <el-row>
               <el-col :span="14">
                 <el-form-item prop="captcha">
-                    <span class="svg-container">
-                      <svg-icon icon-class="lock"/>
-                    </span>
+                  <span class="svg-container">
+                    <svg-icon icon-class="lock"/>
+                  </span>
                   <el-input
-                    placeholder="输入验证码"
+                    placeholder="验证码"
                     v-model="code"/>
                 </el-form-item>
               </el-col>
@@ -81,86 +81,10 @@
                   <Captcha :identifyCode="identifyCode"></Captcha>
                 </div>
               </el-col>
-              <el-col :span="14">
-                <el-form-item prop="captcha">
-                    <span class="svg-container">
-                      <svg-icon icon-class="lock"/>
-                    </span>
-                  <el-input
-                    placeholder="输入发送邮箱地址"
-                    v-model="sendMail"/>
-                </el-form-item>
-              </el-col>
-              <el-col :span="10">
-                <div class="login-code" style="float: right;" @click="refreshCode">
-                  <Captcha :identifyCode="identifyCode"></Captcha>
-                </div>
-              </el-col>
-              <el-col :span="14">
-                <el-form-item prop="captcha">
-                    <span class="svg-container">
-                      <svg-icon icon-class="lock"/>
-                    </span>
-                  <el-input
-                    placeholder="输入验证邮箱地址"
-                    v-model="confirmMail"/>
-                </el-form-item>
-              </el-col>
-              <el-col :span="10">
-                <div class="login-code" style="float: right;" @click="refreshCode">
-                  <Captcha :identifyCode="identifyCode"></Captcha>
-                </div>
-              </el-col>
-              <el-col :span="14">
-                <el-form-item prop="captcha">
-                    <span class="svg-container">
-                      <svg-icon icon-class="lock"/>
-                    </span>
-                  <el-input
-                    placeholder="输入验证学号"
-                    v-model="confirmStudentId"/>
-                </el-form-item>
-              </el-col>
-              <el-col :span="10">
-                <div class="login-code" style="float: right;" @click="refreshCode">
-                  <Captcha :identifyCode="identifyCode"></Captcha>
-                </div>
-              </el-col>
-              <el-col :span="14">
-                <el-form-item prop="captcha">
-                    <span class="svg-container">
-                      <svg-icon icon-class="lock"/>
-                    </span>
-                  <el-input
-                    placeholder="输入验证密码"
-                    v-model="confirmPassword"/>
-                </el-form-item>
-              </el-col>
-              <el-col :span="10">
-                <div class="login-code" style="float: right;" @click="refreshCode">
-                  <Captcha :identifyCode="identifyCode"></Captcha>
-                </div>
-              </el-col>
-              <el-col :span="14">
-                <el-form-item prop="captcha">
-                    <span class="svg-container">
-                      <svg-icon icon-class="lock"/>
-                    </span>
-                  <el-input
-                    placeholder="输入邮箱中的验证码"
-                    v-model="confirmVCode"/>
-                </el-form-item>
-              </el-col>
-              <el-col :span="10">
-                <div class="login-code" style="float: right;" @click="refreshCode">
-                  <Captcha :identifyCode="identifyCode"></Captcha>
-                </div>
-              </el-col>
             </el-row>
 
-
             <el-row type="flex" justify="space-around">
-              <el-col>
+              <el-col :span="20">
                 <el-button
                   :loading="loading"
                   type="primary"
@@ -169,58 +93,152 @@
                 >登录
                 </el-button>
               </el-col>
-              <el-col>
-                <el-button
-                  :loading="loading"
-                  type="primary"
-                  style="width:90%;margin-bottom:30px;justify-content: flex-start"
-                  @click.native.prevent="sendMailEnter"
-                >发送邮件
-                </el-button>
+              <el-col :span="4">
+                <div class="forget-password" @click="showResetPasswordDialog">
+                  忘记密码？
+                </div>
               </el-col>
-              <el-col>
-                <el-button
-                  :loading="loading"
-                  type="primary"
-                  style="width:90%;margin-bottom:30px;justify-content: flex-start"
-                  @click.native.prevent="confirmMailVCode"
-                >验证邮件
-                </el-button>
-              </el-col>
-              <!-- <el-col
-                style="display: flex;justify-content: end">
-                <el-button
-                  :loading="loading"
-                  type="success"
-                  style="width:90%;margin-bottom:30px;justify-content:flex-end"
-                  @click="register"
-                >注册
-                </el-button>
-              </el-col> -->
             </el-row>
-
-
-            <div style="position:relative">
-            </div>
           </el-form>
-
-          <el-dialog title="Or connect with" :visible.sync="showDialog">
-            Can not be simulated on local, so please combine you own business simulation! ! !
-            <br>
-            <br>
-            <br>
-            <social-sign/>
-          </el-dialog>
         </el-col>
       </el-row>
-
     </div>
-    <edit-modal
-      ref="editModal"
-      :visible.sync="dialogFormVisible"
-      @close="dialogFormVisible = false"
-      @updateItem="onUpdateSubmit"
-    />
+
+  <el-dialog :visible.sync="resetPasswordDialog" width="35%"
+    title="重置密码" :modal-append-to-body="false"
+    :show-close="false"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    ref="resetPasswordDialog">
+      <el-form
+        :model="resetPasswordForm"
+        :rules="loginRules"
+        class="reset-password-form"
+        autocomplete="on"
+        label-position="left"
+      >
+        <el-form-item prop="username">
+          <el-row>
+            <el-col :span="2" style="min-height:1px"/>
+            <el-col :span="2">
+              <span class="svg-container">
+                <svg-icon icon-class="user"/>
+              </span>
+            </el-col>
+            <el-col :span="16">
+              <el-input v-model="resetPasswordForm.username"
+                placeholder="学号" name="username" type="text" tabindex="1"/>
+            </el-col>
+          </el-row>
+        </el-form-item>
+        
+        <el-form-item prop="mailbox">
+          <el-row>
+            <el-col :span="2" style="min-height:1px"/>
+            <el-col :span="2">
+              <span class="svg-container">
+                <svg-icon icon-class="email"/>
+              </span>
+            </el-col>
+            <el-col :span="16">
+              <el-input v-model="resetPasswordForm.username" disabled
+                placeholder="邮箱" name="mailbox" type="text" tabindex="1">
+                <template slot="append">@buaa.edu.cn</template>
+              </el-input>
+            </el-col>
+          </el-row>
+        </el-form-item>
+        
+        <el-form-item prop="verification">
+          <el-row>
+            <el-col :span="2" style="min-height:1px"/>
+            <el-col :span="2">
+              <span class="svg-container">
+                <svg-icon icon-class="lock"/>
+              </span>
+            </el-col>
+            <el-col :span="10">
+              <el-input v-model="resetPasswordForm.verification"
+                placeholder="验证码" name="verification" type="text" tabindex="1"/>
+            </el-col>
+            <el-col :span="2" style="min-height:1px"/>
+            <el-col :span="4">
+              <div class="send-verification" @click="sendVerification">
+                发送验证码
+              </div>
+            </el-col>
+          </el-row>
+        </el-form-item>
+
+        <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+          <el-form-item prop="password">
+          <el-row>
+            <el-col :span="2" style="min-height:1px"/>
+            <el-col :span="2">
+              <span class="svg-container">
+                <svg-icon icon-class="password"/>
+              </span>
+            </el-col>
+            <el-col :span="13">
+              <el-input
+                :key="passwordType"
+                v-model="resetPasswordForm.password"
+                :type="resetPasswordType"
+                placeholder="新密码"
+                name="password"
+                tabindex="2"
+                @keyup.native="checkCapslock"
+                @blur="capsTooltip = false"
+              />
+            </el-col>
+            <el-col :span="2" style="min-height:1px"/>
+            <el-col :span="1">
+              <span class="show-pwd" @click="showResetPwd">
+                <svg-icon style="cursor: pointer;"
+                  :icon-class="resetPasswordType === 'password' ? 'eye' : 'eye-open'"/>
+              </span>
+            </el-col>
+          </el-row>
+          </el-form-item>
+        </el-tooltip>
+        
+        <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+          <el-form-item prop="confirm-password">
+          <el-row>
+            <el-col :span="2" style="min-height:1px"/>
+            <el-col :span="2">
+              <span class="svg-container">
+                <svg-icon icon-class="password"/>
+              </span>
+            </el-col>
+            <el-col :span="13">
+              <el-input
+                :key="passwordType"
+                v-model="resetPasswordForm.confirmPassword"
+                :type="confirmResetPasswordType"
+                placeholder="确认密码"
+                name="confirm-password"
+                tabindex="2"
+                @keyup.native="checkCapslock"
+                @blur="capsTooltip = false"
+              />
+            </el-col>
+            <el-col :span="2" style="min-height: 1px;"/>
+            <el-col :span="1">
+              <div class="show-pwd" @click="showResetConfirmPwd">
+                <svg-icon style="cursor: pointer;"
+                  :icon-class="confirmResetPasswordType === 'password' ? 'eye' : 'eye-open'"/>
+              </div>
+            </el-col>
+          </el-row>
+          </el-form-item>
+        </el-tooltip>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="confirm-button" @click="resetPassword">确认</el-button>
+        <el-button class="cancel-button" @click="resetPasswordDialog = false">取消</el-button>
+      </span>
+  </el-dialog>
   </div>
 </template>
 
@@ -264,17 +282,20 @@ export default {
       identifyCode: '',
       code: '',
       passwordType: 'password',
+      resetPasswordType: 'password',
+      confirmResetPasswordType: 'password',
       capsTooltip: false,
       loading: false,
-      showDialog: false,
       redirect: undefined,
       otherQuery: {},
-      dialogFormVisible: false,
-      sendMail: '',
-      confirmMail: '',
-      confirmStudentId: '',
-      confirmPassword: '',
-      confirmVCode: '',
+      resetPasswordDialog: false,
+      resetPasswordForm: {
+        username: '',
+        mailAddress: '',
+        verification: '',
+        password: '',
+        confirmPassword: ''
+      }
     }
   },
   watch: {
@@ -294,7 +315,7 @@ export default {
     const _this = this;
     document.onkeydown = function(e) {
       let key = window.event.keyCode;
-      if (key == 13) {
+      if (key == 13 && _this.resetPasswordDialog === false) {
         _this.handleLogin();
       }
     };
@@ -312,41 +333,6 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    sendMailEnter() {
-      send_mail(this.sendMail).then(response => {
-        console.log(response)
-      }).catch(error => {
-        console.log(error)
-      })
-    },
-    confirmMailVCode() {
-      confirm_mail(this.confirmMail, this.confirmStudentId, sha256(this.confirmPassword), this.confirmVCode).then(response => {
-        console.log(response)
-      }).catch(error => {
-        console.log(error)
-      })
-    },
-    register() {
-      this.dialogFormVisible = true;
-    },
-
-    onUpdateSubmit(data) { //注册
-      this.dialogFormVisible = false;
-      this.$store.dispatch('user/register', data).then(() => {
-        // 登录成功进行路由的跳转
-        this.loginForm.username = data.user_name
-        this.loginForm.password = data.password
-        this.handleLogin()
-      }).catch((error) => {
-        this.$notify({
-          title: '注册失败',
-          message: '用户名已存在',
-          type: 'warning',
-          duration: 2000
-        })
-      })
-    },
-
     checkCapslock(e) {
       const {key} = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
@@ -360,6 +346,40 @@ export default {
       this.$nextTick(() => {
         this.$refs.password.focus()
       })
+    },
+    showResetPwd() {
+      if (this.resetPasswordType === 'password') {
+        this.resetPasswordType = ''
+      } else {
+        this.resetPasswordType = 'password'
+      }
+    },
+    showResetConfirmPwd() {
+      if (this.confirmResetPasswordType === 'password') {
+        this.confirmResetPasswordType = ''
+      } else {
+        this.confirmResetPasswordType = 'password'
+      }
+    },
+    sendVerification() {
+        this.resetPasswordForm.mailAddress = this.resetPasswordForm.username + '@buaa.edu.cn'
+        send_mail(this.resetPasswordForm.mailAddress).then(response => {
+        }).catch(error => {
+        })
+    },
+    resetPassword() {
+        this.resetPasswordForm.mailAddress = this.resetPasswordForm.username + '@buaa.edu.cn'
+        if (this.resetPasswordForm.password !== this.resetPasswordForm.confirmPassword) {
+          Message({
+            message: '两次输入密码不同',
+            type: 'error'
+          });
+          return;
+        }
+        confirm_mail(this.resetPasswordForm.mailAddress, this.resetPasswordForm.username,
+                    sha256(this.resetPasswordForm.password), this.resetPasswordForm.verification).then(response => {
+        }).catch(error => {
+        })
     },
     handleLogin() {
       if (this.identifyCode.toLowerCase() !== this.code.toLowerCase()) {
@@ -426,11 +446,9 @@ export default {
         return acc
       }, {})
     },
-
     randomNum(min, max) {
       return Math.floor(Math.random() * (max - min) + min);
     },
-
     makeCode(o, l) {
       for (let i = 0; i < l; i++) {
         //通过循环获取字符串内随机几位
@@ -438,12 +456,13 @@ export default {
           this.identifyCodes[this.randomNum(0, this.identifyCodes.length)];
       }
     },
-
     refreshCode() {
       this.identifyCode = '';
       this.makeCode(this.identifyCodes, 4);
     },
-
+    showResetPasswordDialog() {
+      this.resetPasswordDialog = true;
+    }
   }
 }
 </script>
@@ -587,5 +606,33 @@ $light_gray: #eee;
       display: none;
     }
   }
+}
+
+.forget-password {
+  font-size: 14px;
+  margin-top: 5px;
+  color: #121212;
+}
+
+.forget-password:hover {
+  cursor: pointer;
+  color: #464646;
+}
+
+.send-verification:hover {
+  cursor: pointer;
+  color: #cacaca;
+}
+
+.confirm-button {
+  background-color: #1687A7;
+  border-color: #1687A7;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #D3E0EA;
+  border-color: #D3E0EA;
+  color: black;
 }
 </style>
