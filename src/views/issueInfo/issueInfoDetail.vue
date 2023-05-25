@@ -36,7 +36,7 @@
               </v-list-item-avatar>
             </v-list-item>
             <v-card-text>
-              <MyRichText :content="this.santinize(this.html_content)"></MyRichText>
+              <MarkdownDisplay :value="this.santinize(this.html_content)"></MarkdownDisplay>
             </v-card-text>
 
             <v-row style="margin-left: 1px">
@@ -154,7 +154,7 @@
 
         </v-container>
         <v-divider></v-divider>
-        <v-container fluid>
+        <v-container>
           <v-timeline align-top dense>
             <v-timeline-item
               v-for="(comment, index) in currentPageItems"
@@ -172,7 +172,7 @@
                     comment.time.slice(11, 16)
                   }}</span></v-card-subtitle>
                 <v-card-text>
-                  <MyRichText :content="comment.content"></MyRichText>
+                  <MarkdownDisplay :value="comment.content"></MarkdownDisplay>
                 </v-card-text>
               </v-card>
             </v-timeline-item>
@@ -181,15 +181,27 @@
             v-model="currentPage"
             :length="totalPages"
             :total-visible="7"
+            @change="handlePageChange"
           ></v-pagination>
         </v-container>
         <v-divider></v-divider>
       </v-card>
 
-      <div>
-        <markdown-editor v-if="this.allow_comment === 1" ref="editor" v-model="editor_content" height="500px"
-                         :hooks="this.hooks"/>
-      </div>
+
+      <v-container fluid style="max-width: 1800px">
+        <v-row class="mt-3" no-gutters>
+          <v-col cols="12">
+            <v-text class="text-h5">发布解答</v-text>
+          </v-col>
+        </v-row>
+        <v-row class="mt-3" no-gutters>
+          <v-col cols="12">
+            <MdEditor v-if="this.allow_comment === 1" ref="editor2" :value="editor_content" style="min-height: 500px" @input="updateParentValue"></MdEditor>
+          </v-col>
+        </v-row>
+
+      </v-container>
+
       <br/>
       <v-row v-if="this.allow_comment === 1" justify="end" style="margin-right: 10px;">
         <v-btn raised color="light-blue darken-2" @click="handleComment()">发布</v-btn>
@@ -270,10 +282,11 @@ import {getToken, getRole} from '@/utils/auth';
 import {upload_public} from "@/api/upload";
 import DOMPurify from "dompurify";
 import {get_association} from "@/api/issue_connect";
-
+import MdEditor from "@/components/MDeditor/MdEditor";
+import MarkdownDisplay from "@/components/MDeditor/MarkdownDisplay";
 export default {
   name: "issueInfoDetail",
-  components: {MarkdownEditor, MyRichText, postIssue, marked, Confirm, RelateDialog},
+  components: {MarkdownEditor, MyRichText, postIssue, marked, Confirm, RelateDialog,MdEditor,MarkdownDisplay},
   props: {},
   data() {
     return {
@@ -339,12 +352,12 @@ export default {
       currentPage: 1,
       relate: false,
       allow_relate: 0,
+      editor_content: '',
       hooks: {
         addImageBlobHook: async (blob, callback) => {
           let jwt = this.$store.state.user.token
           const formData = new FormData();
           formData.append('file', blob);
-          //callback('http://shieask.com/pic/1.png');
           upload_public(formData).then(response => {
             if (response.data) {
               callback(response.data.url);
@@ -360,10 +373,13 @@ export default {
 
         },
       },
-      editor_content: '发表你的评论和回答',
+
     }
   },
   methods: {
+    handlePageChange() {
+      window.scrollTo(0, 0);
+    },
     santinize(html) {
       return DOMPurify.sanitize(html, {
         ALLOWED_TAGS: ['p', 'a', 'b', 'i', 'strong', 'em', 'br', 'img', 'blockquote'],
@@ -427,7 +443,8 @@ export default {
         // console.log(response)
         this.title = response.data.title
         this.content = response.data.content
-        this.html_content = marked.parse(this.content)
+        //this.html_content = marked.parse(this.content)
+        this.html_content = response.data.content
         this.user_name = response.data.user_name
         this.user_avatar = response.data.user_avatar
         this.user_id = response.data.user_id
@@ -679,7 +696,7 @@ export default {
       })
     },
     handleComment() {
-      const html = this.$refs.editor.getHtml();
+      const html = this.$refs.editor2.getHtml();
       let jwt = this.$store.state.user.token
       create_comment(jwt, this.issue_id, html).then(response => {
         this.editor_content = ''
@@ -692,6 +709,7 @@ export default {
           duration: 2000
         })
       })
+      console.log(html)
     },
     closeDialog() {
       this.dialogVisible = false;
@@ -782,6 +800,9 @@ export default {
         })
       })
     },
+    updateParentValue(newValue) {
+      this.editor_content = newValue;
+    }
   },
   computed: {
     likeIconColor() {
