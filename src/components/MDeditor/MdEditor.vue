@@ -1,5 +1,13 @@
 <template>
-  <mavon-editor class="mavon-editor" @imgAdd="imageAdd" :ishljs="true"  ref="editor" v-model="value" :toolbars="toolbars" />
+  <mavon-editor
+    class="mavon-editor"
+    @imgAdd="imageAdd"
+    :ishljs="true"
+    ref="editor"
+    v-model="value"
+    :toolbars="toolbars"
+    :html="false"
+  />
 </template>
 
 <script>

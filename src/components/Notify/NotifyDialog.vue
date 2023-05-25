@@ -48,7 +48,7 @@
                     </v-row>
 
                     <v-row>
-                      <v-list-item-subtitle v-html="item.content"></v-list-item-subtitle>
+                      <v-list-item-subtitle v-text="item.content"></v-list-item-subtitle>
                     </v-row>
                   </v-col>
 
@@ -120,6 +120,12 @@ export default {
     }
   },
   methods: {
+    santinize(html) {
+      return DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: ['p', 'a', 'b', 'i', 'strong', 'em', 'br', 'img', 'blockquote'],
+        ALLOWED_ATTR: ['src']
+      });
+    },
     getList() {
       let jwt = this.$store.state.user.token
       get_all_notification(jwt).then(response => {
