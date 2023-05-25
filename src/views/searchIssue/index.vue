@@ -3,7 +3,7 @@
       <el-row>
         <el-col :span="19">
         <el-switch style="float: right; margin-bottom: 30px;"
-            v-model="year"
+            v-model="is_current_year"
             active-text="本学期问题"
             inactive-text="以往学期问题"
             active-color="#146c94"
@@ -31,6 +31,11 @@
                               :multiple-limit="6" placeholder="问题状态">
                       <el-option v-for="state in all_status"
                                 :key="state.status_id" :label="state.name" :value="state.status_id"/>
+                    </el-select>
+                    <el-select v-model="search_year" class="search-select"
+                               placeholder="学年" @change="updateSearchYear" v-if="is_current_year === false">
+                      <el-option v-for="year in all_years"
+                                 :key="year.year_id" :label="year.content" :value="year.year_id"/>
                     </el-select>
                     <el-select v-model="search_subject" class="search-select"
                               placeholder="科目" @change="clearSubject">
@@ -123,6 +128,7 @@ import {get_all_tags} from '@/api/tag'
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
 import {getToken, getRole} from '@/utils/auth'
 import {get_active_users, get_popular_issues} from '@/api/hot_list'
+import {get_all_years} from '@/api/year'
 
 export default {
   name: "Search",
@@ -139,14 +145,15 @@ export default {
       return {
           dialogVisible: false,
           user_type: getRole(),
-          year: true,
+          is_current_year: true,
+          search_year: null,
           search_keyword: '',
           search_tags: [],
           search_state: null,
           search_subject: null,
-          search_chapter: null,
+          search_chapter: [],
           sort_order: null,
-          year_id: 1, // alpha 阶段先用固定的year_id, beta
+          current_year_id: 1, // alpha 阶段先用固定的year_id, beta
           all_tags: [
               {
                   tag_id: 1,
@@ -164,6 +171,12 @@ export default {
                   tag_id: 4,
                   content: 'debug'
               },
+          ],
+          all_years: [
+            {
+              year_id: 1,
+              content: '2023春季学期'
+            }
           ],
           all_subjects: [
               {
@@ -387,7 +400,15 @@ export default {
       changeYear() {
           this.search()
       },
+      updateSearchYear() {
+          this.initChapters();
+          this.search_subject = null;
+          this.clearSubject();
+      },
       search() {
+          if (this.is_current_year) {
+            this.search_year = this.current_year_id;
+          }
           if (this.sort_order === null) {
             this.sort_order = 0
           }
@@ -395,9 +416,12 @@ export default {
             this.search_state = [4]
           }
           this.listLoading = true;
+          console.log(this.search_year);
+          console.log(this.search_subject);
+          console.log(this.search_chapter);
           search_issue(getToken(), this.search_keyword, this.search_tags,
             this.search_state, this.search_chapter, this.sort_order,
-            this.cur_page, this.page_size).then(response => {
+            this.cur_page, this.page_size, this.search_year, this.search_subject).then(response => {
               this.issues = response.data['issue_list']
               this.total_page = response.data['total_page']
               this.listLoading = false
@@ -408,6 +432,8 @@ export default {
             setTimeout(() => {
               this.listLoading = false
             }, 10 * 1000)
+          }).catch(error => {
+            console.log(error)
           })
       },
       initTags() {
@@ -416,8 +442,35 @@ export default {
           }).catch(error => {
           })
       },
+      initYears() {
+        get_all_years(getToken()).then(response => {
+          console.log(response);
+          this.all_years = response.data['year_list'];
+          this.current_year_id = response.data['current_year_id'];
+          get_all_subjects(getToken(), this.current_year_id).then(response => {
+            // why should JSON? see https://blog.csdn.net/weixin_46331416/article/details/123262798
+            this.all_subjects = JSON.parse(JSON.stringify(response.data['subject_list']));
+            // this.all_subjects = response.data['subject_list']
+            let i = 0;
+            for (i = 0; i < this.all_subjects.length; i++) {
+              // Warning！in each loop, for only calls api, not wait the response but direct go for next loop,
+              // so we should store var i in case of having wrong value in response handling code
+              let tmpI = i;
+              get_subject_all_chapters(getToken(), this.all_subjects[tmpI].subject_id).then(
+                response => {
+                  this.all_chapters[this.all_subjects[tmpI].subject_id] = response.data['chapter_list']
+                }
+              ).catch(error => {
+              })
+            }
+          }).catch(error => {
+          })
+        }).catch(error => {
+          console.log(error)
+        })
+      },
       initChapters() {
-        get_all_subjects(getToken(), this.year_id).then(response => {
+        get_all_subjects(getToken(), this.search_year).then(response => {
           // why should JSON? see https://blog.csdn.net/weixin_46331416/article/details/123262798
           this.all_subjects = JSON.parse(JSON.stringify(response.data['subject_list']));
           // this.all_subjects = response.data['subject_list']
@@ -437,7 +490,7 @@ export default {
         })
       },
 
-      getTops() {
+    getTops() {
         get_popular_issues(getToken(), this.top_k).then(response => {
           this.top_issues = response.data['issue_list'];
           for (var i = 0; i < this.top_issues.length; ++i) {
@@ -482,7 +535,7 @@ export default {
   },
   created() {
       this.initTags();
-      this.initChapters();
+      this.initYears();
       this.getTops();
       this.getIssues();
   },
