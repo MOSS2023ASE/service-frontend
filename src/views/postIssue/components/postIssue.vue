@@ -11,12 +11,11 @@
       </el-form-item>
       <el-form-item label="问题描述">
         <el-col :span="24">
-          <markdown-editor
-            v-model="content"
-            height="500px"
-            lang="zh"
-            :hooks="this.hooks"
-          />
+          <MdEditor
+            ref="editor2" :value="content"
+            style="min-height: 500px"
+            @input="updateParentValue">
+          </MdEditor>
         </el-col>
       </el-form-item>
       <el-row style="margin-top: 30px;">
@@ -61,7 +60,7 @@
 
 <script lang="js">
 import {Message} from "element-ui";
-import MarkdownEditor from '@/components/MarkdownEditor'
+import MdEditor from "@/components/MDeditor/MdEditor";
 import {
   commit_issue, get_issue_detail,
   update_issue_info
@@ -70,12 +69,12 @@ import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
 import {getToken, getRole} from '@/utils/auth'
 import {upload_public} from "@/api/upload";
 import {save_draft, load_draft} from '@/api/draft'
-import { isSwitchStatement } from "@babel/types";
+import {isSwitchStatement} from "@babel/types";
 
 export default {
   name: 'PostIssueDialog',
   components: {
-    MarkdownEditor
+    MdEditor
   },
   props: {
     dialogVisible: Boolean,
@@ -213,16 +212,16 @@ export default {
         anonymous: null,
       },
       content: '',
-      hooks:{
+      hooks: {
         addImageBlobHook: async (blob, callback) => {
           let jwt = this.$store.state.user.token
           const formData = new FormData();
           formData.append('file', blob);
-          upload_public(formData).then(response=>{
+          upload_public(formData).then(response => {
             if (response.data) {
               callback(response.data.url);
             }
-          }).catch(err=>{
+          }).catch(err => {
             this.$notify({
               title: '上传图片失败',
               message: '上传图片信息失败',
@@ -411,6 +410,9 @@ export default {
           duration: 2000
         })
       })
+    },
+    updateParentValue(newValue) {
+      this.content = newValue;
     }
   },
   created() {
