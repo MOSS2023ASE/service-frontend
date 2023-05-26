@@ -29,6 +29,9 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import Vuelidate from 'vuelidate'
 
+import echarts from 'echarts';
+Vue.prototype.$echarts = echarts;
+
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
