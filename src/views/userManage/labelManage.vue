@@ -36,8 +36,8 @@
         <v-row>
           <v-spacer></v-spacer>
           <v-col :cols="2">
-            <v-btn color="blue" class="white--text" v-if="step" @click="showDialog = true">
-              添加{{ (step === 1) ? "科目" : "章节" }}
+            <v-btn color="blue" class="white--text" v-if="step >= 0" @click="showDialog = true">
+              添加{{ (step === 0) ? "学年" : (step === 1) ? "科目" : "章节" }}
             </v-btn>
           </v-col>
           <v-col :cols="2">
@@ -49,7 +49,7 @@
         </v-row>
         <v-dialog v-model="showDialog" max-width="300px">
           <v-card>
-            <v-card-title>添加{{ (step === 1) ? "科目" : "章节" }}</v-card-title>
+            <v-card-title>添加{{ (step === 0) ? "学年" : (step === 1) ? "科目" : "章节" }}</v-card-title>
             <v-card-text>
               <v-text-field
                 v-model="newContent"
@@ -73,47 +73,6 @@
           </v-card>
         </v-dialog>
       </v-card-actions>
-      <v-card-actions>
-        <v-row>
-          <v-spacer></v-spacer>
-          <v-col :cols="2">
-            <v-btn color="blue" class="white--text" v-if="step===0" @click="showDialog = true">
-              添加标签
-            </v-btn>
-          </v-col>
-          <v-col :cols="2">
-            <v-btn color="red" class="white--text" v-if="step===0" click="canRemove = !canRemove" >
-              删除标签
-            </v-btn>
-          </v-col>
-          <v-spacer></v-spacer>
-        </v-row>
-        <v-dialog v-model="showDialog" max-width="300px">
-          <v-card>
-            <v-card-title>添加标签</v-card-title>
-            <v-card-text>
-              <v-text-field
-                v-model="newContent"
-                label="新建内容"
-                outlined
-                dense
-              ></v-text-field>
-            </v-card-text>
-            <v-card-actions>
-              <v-row class="mb-4">
-                <v-spacer></v-spacer>
-                <v-col class="d-flex justify-center">
-                  <v-btn color="blue" class="white--text" @click="createTag">提交</v-btn>
-                </v-col>
-                <v-col class="d-flex justify-center">
-                  <v-btn color="error" @click="showDialog = false">放弃</v-btn>
-                </v-col>
-                <v-spacer></v-spacer>
-              </v-row>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -121,12 +80,15 @@
 <script>
 import { create_chapter, create_subject, delete_chapter, get_all_subjects, get_subject_all_chapters } from '@/api/subject';
 import {create_tag, delete_tag, update_tag, get_all_tags} from '@/api/tag'
+import {get_all_years, create_year, update_year_info, update_current_year} from '@/api/year'
 import { getToken } from '@/utils/auth';
 import { Message } from 'element-ui';
 export default {
   data() {
     return {
       years: [],
+      current_year_id: 1,
+      current_year_content: '2023年',
       subjects: [],
       chapters: [],
       step: 0,
@@ -141,8 +103,16 @@ export default {
   },
   methods: {
     getYear() {
-      this.years = [{year_id: 1,
-        content: '大一下学期'}];
+      get_all_years(getToken()).then(response => {
+        this.years = response.data['year_list'];
+        this.current_year_id = response.data['current_year_id'];
+        this.current_year_content = response.data['current_content'];
+      }).catch(error => {
+        Message({
+          message: '获取学年失败',
+          type: 'error'
+        });
+      });
     },
     getSubject(year_id) {
       get_all_subjects(getToken(),
@@ -193,7 +163,24 @@ export default {
       });
     },
     submitContent() {
-      if (this.step === 1) {
+      if (this.step === 0) {
+        create_year(getToken(),
+          this.newContent
+        ).then(response => {
+          Message({
+            message: '创建成功',
+            type: 'success'
+          });
+          this.getYear();
+          this.newContent = "";
+        }).catch(error => {
+          console.log(error);
+          Message({
+            message: '创建失败',
+            type: 'error'
+          });
+        });
+      } else if (this.step === 1) {
         create_subject(getToken(),
           this.newContent,
           "",

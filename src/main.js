@@ -28,8 +28,13 @@ Vue.prototype.dayjs = dayjs;
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import Vuelidate from 'vuelidate'
+
 import echarts from 'echarts';
 Vue.prototype.$echarts = echarts;
+
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -49,8 +54,7 @@ Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   locale: enLang // 如果使用中文，无需设置，请删除
 })
-Vue.use(Vuelidate)
-
+Vue.use(mavonEditor)
 // Vue.use(ElementTiptapPlugin, {
 //   lang: 'zh'
 // })

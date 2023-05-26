@@ -250,7 +250,9 @@ export function search_issue(
   chapter_list, //: Array<number>,
   order, //: number,
   page_no, //: number,
-  issue_per_page, //: number
+  issue_per_page, //: number,
+  year_id, //: number,
+  subject_id, //: number
 ) {
   return request({
     url: '/issue/',
@@ -263,7 +265,9 @@ export function search_issue(
       chapter_list: chapter_list,
       order: order,
       page_no: page_no,
-      issue_per_page: issue_per_page
+      issue_per_page: issue_per_page,
+      year_id: year_id,
+      subject_id: subject_id
     }
   })
 }
