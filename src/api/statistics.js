@@ -8,7 +8,7 @@ export function get_statistics(
   end_date, // : string
 ) {
   return request({
-    url: '/statistics',
+    url: '/admins/statistics',
     method: 'post',
     data: {
       jwt: jwt,
