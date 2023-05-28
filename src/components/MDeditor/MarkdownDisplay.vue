@@ -12,6 +12,7 @@
     default-open="preview"
     style="min-height: 0"
     v-model="value"
+    :html="false"
   ></mavon-editor>
 </template>
 

@@ -23,7 +23,7 @@
                 <v-icon>mdi-check</v-icon>
               </v-btn>
             </template>
-            <span>全部已读</span>
+            <span>全部删除</span>
           </v-tooltip>
 
         </v-toolbar>
@@ -48,7 +48,7 @@
                     </v-row>
 
                     <v-row>
-                      <v-list-item-subtitle v-html="item.content"></v-list-item-subtitle>
+                      <v-list-item-subtitle v-text="item.content"></v-list-item-subtitle>
                     </v-row>
                   </v-col>
 
@@ -58,6 +58,7 @@
                       depressed
                       text
                       color="#1687A7"
+                      v-show="item.status === 0"
                     >
                       <v-icon>
                         mdi-check
@@ -120,6 +121,12 @@ export default {
     }
   },
   methods: {
+    santinize(html) {
+      return DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: ['p', 'a', 'b', 'i', 'strong', 'em', 'br', 'img', 'blockquote'],
+        ALLOWED_ATTR: ['src']
+      });
+    },
     getList() {
       let jwt = this.$store.state.user.token
       get_all_notification(jwt).then(response => {

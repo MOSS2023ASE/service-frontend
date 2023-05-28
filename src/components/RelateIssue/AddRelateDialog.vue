@@ -19,7 +19,7 @@
                 v-model="ids"
                 :counter="20"
                 :rules="idRules"
-                label="添加关联问题id(请以分号;隔开你想添加的关联问题)"
+                label="添加关联问题id(请输入数字，不要添加其他字符)"
                 required
               ></v-text-field>
               <v-row justify="end">
@@ -57,7 +57,7 @@ export default {
       v => !!v || 'relate issue id is required',
       v => (v && v.length <= 20) || 'string must be less than 10 characters',
       v => {
-        const pattern = /^(\d+;)*\d+$/;
+        const pattern =  /^\d+$/;
         return pattern.test(v) || 'id must be a semicolon-separated list of numbers';
       },
     ],

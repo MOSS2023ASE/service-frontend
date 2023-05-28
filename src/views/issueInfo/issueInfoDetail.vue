@@ -788,6 +788,9 @@ export default {
         let originData = response.data.issue_list
         let divide = {divider: true, inset: true}
         let o
+        originData.sort((a, b) => {
+          return a.status - b.status;
+        });
         this.$nextTick(() => {
           this.asitems = []
           for (o in originData) {
