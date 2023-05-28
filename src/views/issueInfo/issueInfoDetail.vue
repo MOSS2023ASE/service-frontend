@@ -1,11 +1,12 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <v-card flat>
+      <v-card flat outlined rounded >
         <v-container fluid>
           <v-card
             outlined
             class="mx-auto"
+            elevation="1"
           >
             <v-card-title>
               <v-btn text color="#1687A7" @click="back()">
@@ -155,18 +156,19 @@
         </v-container>
         <v-divider></v-divider>
         <v-container>
-          <v-timeline align-top dense>
+          <v-timeline align-top dense >
             <v-timeline-item
               v-for="(comment, index) in currentPageItems"
               :key="index"
               large
+              fill-dot
             >
               <template v-slot:icon>
                 <v-avatar>
                   <img :src="comment.avatar">
                 </v-avatar>
               </template>
-              <v-card class="elevation-2">
+              <v-card color="#F6F5F5">
                 <v-card-title class="headline">{{ comment.name }}</v-card-title>
                 <v-card-subtitle class="subtitle-1"><span>{{ comment.time.slice(0, 10) }} {{
                     comment.time.slice(11, 16)
@@ -182,6 +184,7 @@
             :length="totalPages"
             :total-visible="7"
             @change="handlePageChange"
+            color="#1687A7"
           ></v-pagination>
         </v-container>
         <v-divider></v-divider>
@@ -191,7 +194,7 @@
       <v-container fluid style="max-width: 1800px">
         <v-row class="mt-3" no-gutters>
           <v-col cols="12">
-            <v-text class="text-h5">发布解答</v-text>
+            <v-text v-if="this.allow_comment === 1" class="text-h5">发布解答</v-text>
           </v-col>
         </v-row>
         <v-row class="mt-3" no-gutters>
@@ -204,7 +207,12 @@
 
       <br/>
       <v-row v-if="this.allow_comment === 1" justify="end" style="margin-right: 10px;">
-        <v-btn raised color="light-blue darken-2" @click="handleComment()">发布</v-btn>
+        <v-btn raised color="light-blue darken-2" @click="handleComment()">
+          <span style="color: aliceblue">
+            发布
+          </span>
+
+        </v-btn>
       </v-row>
       <br/>
       <post-issue
