@@ -104,12 +104,12 @@
       </el-row>
     </div>
 
-  <el-dialog :visible.sync="resetPasswordDialog" width="35%"
-    title="重置密码" :modal-append-to-body="false"
-    :show-close="false"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    ref="resetPasswordDialog">
+    <el-dialog :visible.sync="resetPasswordDialog" width="35%"
+               title="重置密码" :modal-append-to-body="false"
+               :show-close="false"
+               :close-on-click-modal="false"
+               :close-on-press-escape="false"
+               ref="resetPasswordDialog">
       <el-form
         :model="resetPasswordForm"
         :rules="loginRules"
@@ -127,11 +127,11 @@
             </el-col>
             <el-col :span="16">
               <el-input v-model="resetPasswordForm.username"
-                placeholder="学号" name="username" type="text" tabindex="1"/>
+                        placeholder="学号" name="username" type="text" tabindex="1"/>
             </el-col>
           </el-row>
         </el-form-item>
-        
+
         <el-form-item prop="mailbox">
           <el-row>
             <el-col :span="2" style="min-height:1px"/>
@@ -142,13 +142,13 @@
             </el-col>
             <el-col :span="16">
               <el-input v-model="resetPasswordForm.username" disabled
-                placeholder="邮箱" name="mailbox" type="text" tabindex="1">
+                        placeholder="邮箱" name="mailbox" type="text" tabindex="1">
                 <template slot="append">@buaa.edu.cn</template>
               </el-input>
             </el-col>
           </el-row>
         </el-form-item>
-        
+
         <el-form-item prop="verification">
           <el-row>
             <el-col :span="2" style="min-height:1px"/>
@@ -159,7 +159,7 @@
             </el-col>
             <el-col :span="10">
               <el-input v-model="resetPasswordForm.verification"
-                placeholder="验证码" name="verification" type="text" tabindex="1"/>
+                        placeholder="验证码" name="verification" type="text" tabindex="1"/>
             </el-col>
             <el-col :span="2" style="min-height:1px"/>
             <el-col :span="4">
@@ -172,65 +172,65 @@
 
         <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
           <el-form-item prop="password">
-          <el-row>
-            <el-col :span="2" style="min-height:1px"/>
-            <el-col :span="2">
+            <el-row>
+              <el-col :span="2" style="min-height:1px"/>
+              <el-col :span="2">
               <span class="svg-container">
                 <svg-icon icon-class="password"/>
               </span>
-            </el-col>
-            <el-col :span="13">
-              <el-input
-                :key="passwordType"
-                v-model="resetPasswordForm.password"
-                :type="resetPasswordType"
-                placeholder="新密码"
-                name="password"
-                tabindex="2"
-                @keyup.native="checkCapslock"
-                @blur="capsTooltip = false"
-              />
-            </el-col>
-            <el-col :span="2" style="min-height:1px"/>
-            <el-col :span="1">
+              </el-col>
+              <el-col :span="13">
+                <el-input
+                  :key="passwordType"
+                  v-model="resetPasswordForm.password"
+                  :type="resetPasswordType"
+                  placeholder="新密码"
+                  name="password"
+                  tabindex="2"
+                  @keyup.native="checkCapslock"
+                  @blur="capsTooltip = false"
+                />
+              </el-col>
+              <el-col :span="2" style="min-height:1px"/>
+              <el-col :span="1">
               <span class="show-pwd" @click="showResetPwd">
                 <svg-icon style="cursor: pointer;"
-                  :icon-class="resetPasswordType === 'password' ? 'eye' : 'eye-open'"/>
+                          :icon-class="resetPasswordType === 'password' ? 'eye' : 'eye-open'"/>
               </span>
-            </el-col>
-          </el-row>
+              </el-col>
+            </el-row>
           </el-form-item>
         </el-tooltip>
-        
+
         <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
           <el-form-item prop="confirm-password">
-          <el-row>
-            <el-col :span="2" style="min-height:1px"/>
-            <el-col :span="2">
+            <el-row>
+              <el-col :span="2" style="min-height:1px"/>
+              <el-col :span="2">
               <span class="svg-container">
                 <svg-icon icon-class="password"/>
               </span>
-            </el-col>
-            <el-col :span="13">
-              <el-input
-                :key="passwordType"
-                v-model="resetPasswordForm.confirmPassword"
-                :type="confirmResetPasswordType"
-                placeholder="确认密码"
-                name="confirm-password"
-                tabindex="2"
-                @keyup.native="checkCapslock"
-                @blur="capsTooltip = false"
-              />
-            </el-col>
-            <el-col :span="2" style="min-height: 1px;"/>
-            <el-col :span="1">
-              <div class="show-pwd" @click="showResetConfirmPwd">
-                <svg-icon style="cursor: pointer;"
-                  :icon-class="confirmResetPasswordType === 'password' ? 'eye' : 'eye-open'"/>
-              </div>
-            </el-col>
-          </el-row>
+              </el-col>
+              <el-col :span="13">
+                <el-input
+                  :key="passwordType"
+                  v-model="resetPasswordForm.confirmPassword"
+                  :type="confirmResetPasswordType"
+                  placeholder="确认密码"
+                  name="confirm-password"
+                  tabindex="2"
+                  @keyup.native="checkCapslock"
+                  @blur="capsTooltip = false"
+                />
+              </el-col>
+              <el-col :span="2" style="min-height: 1px;"/>
+              <el-col :span="1">
+                <div class="show-pwd" @click="showResetConfirmPwd">
+                  <svg-icon style="cursor: pointer;"
+                            :icon-class="confirmResetPasswordType === 'password' ? 'eye' : 'eye-open'"/>
+                </div>
+              </el-col>
+            </el-row>
           </el-form-item>
         </el-tooltip>
       </el-form>
@@ -238,7 +238,11 @@
         <el-button class="confirm-button" @click="resetPassword">确认</el-button>
         <el-button class="cancel-button" @click="resetPasswordDialog = false">取消</el-button>
       </span>
-  </el-dialog>
+    </el-dialog>
+      <div class="footer">
+        <a href=" " target="_blank">备案号</a>
+        <a href="https://beian.miit.gov.cn/" target="_blank">京ICP备2023007993号-1</a>
+      </div>
   </div>
 </template>
 
@@ -248,7 +252,7 @@ import {validUsername} from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
 import editModal from './components/registerPanel.vue'
 import Captcha from './components/captcha.vue'
-import { sha256 } from 'js-sha256'
+import {sha256} from 'js-sha256'
 import {send_mail, confirm_mail} from '@/api/send_email'
 
 export default {
@@ -313,7 +317,7 @@ export default {
   created() {
     // window.addEventListener('storage', this.afterQRScan)
     const _this = this;
-    document.onkeydown = function(e) {
+    document.onkeydown = function (e) {
       let key = window.event.keyCode;
       if (key == 13 && _this.resetPasswordDialog === false) {
         _this.handleLogin();
@@ -362,24 +366,24 @@ export default {
       }
     },
     sendVerification() {
-        this.resetPasswordForm.mailAddress = this.resetPasswordForm.username + '@buaa.edu.cn'
-        send_mail(this.resetPasswordForm.mailAddress).then(response => {
-        }).catch(error => {
-        })
+      this.resetPasswordForm.mailAddress = this.resetPasswordForm.username + '@buaa.edu.cn'
+      send_mail(this.resetPasswordForm.mailAddress).then(response => {
+      }).catch(error => {
+      })
     },
     resetPassword() {
-        this.resetPasswordForm.mailAddress = this.resetPasswordForm.username + '@buaa.edu.cn'
-        if (this.resetPasswordForm.password !== this.resetPasswordForm.confirmPassword) {
-          Message({
-            message: '两次输入密码不同',
-            type: 'error'
-          });
-          return;
-        }
-        confirm_mail(this.resetPasswordForm.mailAddress, this.resetPasswordForm.username,
-                    sha256(this.resetPasswordForm.password), this.resetPasswordForm.verification).then(response => {
-        }).catch(error => {
-        })
+      this.resetPasswordForm.mailAddress = this.resetPasswordForm.username + '@buaa.edu.cn'
+      if (this.resetPasswordForm.password !== this.resetPasswordForm.confirmPassword) {
+        Message({
+          message: '两次输入密码不同',
+          type: 'error'
+        });
+        return;
+      }
+      confirm_mail(this.resetPasswordForm.mailAddress, this.resetPasswordForm.username,
+        sha256(this.resetPasswordForm.password), this.resetPasswordForm.verification).then(response => {
+      }).catch(error => {
+      })
     },
     handleLogin() {
       if (this.identifyCode.toLowerCase() !== this.code.toLowerCase()) {
@@ -527,6 +531,14 @@ $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
 .bg_container {
   min-height: 100%;
   width: 100%;
