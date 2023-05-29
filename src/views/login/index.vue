@@ -131,7 +131,7 @@
             </el-col>
           </el-row>
         </el-form-item>
-        
+
         <el-form-item prop="mailbox">
           <el-row>
             <el-col :span="2" style="min-height:1px"/>
@@ -148,7 +148,7 @@
             </el-col>
           </el-row>
         </el-form-item>
-        
+
         <el-form-item prop="verification">
           <el-row>
             <el-col :span="2" style="min-height:1px"/>
@@ -201,7 +201,7 @@
           </el-row>
           </el-form-item>
         </el-tooltip>
-        
+
         <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
           <el-form-item prop="confirm-password">
           <el-row>
