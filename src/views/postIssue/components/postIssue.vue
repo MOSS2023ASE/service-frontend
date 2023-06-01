@@ -397,12 +397,12 @@ export default {
         this.content,
         this.issue.anonymous).then(response => {
           console.log(response)
-        this.$emit('updateEvent');
+        this.$emit('updateEvent',this.issue_id);
         this.$emit('closeDialogEvent');
         this.$notify({
           title: '编辑成功',
           message: '编辑issue信息成功',
-          type: 'info',
+          type: 'success',
           duration: 2000
         })
       }).catch(err => {
