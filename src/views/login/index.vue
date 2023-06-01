@@ -382,7 +382,9 @@ export default {
       }
       confirm_mail(this.resetPasswordForm.mailAddress, this.resetPasswordForm.username,
         sha256(this.resetPasswordForm.password), this.resetPasswordForm.verification).then(response => {
+          console.log(response)
       }).catch(error => {
+        console.log(error)
       })
     },
     handleLogin() {

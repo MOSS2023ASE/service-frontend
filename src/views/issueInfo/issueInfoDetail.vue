@@ -92,10 +92,10 @@
                        @click="invalidIssue(confirmText.invalidIssue,invalidIssue)" color="red">
                   无效问题
                 </v-btn>
-                <v-btn v-show="true" outlined @click="showRealte" color="orange">
+                <v-btn v-if="this.allow_relate === 1" outlined @click="showRealte" color="orange">
                   相关问题
                 </v-btn>
-                <v-btn v-show="true" outlined @click="showTagManage" color="orange">
+                <v-btn v-if="this.allow_relate === 1" outlined @click="showTagManage" color="orange">
                   标签管理
                 </v-btn>
               </v-card-actions>
