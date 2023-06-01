@@ -220,7 +220,7 @@
         :dialogVisible="dialogVisible"
         :editMode="true"
         :issue_id="this.issue_id"
-        @updateEvent="initissueInfo(this.issue_id)"
+        @updateEvent="initissueInfo"
         @closeDialogEvent="closeDialog"
       >
       </post-issue>
@@ -717,14 +717,12 @@ export default {
           duration: 2000
         })
       })
-      console.log(html)
     },
     closeDialog() {
       this.dialogVisible = false;
     },
     addTags() {
       update_issue_tag(getToken(), this.issue_id, this.added_tags).then(response => {
-        console.log(response);
         this.$notify({
           title: '标签添加成功',
           message: '标签添加成功',
@@ -775,7 +773,6 @@ export default {
           this.added_tags.push(tag_list[i].tag_id)
         }
         this.tag_dialog = true;
-        console.log(this.added_tags)
       }).catch(err => {
         this.$notify({
           title: '获取问题标签',
