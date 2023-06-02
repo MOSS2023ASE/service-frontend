@@ -18,7 +18,7 @@
       <v-divider></v-divider>
 
       <v-card-actions class="d-flex justify-center">
-        <v-btn color="blue" class="white--text" @click="show = true">添加标签</v-btn>
+        <v-btn color="blue" class="white--text" @click="show = true" width="100px">添加标签</v-btn>
       </v-card-actions>
     </v-card>
 
