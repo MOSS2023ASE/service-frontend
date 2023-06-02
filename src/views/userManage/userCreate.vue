@@ -135,10 +135,15 @@
         </v-col>
       </v-row>
       <v-row>
+        <v-col v-if="page === 7">
+          <bonus-manage></bonus-manage>
+        </v-col>
+      </v-row>
+      <v-row>
         <v-col>
           <v-pagination
             v-model="page"
-            :length="6">
+            :length="7">
           </v-pagination>
         </v-col>
       </v-row>
@@ -158,6 +163,7 @@ import { getToken } from '@/utils/auth';
 import { sha256 } from 'js-sha256';
 import labelManage from './labelManage';
 import workStat from './workStat';
+import bonusManage from './bonusManage';
 export default {
   data() {
     return {
@@ -170,7 +176,7 @@ export default {
       dataTable: []
     }
   },
-  components: { UserList, LabelView, tutorManage, postMessage, labelManage, workStat },
+  components: { UserList, LabelView, tutorManage, postMessage, labelManage, workStat, bonusManage },
   methods: {
     uploadCancel() {
       this.canUpload = true;
