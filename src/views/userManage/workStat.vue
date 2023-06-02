@@ -98,23 +98,14 @@ export default {
     return {
       showDate1: false,
       showDate2: false,
-      date1: '',
-      date2: '',
+      date1: '2023-05-01',
+      date2: '2023-06-15',
       chartType: 0,
       indicators: ['辅导师回答问题数', '辅导师复审问题数', 'issue访问次数'],
-      indicator: '',
+      indicator: '辅导师回答问题数',
       line: null,
       pie: null,
       line_option: {
-        visualMap: [
-          {
-            show: false,
-            type: 'continuous',
-            seriesIndex: 0,
-            min: 0,
-            max: 400
-          }
-        ],
         title: [
           {
             left: 'center',
@@ -126,6 +117,7 @@ export default {
         },
         xAxis: [
           {
+            boundaryGap: false,
             data: [] 
           }
         ],
@@ -138,7 +130,27 @@ export default {
         series: [
           {
             type: 'line',
+            smooth: true,
+            lineStyle: {
+              width: 0
+            },
             showSymbol: false,
+            areaStyle: {
+              opacity: 0.8,
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  offset: 0,
+                  color: 'rgb(128, 255, 165)'
+                },
+                {
+                  offset: 1,
+                  color: 'rgb(1, 191, 236)'
+                }
+              ])
+            },
+            emphasis: {
+              focus: 'series'
+            },
             data: []
           }
         ]
@@ -169,7 +181,7 @@ export default {
             emphasis: {
               label: {
                 show: true,
-                fontSize: 40,
+                fontSize: 30,
                 fontWeight: 'bold'
               }
             },
