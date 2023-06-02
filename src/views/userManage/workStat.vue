@@ -81,14 +81,15 @@
       <v-divider></v-divider>
 
       <v-card-text>
-        <div id="main" style="width: 1000px; height: 400px;" v-if="chartType === 0"></div>
-        <div id="main2" style="width: 1000px; height: 400px;" v-if="chartType === 1"></div>
+        <div ref="line" style="width: 1000px; height: 400px;" v-show="chartType === 0"></div>
+        <div ref="pie" style="width: 1000px; height: 400px;" v-show="chartType === 1"></div>
       </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script>
+import * as echarts from 'echarts';
 import { get_statistics } from '@/api/statistics';
 import { getToken } from '@/utils/auth';
 import { Message } from 'element-ui';
@@ -101,55 +102,10 @@ export default {
       date2: '',
       chartType: 0,
       indicators: ['辅导师回答问题数', '辅导师复审问题数', 'issue访问次数'],
-      indicator: ''
-    }
-  },
-  methods: {
-    draw() {
-      get_statistics(getToken(),
-                     this.chartType,
-                     this.indicators.indexOf(this.indicator),
-                     this.date1,
-                     this.date2).then(response => {
-                      if (this.chartType === 0) {
-                        this.drawLine(response.data.list);
-                      } else {
-                        this.drawPie(response.data.list);
-                      }
-                     }).catch(error => {
-                      Message({
-                        message: '获取数据失败',
-                        type: 'error'
-                      });
-                     });
-    },
-    timestampToTime(date) {
-      var Y = date.getFullYear() + '-';
-      var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-      var D = date.getDate();
-      return Y + M + D;
-    },
-    getTime(value) {
-      let arr = []
-      let str_b = value[0].split('-')
-      let str_e = value[1].split('-')
-      let date_b = new Date()
-      date_b.setUTCFullYear(str_b[0], str_b[1] - 1, str_b[2])
-      let date_e = new Date()
-      date_e.setUTCFullYear(str_e[0], str_e[1] - 1, str_e[2])
-      let unixDb = date_b.getTime() - 24 * 60 * 60 * 1000
-      let unixDe = date_e.getTime() - 24 * 60 * 60 * 1000
-      for (let j = unixDb; j <= unixDe;) {
-        j = j + 24 * 60 * 60 * 1000
-        arr.push(this.timestampToTime(new Date(parseInt(j))))
-      }
-      return arr;
-    },
-    drawLine(valueList) {
-      let dateList = this.getTime([this.date1, this.date2]);
-      
-      let myChart = this.$echarts.init(document.getElementById("main"));
-      let option = {
+      indicator: '',
+      line: null,
+      pie: null,
+      line_option: {
         visualMap: [
           {
             show: false,
@@ -170,7 +126,7 @@ export default {
         },
         xAxis: [
           {
-            data: dateList
+            data: [] 
           }
         ],
         yAxis: [
@@ -183,32 +139,11 @@ export default {
           {
             type: 'line',
             showSymbol: false,
-            data: valueList
+            data: []
           }
         ]
-      };
-
-      myChart.setOption(option);
-    },
-    drawPie(valueList) {
-      let sections = ['0~10次', '11~20次', '21~30次' , '31~40次', '40次以上'];
-      let counts = [0, 0, 0, 0, 0];
-
-      for (let i = 0; i < valueList.length; i++) {
-        counts[(valueList[i] - 1) / 10] += 1;
-      }
-
-      let data = [];
-      for (let i = 0; i < sections.length; i++) {
-        data.push({
-          value: counts[i],
-          name: sections[i]
-        });
-      }
-
-      let myChart = this.$echarts.init(document.getElementById("main2"));
-
-      let option = {
+      },
+      pie_option: {
         tooltip: {
           trigger: 'item'
         },
@@ -241,13 +176,105 @@ export default {
             labelLine: {
               show: false
             },
-            data: data
+            data: []
           }
         ]
-      };
+      }
+    }
+  },
+  methods: {
+    draw() {
+      get_statistics(getToken(),
+                     0,
+                     this.indicators.indexOf(this.indicator),
+                     this.date1,
+                     this.date2).then(response => {
+                      this.drawLine(response.data.list);
+                     }).catch(error => {
+                      Message({
+                        message: '折线图绘制失败',
+                        type: 'error'
+                      });
+                      console.log(error);
+                     });
 
-      myChart.setOption(option);
+      get_statistics(getToken(),
+                     1,
+                     this.indicators.indexOf(this.indicator),
+                     this.date1,
+                     this.date2).then(response => {
+                      console.log(response.data.list);
+                      this.drawPie(response.data.list);
+                     }).catch(error => {
+                      Message({
+                        message: '饼图绘制失败',
+                        type: 'error'
+                      });
+                      console.log(error);
+                     });
+    },
+    timestampToTime(date) {
+      var Y = date.getFullYear() + '-';
+      var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+      var D = date.getDate();
+      return Y + M + D;
+    },
+    getTime(value) {
+      let arr = []
+      let str_b = value[0].split('-')
+      let str_e = value[1].split('-')
+      let date_b = new Date()
+      date_b.setUTCFullYear(str_b[0], str_b[1] - 1, str_b[2])
+      let date_e = new Date()
+      date_e.setUTCFullYear(str_e[0], str_e[1] - 1, str_e[2])
+      let unixDb = date_b.getTime() - 24 * 60 * 60 * 1000
+      let unixDe = date_e.getTime() - 24 * 60 * 60 * 1000
+      for (let j = unixDb; j <= unixDe;) {
+        j = j + 24 * 60 * 60 * 1000
+        arr.push(this.timestampToTime(new Date(parseInt(j))))
+      }
+      return arr;
+    },
+    drawLine(valueList) {
+      let dateList = this.getTime([this.date1, this.date2]);
+      this.line_option.xAxis[0].data = dateList;
+      this.line_option.series[0].data = valueList;
+
+      echarts.registerTheme("waldon", theme);
+      this.line = echarts.init(this.$refs.line, "waldon");
+      this.line.setOption(this.line_option);
+    },
+    drawPie(valueList) {
+      let sections = ['0~10次', '11~20次', '21~30次' , '31~40次', '40次以上'];
+      let counts = [0, 0, 0, 0, 0];
+
+      for (let i = 0; i < valueList.length; i++) {
+        if (valueList[i] <= 40) {
+          counts[Math.floor((valueList[i] - 1) / 10)] += 1;
+        } else {
+          counts[4] += 1;
+        }
+      }
+
+      console.log(counts);
+
+      let data = [];
+      for (let i = 0; i < sections.length; i++) {
+        data.push({
+          value: counts[i],
+          name: sections[i]
+        });
+      }
+      console.log(data);
+
+      this.pie_option.series[0].data = data;
+      echarts.registerTheme("waldon", theme);
+      this.pie = echarts.init(this.$refs.pie, "waldon");
+      this.pie.setOption(this.pie_option);
     }
   }
 }
+
+import theme from './waldon.json';
+
 </script>
