@@ -207,7 +207,6 @@ export default {
                         message: '折线图绘制失败',
                         type: 'error'
                       });
-                      console.log(error);
                      });
 
       get_statistics(getToken(),
@@ -215,14 +214,12 @@ export default {
                      this.indicators.indexOf(this.indicator),
                      this.date1,
                      this.date2).then(response => {
-                      console.log(response.data.list);
                       this.drawPie(response.data.list);
                      }).catch(error => {
                       Message({
                         message: '饼图绘制失败',
                         type: 'error'
                       });
-                      console.log(error);
                      });
     },
     timestampToTime(date) {
@@ -268,8 +265,6 @@ export default {
         }
       }
 
-      console.log(counts);
-
       let data = [];
       for (let i = 0; i < sections.length; i++) {
         data.push({
@@ -277,7 +272,6 @@ export default {
           name: sections[i]
         });
       }
-      console.log(data);
 
       this.pie_option.series[0].data = data;
       echarts.registerTheme("waldon", theme);
