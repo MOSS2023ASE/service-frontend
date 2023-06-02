@@ -149,13 +149,11 @@ export default {
     },
     createTag() {
       create_tag(getToken(), this.newContent).then(response => {
-        console.log(response)
         Message({
           message: '创建成功',
           type: 'success'
         });
       }).catch(error => {
-        console.log(error)
         Message({
           message: '创建失败',
           type: 'error'
@@ -174,7 +172,6 @@ export default {
           this.getYear();
           this.newContent = "";
         }).catch(error => {
-          console.log(error);
           Message({
             message: '创建失败',
             type: 'error'

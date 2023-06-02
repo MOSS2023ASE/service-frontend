@@ -57,16 +57,12 @@ export default {
   },
   methods: {
     getStatistics() {
-      console.log(this.type)
-      console.log(this.indicator)
       get_statistics(getToken(), parseInt(this.type), parseInt(this.indicator), this.begin_date, this.end_date).then(response => {
-        console.log(response)
         Message({
           message: '统计图获取成功',
           type: 'success'
         });
       }).catch(error => {
-        console.log(error)
         Message({
           message: '统计图获取失败',
           type: 'error'
@@ -76,13 +72,11 @@ export default {
     getStudentBonus() {
       get_student_bonus(getToken(), parseFloat(this.bonus_per_issue), this.begin_date,
         this.end_date, this.min_bonus, this.max_bonus).then(response => {
-        console.log(response)
         Message({
           message: '获取成功',
           type: 'success'
         });
       }).catch(error => {
-        console.log(error)
         Message({
           message: '获取失败',
           type: 'error'
@@ -92,13 +86,11 @@ export default {
     getTutorBonus() {
       get_tutor_bonus(getToken(), parseFloat(this.bonus_per_counsel), parseFloat(this.bonus_per_review), this.begin_date,
         this.end_date, this.min_bonus, this.max_bonus).then(response => {
-        console.log(response)
         Message({
           message: '获取成功',
           type: 'success'
         });
       }).catch(error => {
-        console.log(error)
         Message({
           message: '获取失败',
           type: 'error'

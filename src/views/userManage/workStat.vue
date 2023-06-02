@@ -117,7 +117,6 @@ export default {
                         this.drawPie(response.data.list);
                       }
                      }).catch(error => {
-                      console.log(error);
                       Message({
                         message: '获取数据失败',
                         type: 'error'
@@ -206,8 +205,6 @@ export default {
           name: sections[i]
         });
       }
-
-      console.log(data);
 
       let myChart = this.$echarts.init(document.getElementById("main2"));
 
