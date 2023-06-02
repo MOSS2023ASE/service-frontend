@@ -13,39 +13,28 @@
       <v-card-text>
         <v-row v-if="step === 0">
           <v-col :cols="2" v-for="(year, i) in years" :key="i">
-            <v-btn @click="goStep(1, year)">{{ year.content }}</v-btn>
-            <v-icon class="ml-2" v-if="canRemove" color="red">mdi-close-circle-outline</v-icon>
+            <v-chip outlined color="blue" @click="goStep(1, year)">{{ year.content }}</v-chip>
           </v-col>
         </v-row>
         <v-row v-if="step === 1">
           <v-col :cols="2" v-for="(subject, i) in subjects" :key="i">
-            <v-btn @click="goStep(2, subject)">{{ subject.name }}</v-btn>
-            <v-icon class="ml-2" v-if="canRemove" color="red">mdi-close-circle-outline</v-icon>
+            <v-chip outlined color="blue" @click="goStep(2, subject)">{{ subject.name }}</v-chip>
           </v-col>
         </v-row>
         <v-row v-if="step === 2">
           <v-col :cols="2" v-for="(chapter, i) in chapters" :key="i">
-            <v-btn>{{ chapter.name }}</v-btn>
-            <v-icon class="ml-2" v-if="canRemove" color="red"
-                    @click="removeChapter(chapter.chapter_id)">mdi-close-circle-outline</v-icon>
+            <v-chip outlined color="blue" close @click:close="removeChapter(chapter.chapter_id)">{{ chapter.name }}</v-chip>
           </v-col>
         </v-row>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
         <v-row>
-          <v-spacer></v-spacer>
-          <v-col :cols="2">
-            <v-btn color="blue" class="white--text" v-if="step >= 0" @click="showDialog = true">
+          <v-col class="d-flex justify-center">
+            <v-btn color="blue" class="white--text" v-if="step >= 0" @click="showDialog = true" width="100px">
               添加{{ (step === 0) ? "学年" : (step === 1) ? "科目" : "章节" }}
             </v-btn>
           </v-col>
-          <v-col :cols="2">
-            <v-btn color="red" class="white--text" @click="canRemove = !canRemove" v-if="step === 2">
-              删除{{ (step === 1) ? "科目" : "章节" }}
-            </v-btn>
-          </v-col>
-          <v-spacer></v-spacer>
         </v-row>
         <v-dialog v-model="showDialog" max-width="300px">
           <v-card>
@@ -92,7 +81,6 @@ export default {
       subjects: [],
       chapters: [],
       step: 0,
-      canRemove: false,
       record: {},
       showDialog: false,
       newContent: "",
@@ -134,7 +122,6 @@ export default {
       });
     },
     goStep(step, target) {
-      this.canRemove = false;
       this.step = step;
       if (step === 0) {
         this.record = {};
@@ -149,13 +136,11 @@ export default {
     },
     createTag() {
       create_tag(getToken(), this.newContent).then(response => {
-        console.log(response)
         Message({
           message: '创建成功',
           type: 'success'
         });
       }).catch(error => {
-        console.log(error)
         Message({
           message: '创建失败',
           type: 'error'
@@ -174,7 +159,6 @@ export default {
           this.getYear();
           this.newContent = "";
         }).catch(error => {
-          console.log(error);
           Message({
             message: '创建失败',
             type: 'error'

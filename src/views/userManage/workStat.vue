@@ -81,14 +81,15 @@
       <v-divider></v-divider>
 
       <v-card-text>
-        <div id="main" style="width: 1000px; height: 400px;" v-if="chartType === 0"></div>
-        <div id="main2" style="width: 1000px; height: 400px;" v-if="chartType === 1"></div>
+        <div ref="line" style="width: 1000px; height: 400px;" v-show="chartType === 0"></div>
+        <div ref="pie" style="width: 1000px; height: 400px;" v-show="chartType === 1"></div>
       </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script>
+import * as echarts from 'echarts';
 import { get_statistics } from '@/api/statistics';
 import { getToken } from '@/utils/auth';
 import { Message } from 'element-ui';
@@ -97,31 +98,131 @@ export default {
     return {
       showDate1: false,
       showDate2: false,
-      date1: '',
-      date2: '',
+      date1: '2023-05-01',
+      date2: '2023-06-15',
       chartType: 0,
       indicators: ['辅导师回答问题数', '辅导师复审问题数', 'issue访问次数'],
-      indicator: ''
+      indicator: '辅导师回答问题数',
+      line: null,
+      pie: null,
+      line_option: {
+        title: [
+          {
+            left: 'center',
+            text: this.indicator
+          }
+        ],
+        tooltip: {
+          trigger: 'axis'
+        },
+        xAxis: [
+          {
+            boundaryGap: false,
+            data: [] 
+          }
+        ],
+        yAxis: [
+          {}
+        ],
+        grid: [
+          {}
+        ],
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            lineStyle: {
+              width: 0
+            },
+            showSymbol: false,
+            areaStyle: {
+              opacity: 0.8,
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  offset: 0,
+                  color: 'rgb(128, 255, 165)'
+                },
+                {
+                  offset: 1,
+                  color: 'rgb(1, 191, 236)'
+                }
+              ])
+            },
+            emphasis: {
+              focus: 'series'
+            },
+            data: []
+          }
+        ]
+      },
+      pie_option: {
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          top: '5%',
+          left: 'center'
+        },
+        series: [
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: ['40%', '70%'],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderRadius: 10,
+              borderColor: '#fff',
+              borderWidth: 2
+            },
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: 30,
+                fontWeight: 'bold'
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: []
+          }
+        ]
+      }
     }
   },
   methods: {
     draw() {
       get_statistics(getToken(),
-                     this.chartType,
+                     0,
                      this.indicators.indexOf(this.indicator),
                      this.date1,
                      this.date2).then(response => {
-                      if (this.chartType === 0) {
-                        this.drawLine(response.data.list);
-                      } else {
-                        this.drawPie(response.data.list);
-                      }
+                      this.drawLine(response.data.list);
                      }).catch(error => {
-                      console.log(error);
                       Message({
-                        message: '获取数据失败',
+                        message: '折线图绘制失败',
                         type: 'error'
                       });
+                      console.log(error);
+                     });
+
+      get_statistics(getToken(),
+                     1,
+                     this.indicators.indexOf(this.indicator),
+                     this.date1,
+                     this.date2).then(response => {
+                      console.log(response.data.list);
+                      this.drawPie(response.data.list);
+                     }).catch(error => {
+                      Message({
+                        message: '饼图绘制失败',
+                        type: 'error'
+                      });
+                      console.log(error);
                      });
     },
     timestampToTime(date) {
@@ -148,56 +249,26 @@ export default {
     },
     drawLine(valueList) {
       let dateList = this.getTime([this.date1, this.date2]);
-      
-      let myChart = this.$echarts.init(document.getElementById("main"));
-      let option = {
-        visualMap: [
-          {
-            show: false,
-            type: 'continuous',
-            seriesIndex: 0,
-            min: 0,
-            max: 400
-          }
-        ],
-        title: [
-          {
-            left: 'center',
-            text: this.indicator
-          }
-        ],
-        tooltip: {
-          trigger: 'axis'
-        },
-        xAxis: [
-          {
-            data: dateList
-          }
-        ],
-        yAxis: [
-          {}
-        ],
-        grid: [
-          {}
-        ],
-        series: [
-          {
-            type: 'line',
-            showSymbol: false,
-            data: valueList
-          }
-        ]
-      };
+      this.line_option.xAxis[0].data = dateList;
+      this.line_option.series[0].data = valueList;
 
-      myChart.setOption(option);
+      echarts.registerTheme("waldon", theme);
+      this.line = echarts.init(this.$refs.line, "waldon");
+      this.line.setOption(this.line_option);
     },
     drawPie(valueList) {
       let sections = ['0~10次', '11~20次', '21~30次' , '31~40次', '40次以上'];
       let counts = [0, 0, 0, 0, 0];
 
       for (let i = 0; i < valueList.length; i++) {
-        counts[(valueList[i] - 1) / 10] += 1;
+        if (valueList[i] <= 40) {
+          counts[Math.floor((valueList[i] - 1) / 10)] += 1;
+        } else {
+          counts[4] += 1;
+        }
       }
+
+      console.log(counts);
 
       let data = [];
       for (let i = 0; i < sections.length; i++) {
@@ -206,51 +277,16 @@ export default {
           name: sections[i]
         });
       }
-
       console.log(data);
 
-      let myChart = this.$echarts.init(document.getElementById("main2"));
-
-      let option = {
-        tooltip: {
-          trigger: 'item'
-        },
-        legend: {
-          top: '5%',
-          left: 'center'
-        },
-        series: [
-          {
-            name: 'Access From',
-            type: 'pie',
-            radius: ['40%', '70%'],
-            avoidLabelOverlap: false,
-            itemStyle: {
-              borderRadius: 10,
-              borderColor: '#fff',
-              borderWidth: 2
-            },
-            label: {
-              show: false,
-              position: 'center'
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: 40,
-                fontWeight: 'bold'
-              }
-            },
-            labelLine: {
-              show: false
-            },
-            data: data
-          }
-        ]
-      };
-
-      myChart.setOption(option);
+      this.pie_option.series[0].data = data;
+      echarts.registerTheme("waldon", theme);
+      this.pie = echarts.init(this.$refs.pie, "waldon");
+      this.pie.setOption(this.pie_option);
     }
   }
 }
+
+import theme from './waldon.json';
+
 </script>
