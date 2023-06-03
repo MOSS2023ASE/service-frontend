@@ -13,43 +13,32 @@
       <v-card-text>
         <v-row v-if="step === 0">
           <v-col :cols="2" v-for="(year, i) in years" :key="i">
-            <v-btn @click="goStep(1, year)">{{ year.content }}</v-btn>
-            <v-icon class="ml-2" v-if="canRemove" color="red">mdi-close-circle-outline</v-icon>
+            <v-chip outlined color="blue" @click="goStep(1, year)">{{ year.content }}</v-chip>
           </v-col>
         </v-row>
         <v-row v-if="step === 1">
           <v-col :cols="2" v-for="(subject, i) in subjects" :key="i">
-            <v-btn @click="goStep(2, subject)">{{ subject.name }}</v-btn>
-            <v-icon class="ml-2" v-if="canRemove" color="red">mdi-close-circle-outline</v-icon>
+            <v-chip outlined color="blue" @click="goStep(2, subject)">{{ subject.name }}</v-chip>
           </v-col>
         </v-row>
         <v-row v-if="step === 2">
           <v-col :cols="2" v-for="(chapter, i) in chapters" :key="i">
-            <v-btn>{{ chapter.name }}</v-btn>
-            <v-icon class="ml-2" v-if="canRemove" color="red"
-                    @click="removeChapter(chapter.chapter_id)">mdi-close-circle-outline</v-icon>
+            <v-chip outlined color="blue" close @click:close="removeChapter(chapter.chapter_id)">{{ chapter.name }}</v-chip>
           </v-col>
         </v-row>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
         <v-row>
-          <v-spacer></v-spacer>
-          <v-col :cols="2">
-            <v-btn color="blue" class="white--text" v-if="step" @click="showDialog = true">
-              添加{{ (step === 1) ? "科目" : "章节" }}
+          <v-col class="d-flex justify-center">
+            <v-btn color="blue" class="white--text" v-if="step >= 0" @click="showDialog = true" width="100px">
+              添加{{ (step === 0) ? "学年" : (step === 1) ? "科目" : "章节" }}
             </v-btn>
           </v-col>
-          <v-col :cols="2">
-            <v-btn color="red" class="white--text" @click="canRemove = !canRemove" v-if="step === 2">
-              删除{{ (step === 1) ? "科目" : "章节" }}
-            </v-btn>
-          </v-col>
-          <v-spacer></v-spacer>
         </v-row>
         <v-dialog v-model="showDialog" max-width="300px">
           <v-card>
-            <v-card-title>添加{{ (step === 1) ? "科目" : "章节" }}</v-card-title>
+            <v-card-title>添加{{ (step === 0) ? "学年" : (step === 1) ? "科目" : "章节" }}</v-card-title>
             <v-card-text>
               <v-text-field
                 v-model="newContent"
@@ -79,16 +68,19 @@
 
 <script>
 import { create_chapter, create_subject, delete_chapter, get_all_subjects, get_subject_all_chapters } from '@/api/subject';
+import {create_tag, delete_tag, update_tag, get_all_tags} from '@/api/tag'
+import {get_all_years, create_year, update_year_info, update_current_year} from '@/api/year'
 import { getToken } from '@/utils/auth';
 import { Message } from 'element-ui';
 export default {
   data() {
     return {
       years: [],
+      current_year_id: 1,
+      current_year_content: '2023年',
       subjects: [],
       chapters: [],
       step: 0,
-      canRemove: false,
       record: {},
       showDialog: false,
       newContent: "",
@@ -99,8 +91,16 @@ export default {
   },
   methods: {
     getYear() {
-      this.years = [{year_id: 1,
-        content: '大一下学期'}];
+      get_all_years(getToken()).then(response => {
+        this.years = response.data['year_list'];
+        this.current_year_id = response.data['current_year_id'];
+        this.current_year_content = response.data['current_content'];
+      }).catch(error => {
+        Message({
+          message: '获取学年失败',
+          type: 'error'
+        });
+      });
     },
     getSubject(year_id) {
       get_all_subjects(getToken(),
@@ -122,7 +122,6 @@ export default {
       });
     },
     goStep(step, target) {
-      this.canRemove = false;
       this.step = step;
       if (step === 0) {
         this.record = {};
@@ -135,8 +134,37 @@ export default {
         this.getChapter(target.subject_id);
       }
     },
+    createTag() {
+      create_tag(getToken(), this.newContent).then(response => {
+        Message({
+          message: '创建成功',
+          type: 'success'
+        });
+      }).catch(error => {
+        Message({
+          message: '创建失败',
+          type: 'error'
+        });
+      });
+    },
     submitContent() {
-      if (this.step === 1) {
+      if (this.step === 0) {
+        create_year(getToken(),
+          this.newContent
+        ).then(response => {
+          Message({
+            message: '创建成功',
+            type: 'success'
+          });
+          this.getYear();
+          this.newContent = "";
+        }).catch(error => {
+          Message({
+            message: '创建失败',
+            type: 'error'
+          });
+        });
+      } else if (this.step === 1) {
         create_subject(getToken(),
           this.newContent,
           "",

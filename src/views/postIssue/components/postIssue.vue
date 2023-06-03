@@ -7,16 +7,15 @@
              :close-on-press-escape="false">
     <el-form :model="issue">
       <el-form-item label="标题">
-        <el-input v-model="issue.title" placeholder="点此输入标题..."/>
+        <el-input v-model="issue.title" placeholder=""/>
       </el-form-item>
       <el-form-item label="问题描述">
         <el-col :span="24">
-          <markdown-editor
-            v-model="content"
-            height="500px"
-            lang="zh"
-            :hooks="this.hooks"
-          />
+          <MdEditor
+            ref="editor2" :value="content"
+            style="min-height: 500px"
+            @input="updateParentValue">
+          </MdEditor>
         </el-col>
       </el-form-item>
       <el-row style="margin-top: 30px;">
@@ -51,15 +50,17 @@
       </el-row>
     </el-form>
     <span slot="footer" class="dialog-footer">
-            <el-button id="confirm-button" type="primary" @click="editMode?upadteIssue():postIssue()">确认</el-button>
-            <el-button id="cancel-button" @click="closeDialog">取消</el-button>
+            <el-button class="cancel-button" @click="saveDraft">保存草稿</el-button>
+            <el-button class="cancel-button" @click="loadDraft">恢复草稿</el-button>
+            <el-button class="confirm-button" @click="editMode?upadteIssue():postIssue()">确认</el-button>
+            <el-button class="cancel-button" @click="closeDialog">取消</el-button>
         </span>
   </el-dialog>
 </template>
 
 <script lang="js">
 import {Message} from "element-ui";
-import MarkdownEditor from '@/components/MarkdownEditor'
+import MdEditor from "@/components/MDeditor/MdEditor";
 import {
   commit_issue, get_issue_detail,
   update_issue_info
@@ -67,12 +68,13 @@ import {
 import {get_all_subjects, get_subject_all_chapters} from '@/api/subject'
 import {getToken, getRole} from '@/utils/auth'
 import {upload_public} from "@/api/upload";
-import { isSwitchStatement } from "@babel/types";
+import {save_draft, load_draft} from '@/api/draft'
+import {isSwitchStatement} from "@babel/types";
 
 export default {
   name: 'PostIssueDialog',
   components: {
-    MarkdownEditor
+    MdEditor
   },
   props: {
     dialogVisible: Boolean,
@@ -208,18 +210,19 @@ export default {
         subject: null,
         chapter: null,
         anonymous: null,
+        id: 0,
       },
-      content: '点此输入问题...',
-      hooks:{
+      content: '',
+      hooks: {
         addImageBlobHook: async (blob, callback) => {
           let jwt = this.$store.state.user.token
           const formData = new FormData();
           formData.append('file', blob);
-          upload_public(formData).then(response=>{
+          upload_public(formData).then(response => {
             if (response.data) {
               callback(response.data.url);
             }
-          }).catch(err=>{
+          }).catch(err => {
             this.$notify({
               title: '上传图片失败',
               message: '上传图片信息失败',
@@ -259,7 +262,7 @@ export default {
       this.issue.subject = null;
       this.issue.chapter = null;
       this.issue.anonymous = null;
-      this.content = '点此输入问题...';
+      this.content = '';
     },
     clearSubject() {
       this.issue.chapter = null
@@ -312,6 +315,38 @@ export default {
         })
       })
     },
+    saveDraft() {
+      save_draft(getToken(), this.issue.chapter, this.issue.title,
+        this.content, parseInt(this.issue.anonymous)).then(response => {
+        Message({
+          message: '草稿保存成功',
+          type: 'success'
+        });
+      }).catch(error => {
+        Message({
+          message: '草稿保存失败',
+          type: 'error',
+        })
+      })
+    },
+    loadDraft() {
+      load_draft(getToken()).then(response => {
+        // console.log(response.data.anonymous)
+        this.issue.title = response.data.title
+        this.content = response.data.content
+        this.issue.text = response.data.content
+        this.issue.chapter = response.data.chapter_id
+        this.issue.subject = response.data.subject_id
+        this.issue.anonymous = String(response.data.anonymous)
+      }).catch(error => {
+        this.$notify({
+          title: '草稿加载失败',
+          message: '草稿加载失败',
+          type: 'warning',
+          duration: 2000
+        })
+      })
+    },
     initChapters() {
       get_all_subjects(getToken(), this.year_id).then(response => {
         // why should JSON? see https://blog.csdn.net/weixin_46331416/article/details/123262798
@@ -354,18 +389,20 @@ export default {
     },
     upadteIssue() {
       let jwt = this.$store.state.user.token
+      console.log('here')
       update_issue_info(jwt,
         this.issue.id,
         this.issue.chapter,
         this.issue.title,
         this.content,
         this.issue.anonymous).then(response => {
-        this.$emit('updateEvent');
+          console.log(response)
+        this.$emit('updateEvent',this.issue_id);
         this.$emit('closeDialogEvent');
         this.$notify({
           title: '编辑成功',
           message: '编辑issue信息成功',
-          type: 'info',
+          type: 'success',
           duration: 2000
         })
       }).catch(err => {
@@ -376,6 +413,9 @@ export default {
           duration: 2000
         })
       })
+    },
+    updateParentValue(newValue) {
+      this.content = newValue;
     }
   },
   created() {
@@ -386,7 +426,11 @@ export default {
 
 <style scoped>
 ::v-deep .el-dialog__header {
-  background-color: #689add !important;
+  background-color: #276678 !important;
+}
+
+::v-deep .el-dialog__title {
+  color: white !important;
 }
 
 ::v-deep .el-dialog__footer {
@@ -394,11 +438,15 @@ export default {
   margin-bottom: 30px !important;
 }
 
-#confirm-button {
+.confirm-button {
+  background-color: #1687A7;
+  border-color: #1687A7;
   color: white;
 }
 
-#cancel-button {
+.cancel-button {
+  background-color: #D3E0EA;
+  border-color: #D3E0EA;
   color: black;
 }
 

@@ -48,6 +48,7 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'issueInfoDetail',
+        props: true,
         component: () => import('@/views/issueInfo/issueInfoDetail')
       },
     ]
@@ -117,6 +118,14 @@ const createRouter = () => new Router({
 })
 
 const router = createRouter()
+router.afterEach((to, from) => {
+  if (from.name !== null) {
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+    });
+  }
+});
+
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {

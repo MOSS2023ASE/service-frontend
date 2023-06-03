@@ -61,6 +61,15 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
+    },
+    module: {
+      rules: [
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: 'javascript/auto'
+        }
+      ]
     }
   },
   chainWebpack(config) {

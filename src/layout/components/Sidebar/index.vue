@@ -3,7 +3,7 @@
     <v-navigation-drawer
       mini-variant
       app
-      style="background-color:	#87CEFA;">
+      style="background-color:	#1687A7;">
       <div :class="{'has-logo':showLogo}">
         <logo v-if="showLogo" :collapse="isCollapse"/>
         <!--        <el-scrollbar wrap-class="scrollbar-wrapper">-->
