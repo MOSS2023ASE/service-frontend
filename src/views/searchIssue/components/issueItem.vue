@@ -176,7 +176,6 @@ export default {
     },
     answerIssue() {
       adopt_issue(getToken(), this.id).then(response => {
-        console.log(response)
         this.verifyDialogVisible = false
         this.$emit('refreshEvent');
         Message({
@@ -190,7 +189,6 @@ export default {
     },
     verifyIssue() {
       review_issue(getToken(), this.id).then(response => {
-        console.log(response)
         this.verifyDialogVisible = false
         this.$emit('refreshEvent');
         Message({

@@ -174,7 +174,7 @@
                     comment.time.slice(11, 16)
                   }}</span></v-card-subtitle>
                 <v-card-text>
-                  <MarkdownDisplay :value="comment.content"></MarkdownDisplay>
+                  <MarkdownDisplay :value="toMdText(comment)"></MarkdownDisplay>
                 </v-card-text>
               </v-card>
             </v-timeline-item>
@@ -269,29 +269,32 @@ import marked from 'marked';
 import Confirm from "@/views/issueInfo/components/Confirm";
 import RelateDialog from "@/components/RelateIssue/RelateDialog";
 import {
-  get_issue_detail,
-  like_issue,
-  follow_issue,
+  adopt_issue,
+  agree_issue,
+  cancel_issue,
   check_follow_issue,
   check_like_issue,
-  cancel_issue,
-  adopt_issue,
-  reject_issue,
-  agree_issue,
-  review_issue,
-  readopt_issue,
   classify_issue,
-  update_issue_tag,
-  get_issue_tag
+  follow_issue,
+  get_issue_detail,
+  get_issue_tag,
+  like_issue,
+  readopt_issue,
+  reject_issue,
+  review_issue,
+  update_issue_tag
 } from "@/api/issue";
-import {get_issue_all_comments, create_comment, delete_comment} from "@/api/forum";
+import {create_comment, get_issue_all_comments} from "@/api/forum";
 import {get_all_tags} from '@/api/tag';
-import {getToken, getRole} from '@/utils/auth';
+import {getRole, getToken} from '@/utils/auth';
 import {upload_public} from "@/api/upload";
 import DOMPurify from "dompurify";
 import {get_association} from "@/api/issue_connect";
 import MdEditor from "@/components/MDeditor/MdEditor";
 import MarkdownDisplay from "@/components/MDeditor/MarkdownDisplay";
+
+const TurndownService = require('turndown').default;
+
 export default {
   name: "issueInfoDetail",
   components: {MarkdownEditor, MyRichText, postIssue, marked, Confirm, RelateDialog,MdEditor,MarkdownDisplay},
@@ -759,6 +762,17 @@ export default {
         })
     },
     //beta
+    toMdText(comment) {
+      const targetDate = new Date('2023-05-25T12:00:00');
+      const inputDate = new Date(comment.time);
+
+      if(inputDate < targetDate){
+        var turndownService = new TurndownService()
+        return turndownService.turndown(comment.content)
+      }else{
+        return comment.content
+      }
+    },
     showRealte() {
       this.relate = true
     },
