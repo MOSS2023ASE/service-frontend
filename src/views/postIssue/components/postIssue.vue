@@ -389,14 +389,13 @@ export default {
     },
     upadteIssue() {
       let jwt = this.$store.state.user.token
-      console.log('here')
       update_issue_info(jwt,
         this.issue.id,
         this.issue.chapter,
         this.issue.title,
         this.content,
         this.issue.anonymous).then(response => {
-          console.log(response)
+
         this.$emit('updateEvent',this.issue_id);
         this.$emit('closeDialogEvent');
         this.$notify({

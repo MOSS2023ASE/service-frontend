@@ -416,9 +416,6 @@ export default {
             this.search_state = [4]
           }
           this.listLoading = true;
-          console.log(this.search_year);
-          console.log(this.search_subject);
-          console.log(this.search_chapter);
           search_issue(getToken(), this.search_keyword, this.search_tags,
             this.search_state, this.search_chapter, this.sort_order,
             this.cur_page, this.page_size, this.search_year, this.search_subject).then(response => {
@@ -444,7 +441,6 @@ export default {
       },
       initYears() {
         get_all_years(getToken()).then(response => {
-          console.log(response);
           this.all_years = response.data['year_list'];
           this.current_year_id = response.data['current_year_id'];
           get_all_subjects(getToken(), this.current_year_id).then(response => {
