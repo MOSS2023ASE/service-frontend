@@ -74,3 +74,19 @@ export async function readTutorXlsx(file) {
   }
   return data;
 }
+
+export async function exportCsvFile(json, title) {
+  const lib = require('papaparse');
+  let csv = lib.unparse(json);
+  let csvData = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  let csvURL;
+  if (navigator.msSaveBlob) {
+    csvURL = navigator.msSaveBlob(csvData, title + '.csv');
+  } else {
+    csvURL = window.URL.createObjectURL(csvData);
+  }
+  let tempLink = document.createElement('a');
+  tempLink.href = csvURL;
+  tempLink.setAttribute('download', title + '.csv');
+  tempLink.click();
+}

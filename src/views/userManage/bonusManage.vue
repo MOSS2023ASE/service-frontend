@@ -72,7 +72,7 @@
       </v-col>
 
       <v-col :cols="1">
-        <v-btn color="orange" class="white--text">导出</v-btn>
+        <v-btn color="orange" class="white--text" @click="exportCsv">导出</v-btn>
       </v-col>
     </v-row>
     
@@ -117,6 +117,7 @@
 import { getToken } from '@/utils/auth';
 import { get_tutor_bonus, get_student_bonus } from '@/api/statistics'
 import { Message } from 'element-ui';
+import { exportCsvFile } from '@/utils/file';
 export default {
   data() {
     return {
@@ -175,6 +176,9 @@ export default {
       this.data_list = [];
       this.getStudentBonus();
       this.getTutorBonus();
+    },
+    exportCsv() {
+      exportCsvFile(this.data_list, '志愿时长统计');
     }
   }
 }

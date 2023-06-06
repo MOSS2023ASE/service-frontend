@@ -254,7 +254,7 @@ export default {
       this.line.setOption(this.line_option);
     },
     drawPie(valueList) {
-      let sections = ['0~10次', '11~20次', '21~30次' , '31~40次', '40次以上'];
+      let sections = ['1~10次', '11~20次', '21~30次' , '31~40次', '40次以上'];
       let counts = [0, 0, 0, 0, 0];
 
       for (let i = 0; i < valueList.length; i++) {
