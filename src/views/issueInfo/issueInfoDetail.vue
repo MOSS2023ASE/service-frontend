@@ -21,7 +21,7 @@
             </v-card-title>
             <v-list-item three-line>
               <v-list-item-content>
-                <v-list-item-title class="headline">{{ this.title }} (id:{{ this.issue_id }})</v-list-item-title>
+                <v-list-item-title class="headline">{{ this.title }}</v-list-item-title>
                 <v-list-item-subtitle class="headline">
                   {{ this.user_name }}
                 </v-list-item-subtitle>
@@ -44,6 +44,7 @@
               <v-card-actions>
                 <v-btn text color="blue">{{ this.subject_name }}</v-btn>
                 <v-btn text color="blue">{{ this.chapter_name }}</v-btn>
+                <v-btn v-for="(tag, index) in tag_list" :key="index" text color="orange">{{ tag }}</v-btn>
               </v-card-actions>
             </v-row>
             <v-row justify="end" style="margin-right: 10px">
@@ -406,6 +407,25 @@ export default {
     initIssueId() {
       this.issue_id = this.$route.query.issue_id
     },
+    initHasTag(id) {
+      get_issue_tag(getToken(), id).then(response => {
+        let all_tag_list = response.data.tag_list
+        console.log(all_tag_list)
+        this.tag_list = []
+        let i
+        for (i in all_tag_list) {
+          this.tag_list.push(all_tag_list[i].tag_content)
+        }
+        console.log(this.tag_list)
+      }).catch(err => {
+        this.$notify({
+          title: '获取问题标签',
+          message: '获取问题标签失败',
+          type: 'warning',
+          duration: 2000
+        })
+      })
+    },
     initTags() {
       get_all_tags(getToken()).then(response => {
         this.all_tags = response.data['tag_list']
@@ -733,6 +753,7 @@ export default {
           duration: 2000
         })
         this.tag_dialog = false;
+        this.initHasTag(this.issue_id)
       }).catch(() => {
         this.$notify({
           title: '标签添加失败',
@@ -748,7 +769,7 @@ export default {
       // this.initissueInfo(id)
       // this.initissueComment(id)
       this.isLoading = true
-      Promise.all([this.initLike(id), this.initFollow(id), this.initissueInfo(id), this.initissueComment(id),this.getAsList(id), this.initTags()])
+      Promise.all([this.initLike(id), this.initFollow(id), this.initissueInfo(id), this.initissueComment(id),this.getAsList(id), this.initHasTag(id),this.initTags()])
         .then(() => {
           this.isLoading = false
         })
@@ -786,6 +807,7 @@ export default {
     showTagManage() {
       get_issue_tag(getToken(), this.issue_id).then(response => {
         let tag_list = response.data['tag_list']
+        this.added_tags = []
         let i
         for (i in tag_list) {
           this.added_tags.push(tag_list[i].tag_id)
