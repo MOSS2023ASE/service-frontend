@@ -762,6 +762,10 @@ export default {
         })
     },
     //beta
+    removeLocalStorage() {
+      // 或者删除所有本地缓存
+      localStorage.clear();
+    },
     toMdText(comment) {
       const targetDate = new Date('2023-05-25T12:00:00');
       const inputDate = new Date(comment.time);
@@ -862,10 +866,14 @@ export default {
     }
 
     this.initAll(id)
+    // 添加 beforeunload 事件监听器
+    window.addEventListener('beforeunload', this.removeLocalStorage);
   },
   beforeDestroy() {
+    // 移除 beforeunload 事件监听器
+    window.removeEventListener('beforeunload', this.removeLocalStorage);
     // 从LocalStorage中移除数据
-    localStorage.removeItem('issue_id')
+    localStorage.clear();
   },
   watch: {
     $route(to, from) {
