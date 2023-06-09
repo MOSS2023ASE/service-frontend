@@ -11,7 +11,9 @@
             @change="changeYear">
         </el-switch>
         <v-card class="search-bar">
-            <div class="search-info">
+            <el-row style="width: 100%;">
+            <el-col :span="22">
+              <div class="search-info">
                 <el-input v-model="search_keyword"
                         placeholder="请输入关键词" class="search-keyword"/>
                 <div class="search-options">
@@ -50,11 +52,13 @@
                                 :key="chapter.chapter_id" :label="chapter.name" :value="chapter.chapter_id"/>
                     </el-select>
                 </div>
-            </div>
-            <el-button icon="el-icon-search" class="search-button"
-                      @click="search" v-loading.fullscreen.lock="listLoading">
-                搜索
-            </el-button>
+              </div>
+            </el-col>
+            <el-col :span="2" style="height: 96px;">
+              <el-button icon="el-icon-search" class="search-button"
+                        @click="search" v-loading.fullscreen.lock="listLoading"/>
+            </el-col>
+            </el-row>
         </v-card>
         <v-card class="issues-table">
             <!--在这里应该最多传三个tag进去，不然显示不了 -->
@@ -69,7 +73,7 @@
             :abstract="issue.content.length > 16 ?
                       issue.content.slice(0, 15) + '...' :
                       issue.content"
-            :created_at="issue.created_at.slice(0, 16)"
+            :created_at="issue.created_at.slice(0, 10)"
             :subject="issue.subject_name"
             :chapter="issue.chapter_name"
             :tags="issue.tags"
@@ -377,7 +381,7 @@ export default {
           listLoading: false,
           cur_page: 1,
           total_page: 2,
-          page_size: 10,
+          page_size: 7,
           issues: [],
           top_k : 5,
           top_issues: [],
@@ -554,7 +558,7 @@ export default {
 .search-info {
   display: flex;
   flex-direction: column;
-  width: 87%;
+  width: 95%;
   margin-right: 5%;
 }
 
@@ -563,15 +567,17 @@ export default {
 }
 
 .search-button {
-  width: 8%;
+  width: 100%;
+  margin-top: 0px;
   height: inherit;
   color: #666666;
-  min-width: 80px;
+  min-width: 48px;
 }
 
 .search-keyword {
   height: 60px;
   font-size: 19px;
+  font-family:"黑体";
 }
 
 .search-keyword .el-input__wrapper {
@@ -590,8 +596,8 @@ export default {
 .search-select {
   /* width: 14%; */
   /* margin-left: 1%; */
-  width: 21%;
-  margin-right: 4%;
+  width: 22%;
+  margin-right: 3%;
 }
 
 .search-select /deep/ .el-select__tags {

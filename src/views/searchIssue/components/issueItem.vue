@@ -1,5 +1,5 @@
 <template>
-  <div class="issue-item" @click="toIssueDetailView()">
+  <v-card class="issue-item" @click="toIssueDetailView()">
     <div class="author">
       <el-avatar v-if="this.user_avatar !== null" class="user_avatar" :src="this.user_avatar" :key="this.user_avatar" />
       <el-avatar v-else class="user_avatar" :src="require('../../../assets/images/anonymous.jpg')" />
@@ -12,7 +12,7 @@
           <div class="content">{{this.abstract}}</div>
         </div>
         <div class="time-state">
-          <div>{{this.created_at.slice(0, 10)}} {{this.created_at.slice(11, 16)}}</div>
+          <div>{{this.created_at}}</div>
           <div v-if="this.status === 0" class="state0">
             [未认领回答]
           </div>
@@ -93,7 +93,7 @@
                 </span>
       </el-dialog>
     </div>
-  </div>
+  </v-card>
 </template>
 
 <script>
@@ -214,11 +214,6 @@ export default {
   margin-bottom: 12px;
   margin-left: 10%;
   transition: all 0.3s;
-
-  border-style: solid;
-  border-color: #AAAAAA;
-  border-width: 1px;
-  border-radius: 0.8ch;
 }
 
 .issue-item:hover {
