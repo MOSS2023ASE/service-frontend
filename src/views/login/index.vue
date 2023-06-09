@@ -368,6 +368,10 @@ export default {
     sendVerification() {
       this.resetPasswordForm.mailAddress = this.resetPasswordForm.username + '@buaa.edu.cn'
       send_mail(this.resetPasswordForm.mailAddress).then(response => {
+        Message({
+          message: '验证码已发送至邮箱',
+          type: 'success'
+        });
       }).catch(error => {
       })
     },
@@ -382,8 +386,12 @@ export default {
       }
       confirm_mail(this.resetPasswordForm.mailAddress, this.resetPasswordForm.username,
         sha256(this.resetPasswordForm.password), this.resetPasswordForm.verification).then(response => {
+          Message({
+            message: '密码重置成功',
+            type: 'success'
+          });
+          this.resetPasswordDialog = false;
       }).catch(error => {
-        console.log(error)
       })
     },
     handleLogin() {
