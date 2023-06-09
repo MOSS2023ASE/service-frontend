@@ -111,7 +111,7 @@ export async function modify_user_subject(
     method: 'post',
     data: {
       jwt: jwt,
-      tutor_student_id: tutor_id,
+      tutor_id: tutor_id,
       subject_id_list: subject_id_list
     }
   })

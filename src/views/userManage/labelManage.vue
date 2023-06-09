@@ -1,5 +1,6 @@
 <template>
-  <v-container>
+  <v-app>
+    <v-container>
     <v-card>
       <v-card-title class="ml-4">
         章节科目管理：
@@ -64,6 +65,8 @@
       </v-card-actions>
     </v-card>
   </v-container>
+  <label-view></label-view>
+  </v-app>
 </template>
 
 <script>
@@ -72,6 +75,7 @@ import {create_tag, delete_tag, update_tag, get_all_tags} from '@/api/tag'
 import {get_all_years, create_year, update_year_info, update_current_year} from '@/api/year'
 import { getToken } from '@/utils/auth';
 import { Message } from 'element-ui';
+import labelView from './labelView';
 export default {
   data() {
     return {
@@ -86,6 +90,7 @@ export default {
       newContent: "",
     }
   },
+  components: { labelView },
   mounted() {
     this.getYear();
   },
