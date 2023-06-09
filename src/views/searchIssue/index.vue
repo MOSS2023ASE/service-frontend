@@ -590,13 +590,14 @@ export default {
 }
 
 .search-tags {
-  width: 40% !important;
+  width: 31% !important;
+  padding-right: 3%;
 }
 
 .search-select {
   /* width: 14%; */
   /* margin-left: 1%; */
-  width: 22%;
+  width: 20%;
   margin-right: 3%;
 }
 

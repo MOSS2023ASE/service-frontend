@@ -1,98 +1,64 @@
 <template>
   <v-card class="issue-item" @click="toIssueDetailView()">
-    <div class="author">
-      <el-avatar v-if="this.user_avatar !== null" class="user_avatar" :src="this.user_avatar" :key="this.user_avatar" />
-      <el-avatar v-else class="user_avatar" :src="require('../../../assets/images/anonymous.jpg')" />
-      <div class="user_name">{{this.user_name}}</div>
-    </div>
-    <div class="previews">
-      <div style="display: flex;">
-        <div style="display: flex; flex-direction: column;">
-          <div class="title">{{this.title}}</div>
-          <div class="content">{{this.abstract}}</div>
+    <el-row style="width: 100%;">
+      <el-col :span="4">
+        <div class="author">
+          <el-avatar v-if="this.user_avatar !== null" class="user_avatar" :src="this.user_avatar" :key="this.user_avatar" />
+          <el-avatar v-else class="user_avatar" :src="require('../../../assets/images/anonymous.jpg')" />
+          <div class="user_name">{{this.user_name}}</div>
         </div>
-        <div class="time-state">
-          <div>{{this.created_at}}</div>
-          <div v-if="this.status === 0" class="state0">
-            [未认领回答]
-          </div>
-          <div v-if="this.status === 1" class="state1">
-            [已认领回答]
-          </div>
-          <div v-if="this.status === 2" class="state2">
-            [未认领复审]
-          </div>
-          <div v-if="this.status === 3" class="state3">
-            [已认领复审]
-          </div>
-          <div v-if="this.status === 4" class="state4">
-            [有效提问]
-          </div>
-          <div v-if="this.status === 5" class="state5">
-            [无效提问]
+      </el-col>
+      <el-col :span="13">
+        <div class="previews">
+          <el-row style="width: 100%">
+            <el-col :span="15">
+              <div style="display: flex; flex-direction: column;">
+                <div class="title">{{this.title}}</div>
+                <div class="content">{{this.abstract}}</div>
+              </div>
+            </el-col>
+            <el-col :span="9">
+              <div class="time-state">
+              <div>{{this.created_at}}</div>
+              <div v-if="this.status === 0" class="state0">
+                [未认领回答]
+              </div>
+              <div v-if="this.status === 1" class="state1">
+                [已认领回答]
+              </div>
+              <div v-if="this.status === 2" class="state2">
+                [未认领复审]
+              </div>
+              <div v-if="this.status === 3" class="state3">
+                [已认领复审]
+              </div>
+              <div v-if="this.status === 4" class="state4">
+                [有效提问]
+              </div>
+              <div v-if="this.status === 5" class="state5">
+                [无效提问]
+              </div>
+              </div>
+            </el-col>
+          </el-row>
+          <div class="subject-chapter">
+            <el-row style="width: 100%">
+              <el-col :span="10">
+                <el-tag type="warning" class="square-tag">{{ this.subject }}</el-tag>
+              </el-col>
+              <el-col :span="10">
+                <el-tag type="warning" class="square-tag">{{ this.chapter }}</el-tag>
+              </el-col>
+            </el-row>
           </div>
         </div>
+      </el-col>
+      <el-col :span="6">
+      <div class="tags">
+        <li class="tag" v-for="tag in this.tags">{{tag}}</li>
       </div>
-      <div class="subject-chapter">
-        <el-row style="width: 100%">
-          <el-col :span="10">
-            <el-tag type="warning" class="square-tag">{{ this.subject }}</el-tag>
-          </el-col>
-          <el-col :span="10">
-            <el-tag type="warning" class="square-tag">{{ this.chapter }}</el-tag>
-          </el-col>
-        </el-row>
-      </div>
-    </div>
-    <div class="tags">
-      <li class="tag" v-for="tag in this.tags">{{tag}}</li>
-    </div>
-    <div class="interactions" v-if="this.user_type === 0">
-      <div class="like_count">
-        <v-icon left>
-          mdi-thumb-up-outline
-        </v-icon>
-        <span style="margin: 0px 0px 4px 5px">{{this.like_count}}</span>
-      </div>
-      <div class="follow_count">
-        <v-icon left>
-          mdi-heart-outline
-        </v-icon>
-        <span style="margin: 0px 0px 4px 5px">{{this.follow_count}}</span>
-      </div>
-    </div>
-    <div class="interactions" @click.stop="">
-      <el-button class="inter-button" v-if="this.status_trans_permit[0] === 1"
-                 style="issue-button" @click.stop="answerDialogVisible = true">
-        认领回答
-      </el-button>
-      <el-dialog
-        title="提示"
-        :show-close="false"
-        :visible.sync="answerDialogVisible"
-        width="30%">
-        <span>确认认领回答该问题？</span>
-        <span slot="footer" class="dialog-footer">
-                    <el-button class="confirm-button" @click.stop="answerIssue">确 认</el-button>
-                    <el-button class="cancel-button" @click.stop="answerDialogVisible = false" style="color: #666666;">取 消</el-button>
-                </span>
-      </el-dialog>
-      <el-button class="inter-button" v-if="this.status_trans_permit[4] === 1"
-                 style="issue-button" @click.stop="verifyDialogVisible = true">
-        认领复审
-      </el-button>
-      <el-dialog
-        title="提示"
-        :show-close="false"
-        :visible.sync="verifyDialogVisible"
-        width="30%">
-        <span>确认认领复审该问题？</span>
-        <span slot="footer" class="dialog-footer">
-                    <el-button @click.stop="verifyDialogVisible = false" style="color: #666666;">取 消</el-button>
-                    <el-button type="primary" @click.stop="verifyIssue">确 定</el-button>
-                </span>
-      </el-dialog>
-    </div>
+      </el-col>
+    </el-row>
   </v-card>
 </template>
 
@@ -225,7 +191,6 @@ export default {
   flex-direction: column;
   padding-top: 13px;
   padding-left: 4%;
-  width: 15%;
   min-width: 80px;
 }
 
@@ -234,7 +199,7 @@ export default {
   flex-direction: column;
   padding-top: 18px;
   padding-left: 2%;
-  width: 50%;
+  padding-right: 2%;
 }
 .tags {
   display:flex;
@@ -273,9 +238,10 @@ export default {
 .title {
   font-weight: 600;
   font-size: 22px;
+  width: 100%;
   letter-spacing: 1.5px;
   display: inline-block;
-  max-width: 220px;
+  max-width: 240px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -283,12 +249,13 @@ export default {
 
 .content {
   padding-top: 12px;
+  width: 90%;
   color: #666666;
   font-weight: 400;
   font-size: 14px;
   letter-spacing: 1px;
   display: inline-block;
-  max-width: 220px;
+  max-width: 240px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -329,6 +296,7 @@ export default {
 }
 
 .time-state {
+  /* width: 100%; */
   margin-top: 3px;
   margin-left: auto;
   margin-right: 3%;
@@ -336,7 +304,7 @@ export default {
   font-weight: 400;
   font-size: 14px;
   letter-spacing: 0.4px;
-  max-width: 200px;
+  max-width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
