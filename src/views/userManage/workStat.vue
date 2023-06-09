@@ -1,5 +1,6 @@
 <template>
-  <v-container>
+  <v-app>
+  <v-container v-if="page === 1">
     <v-card>
       <v-card-title class="mb-n6" align="center">
         <v-row>
@@ -86,6 +87,18 @@
       </v-card-text>
     </v-card>
   </v-container>
+
+  <v-container v-if="page === 2">
+    <bonus-manage></bonus-manage>
+  </v-container>
+  
+  <v-container>
+    <v-pagination
+      v-model="page"
+      :length="2">
+    </v-pagination>
+  </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -93,9 +106,12 @@ import * as echarts from 'echarts';
 import { get_statistics } from '@/api/statistics';
 import { getToken } from '@/utils/auth';
 import { Message } from 'element-ui';
+import bonusManage from './bonusManage';
 export default {
+  components: { bonusManage },
   data() {
     return {
+      page: 1,
       showDate1: false,
       showDate2: false,
       date1: '2023-05-01',
@@ -165,7 +181,7 @@ export default {
         },
         series: [
           {
-            name: 'Access From',
+            name: '人数',
             type: 'pie',
             radius: ['40%', '70%'],
             avoidLabelOverlap: false,

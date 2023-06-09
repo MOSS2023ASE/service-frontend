@@ -1,4 +1,5 @@
 <template>
+  <v-app>
   <v-container>
     <v-row>
       <v-spacer></v-spacer>
@@ -16,6 +17,7 @@
       <v-spacer></v-spacer>
     </v-row>
   </v-container>
+  </v-app>
 </template>
 
 <script>
