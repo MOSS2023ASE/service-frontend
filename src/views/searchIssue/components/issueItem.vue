@@ -170,7 +170,7 @@ export default {
   setup() {
   },
   methods: {
-    /* async */ toIssueDetailView() {
+    toIssueDetailView() {
       //Test issueInfoDetail
       this.$router.push({name: 'issueInfoDetail', query: {issue_id: this.id}})
     },

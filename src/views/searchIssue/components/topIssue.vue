@@ -1,5 +1,5 @@
 <template>
-  <div class="top-issue">
+  <div class="top-issue" @click="toIssueDetailView()">
     <el-row>
       <el-col :span="1" style="min-height: 1px"></el-col>
       <el-col :span="7">
@@ -21,7 +21,6 @@
         <div class="title">{{this.title}}</div>
         <div class="subject-chapter">
             <el-tag type="warning" class="square-tag">{{ this.subject }}</el-tag>
-            <el-tag type="warning" class="square-tag">{{ this.chapter }}</el-tag>
         </div>
       </el-col>
     </el-row>
@@ -61,6 +60,10 @@ export default {
     setup() {
     },
     methods: {
+      toIssueDetailView() {
+        //Test issueInfoDetail
+        this.$router.push({name: 'issueInfoDetail', query: {issue_id: this.id}})
+      },
     }
 }
 </script>
@@ -69,6 +72,7 @@ export default {
 .top-issue {
     display: flex;
     flex-direction: column;
+    cursor: pointer;
     width: 90%;
     height: 60px;
     margin-left: 5%;
