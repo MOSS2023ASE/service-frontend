@@ -294,7 +294,7 @@ export default {
 }
 
 .state0 {
-  background: linear-gradient(to right, rgba(0, 0, 0, 0) 80%, rgba(20, 35, 52, 1))
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 80%, rgba(20, 35, 72, 1))
 }
 
 .state5 {
