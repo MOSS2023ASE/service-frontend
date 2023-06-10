@@ -65,7 +65,6 @@
             <!-- tags 目前还没有 -->
             <IssueItem
             v-for="issue in issues"
-            :user_type="user_type"
             :id="issue.issue_id"
             :title="issue.issue_title"
             :user_name="issue.user_name"
@@ -77,8 +76,6 @@
             :subject="issue.subject_name"
             :chapter="issue.chapter_name"
             :tags="issue.tags"
-            :like_count="issue.like_count"
-            :follow_count="issue.follow_count"
             :status_trans_permit="issue.status_trans_permit"
             :status="issue.status"
             @refreshEvent="refresh"
@@ -304,7 +301,6 @@ export default {
                   subject_name: '数学分析',
                   chapter_name: '不定积分',
                   tags: ['作业题', '答案勘误'],
-                  like_count: 5,
                   follow_count: 5
               },
               {
@@ -316,7 +312,6 @@ export default {
                   subject_name: '数据结构',
                   chapter_name: '树',
                   tags: ['debug'],
-                  like_count: 8,
                   follow_count: 2
               },
               {
