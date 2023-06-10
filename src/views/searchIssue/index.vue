@@ -65,7 +65,6 @@
             <!-- tags 目前还没有 -->
             <IssueItem
             v-for="issue in issues"
-            :user_type="user_type"
             :id="issue.issue_id"
             :title="issue.issue_title"
             :user_name="issue.user_name"

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="issue-item" @click="toIssueDetailView()">
+  <v-card class="issue-item" @click="toIssueDetailView()" :class="this.status_class[this.status]">
     <el-row style="width: 100%;">
       <el-col :span="4">
         <div class="author">
@@ -55,27 +55,25 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="6">
-      <div class="tags">
-        <li class="tag" v-for="tag in this.tags">{{tag}}</li>
-      </div>
+      <el-col :span="7">
+        <div class="tags">
+          <li class="tag" v-for="tag in this.tags">{{tag}}</li>
+        </div>
+      </el-col>
+      <el-col :span="1">
+        <div class="state">
+            {{ this.status_text[this.status] }}
+        </div>
       </el-col>
     </el-row>
   </v-card>
 </template>
 
 <script>
-import {Message} from 'element-ui'
-import {adopt_issue, review_issue} from '@/api/issue'
-import {getToken, getRole} from '@/utils/auth'
 
 export default {
   name: 'IssueItem',
   props: {
-    user_type: {
-      type: Number,
-      default: 0
-    },
     id: {
       type: Number,
       default: 998244353
@@ -110,7 +108,7 @@ export default {
     },
     created_at: {
       type: String,
-      default: '2022-09-01 00:00'
+      default: '2022-09-01'
     },
     status_trans_permit: {
       type: Array,
@@ -123,15 +121,28 @@ export default {
   },
   data() {
     return {
-      answerDialogVisible: false,
-      verifyDialogVisible: false
+      status_text: [
+        '未认领回答',
+        '已认领回答',
+        '未认领复审',
+        '已认领复审',
+        '有效提问',
+        '无效提问'
+      ],
+      status_class: [
+        'state0',
+        'state1',
+        'state2',
+        'state3',
+        'state4',
+        'state5'
+      ]
     }
   },
   setup() {
   },
   methods: {
     toIssueDetailView() {
-      //Test issueInfoDetail
       this.$router.push({name: 'issueInfoDetail', query: {issue_id: this.id}})
     },
   }
@@ -271,48 +282,39 @@ export default {
 }
 
 .state {
-  /* width: 100%; */
-  margin-top: 3px;
+  margin-top: 10px;
   margin-left: auto;
-  margin-right: 3%;
-  font-weight: 400;
-  font-size: 14px;
-  letter-spacing: 0.4px;
-  max-width: 100px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: center;
+  margin-right: 6px;
+  font-weight: 500;
+  font-size: 15px;
+  font-family: '黑体';
+  color: #ffffff;
+  letter-spacing: 1px;
+  width: 20px;
 }
 
 .state0 {
-  margin-top: 5px;
-  color: #332e2e;
-}
-
-.state1 {
-  margin-top: 5px;
-  color: #e1b92c;
-}
-
-.state2 {
-  margin-top: 5px;
-  color: #e69be6;
-}
-
-.state3 {
-  margin-top: 5px;
-  color: #3636da;
-}
-
-.state4 {
-  margin-top: 5px;
-  color: #4c9f4c
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 80%, rgba(20, 35, 52, 1))
 }
 
 .state5 {
-  margin-top: 5px;
-  color: #d64646;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 80%, rgba(43, 49, 44, 1))
+}
+
+.state2 {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 80%, rgba(23, 129, 181, 1))
+}
+
+.state3 {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 80%, rgba(19, 72, 87, 1))
+}
+
+.state1 {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 80%, rgba(21, 85, 154, 1))
+}
+
+.state4 {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 80%, rgba(34, 148, 83, 1))
 }
 
 li {
