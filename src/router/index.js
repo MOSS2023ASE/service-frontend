@@ -79,6 +79,22 @@ export const constantRoutes = [
       }
     ]
   },
+]
+
+export const asyncRoutes = [
+  {
+    path: '/post',
+    component: Layout,
+    redirect: '/path/index',
+    children: [
+      {
+        path: 'index',
+        name: 'post',
+        component: () => import('@/views/postIssue/index'),
+        meta: {title: '发布问题', icon: 'el-icon-plus', roles: [0]}
+      }
+    ]
+  },
   {
     path: '/',
     component: Layout,
@@ -108,23 +124,7 @@ export const constantRoutes = [
         meta: {title: '统计图表', icon: 'el-icon-s-data'}
       },
     ],
-    meta: {title: '管理端', icon: 'el-icon-s-tools'}
-  },
-]
-
-export const asyncRoutes = [
-  {
-    path: '/post',
-    component: Layout,
-    redirect: '/path/index',
-    children: [
-      {
-        path: 'index',
-        name: 'post',
-        component: () => import('@/views/postIssue/index'),
-        meta: {title: '发布问题', icon: 'el-icon-plus', roles: [0]}
-      }
-    ]
+    meta: {title: '管理端', icon: 'el-icon-s-tools', roles: [2]}
   },
   // 404 page must be placed at the end !!!
   {path: '*', redirect: '/404', hidden: true}
