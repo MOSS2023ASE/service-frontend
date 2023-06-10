@@ -17,12 +17,12 @@
                 <el-input v-model="search_keyword"
                         placeholder="请输入关键词" class="search-keyword"/>
                 <div class="search-options">
-                    <!-- <el-select v-model="search_tags" class="search-tags"
+                    <el-select v-model="search_tags" class="search-tags"
                         filterable multiple collapse-tags :multiple-limit="3"
                         placeholder="请输入标签" style="width: 100%;">
                         <el-option v-for="tag in all_tags"
                             :key="tag.tag_id" :label="tag.content" :value="tag.tag_id"/>
-                    </el-select> -->
+                    </el-select>
                     <el-select v-model="sort_order" class="search-select"
                               placeholder="排序方式">
                       <el-option v-for="order in all_orders"
