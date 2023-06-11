@@ -11,16 +11,18 @@
             @change="changeYear">
         </el-switch>
         <v-card class="search-bar">
-            <div class="search-info">
+            <el-row style="width: 100%;">
+            <el-col :span="22">
+              <div class="search-info">
                 <el-input v-model="search_keyword"
                         placeholder="请输入关键词" class="search-keyword"/>
                 <div class="search-options">
-                    <!-- <el-select v-model="search_tags" class="search-tags"
+                    <el-select v-model="search_tags" class="search-tags"
                         filterable multiple collapse-tags :multiple-limit="3"
                         placeholder="请输入标签" style="width: 100%;">
                         <el-option v-for="tag in all_tags"
                             :key="tag.tag_id" :label="tag.content" :value="tag.tag_id"/>
-                    </el-select> -->
+                    </el-select>
                     <el-select v-model="sort_order" class="search-select"
                               placeholder="排序方式">
                       <el-option v-for="order in all_orders"
@@ -50,18 +52,19 @@
                                 :key="chapter.chapter_id" :label="chapter.name" :value="chapter.chapter_id"/>
                     </el-select>
                 </div>
-            </div>
-            <el-button icon="el-icon-search" class="search-button"
-                      @click="search" v-loading.fullscreen.lock="listLoading">
-                搜索
-            </el-button>
+              </div>
+            </el-col>
+            <el-col :span="2" style="height: 96px;">
+              <el-button icon="el-icon-search" class="search-button"
+                        @click="search" v-loading.fullscreen.lock="listLoading"/>
+            </el-col>
+            </el-row>
         </v-card>
         <v-card class="issues-table">
             <!--在这里应该最多传三个tag进去，不然显示不了 -->
             <!-- tags 目前还没有 -->
             <IssueItem
             v-for="issue in issues"
-            :user_type="user_type"
             :id="issue.issue_id"
             :title="issue.issue_title"
             :user_name="issue.user_name"
@@ -69,12 +72,10 @@
             :abstract="issue.content.length > 16 ?
                       issue.content.slice(0, 15) + '...' :
                       issue.content"
-            :created_at="issue.created_at.slice(0, 16)"
+            :created_at="issue.created_at.slice(0, 10)"
             :subject="issue.subject_name"
             :chapter="issue.chapter_name"
             :tags="issue.tags"
-            :like_count="issue.like_count"
-            :follow_count="issue.follow_count"
             :status_trans_permit="issue.status_trans_permit"
             :status="issue.status"
             @refreshEvent="refresh"
@@ -300,7 +301,6 @@ export default {
                   subject_name: '数学分析',
                   chapter_name: '不定积分',
                   tags: ['作业题', '答案勘误'],
-                  like_count: 5,
                   follow_count: 5
               },
               {
@@ -312,7 +312,6 @@ export default {
                   subject_name: '数据结构',
                   chapter_name: '树',
                   tags: ['debug'],
-                  like_count: 8,
                   follow_count: 2
               },
               {
@@ -377,7 +376,7 @@ export default {
           listLoading: false,
           cur_page: 1,
           total_page: 2,
-          page_size: 10,
+          page_size: 7,
           issues: [],
           top_k : 5,
           top_issues: [],
@@ -416,9 +415,6 @@ export default {
             this.search_state = [4]
           }
           this.listLoading = true;
-          console.log(this.search_year);
-          console.log(this.search_subject);
-          console.log(this.search_chapter);
           search_issue(getToken(), this.search_keyword, this.search_tags,
             this.search_state, this.search_chapter, this.sort_order,
             this.cur_page, this.page_size, this.search_year, this.search_subject).then(response => {
@@ -444,7 +440,6 @@ export default {
       },
       initYears() {
         get_all_years(getToken()).then(response => {
-          console.log(response);
           this.all_years = response.data['year_list'];
           this.current_year_id = response.data['current_year_id'];
           get_all_subjects(getToken(), this.current_year_id).then(response => {
@@ -558,7 +553,7 @@ export default {
 .search-info {
   display: flex;
   flex-direction: column;
-  width: 87%;
+  width: 95%;
   margin-right: 5%;
 }
 
@@ -567,15 +562,17 @@ export default {
 }
 
 .search-button {
-  width: 8%;
+  width: 100%;
+  margin-top: 0px;
   height: inherit;
   color: #666666;
-  min-width: 80px;
+  min-width: 48px;
 }
 
 .search-keyword {
   height: 60px;
   font-size: 19px;
+  font-family:"黑体";
 }
 
 .search-keyword .el-input__wrapper {
@@ -588,14 +585,15 @@ export default {
 }
 
 .search-tags {
-  width: 40% !important;
+  width: 31% !important;
+  padding-right: 3%;
 }
 
 .search-select {
   /* width: 14%; */
   /* margin-left: 1%; */
-  width: 21%;
-  margin-right: 4%;
+  width: 20%;
+  margin-right: 3%;
 }
 
 .search-select /deep/ .el-select__tags {

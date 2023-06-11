@@ -254,6 +254,7 @@ import editModal from './components/registerPanel.vue'
 import Captcha from './components/captcha.vue'
 import {sha256} from 'js-sha256'
 import {send_mail, confirm_mail} from '@/api/send_email'
+import { deepClone } from '@/utils'
 
 export default {
   name: 'Login',
@@ -368,6 +369,10 @@ export default {
     sendVerification() {
       this.resetPasswordForm.mailAddress = this.resetPasswordForm.username + '@buaa.edu.cn'
       send_mail(this.resetPasswordForm.mailAddress).then(response => {
+        Message({
+          message: '验证码已发送至邮箱',
+          type: 'success'
+        });
       }).catch(error => {
       })
     },
@@ -382,9 +387,12 @@ export default {
       }
       confirm_mail(this.resetPasswordForm.mailAddress, this.resetPasswordForm.username,
         sha256(this.resetPasswordForm.password), this.resetPasswordForm.verification).then(response => {
-          console.log(response)
+          Message({
+            message: '密码重置成功',
+            type: 'success'
+          });
+          this.resetPasswordDialog = false;
       }).catch(error => {
-        console.log(error)
       })
     },
     handleLogin() {
@@ -411,13 +419,12 @@ export default {
           // TODO 在前后端对接阶段，将下面的注释取消，在 store/user 中的 login 中已经实现 api 的调用
           //如果后端支持权限，注释上面三行，取消下列代码的注释
           //派发一个action:user/login,带着用户名与密码的载荷
-          let temp_pwd = this.loginForm.password;
-          this.loginForm.password = sha256(this.loginForm.password);
-          this.$store.dispatch('user/login', this.loginForm)
+          let temp_form = deepClone(this.loginForm);
+          temp_form.password = sha256(temp_form.password);
+          this.$store.dispatch('user/login', temp_form)
             .then(() => {
               // 登录成功进行路由的跳转
               // console.log("we would login success")
-              this.loginForm.password = temp_pwd;
               this.$router.push({name: 'search', query: this.otherQuery})
               // loading效果结束
               this.loading = false
@@ -430,7 +437,6 @@ export default {
               //this.$store.dispatch('user/getInfo')
             })
             .catch((error) => {
-              this.loginForm.password = temp_pwd;
               this.loading = false
               this.$notify({
                 title: '登录失败',

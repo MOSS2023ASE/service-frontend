@@ -21,7 +21,7 @@
             </v-card-title>
             <v-list-item three-line>
               <v-list-item-content>
-                <v-list-item-title class="headline">{{ this.title }} (id:{{ this.issue_id }})</v-list-item-title>
+                <v-list-item-title class="headline">{{ this.title }}</v-list-item-title>
                 <v-list-item-subtitle class="headline">
                   {{ this.user_name }}
                 </v-list-item-subtitle>
@@ -44,6 +44,7 @@
               <v-card-actions>
                 <v-btn text color="blue">{{ this.subject_name }}</v-btn>
                 <v-btn text color="blue">{{ this.chapter_name }}</v-btn>
+                <v-btn v-for="(tag, index) in tag_list" :key="index" text color="orange">{{ tag }}</v-btn>
               </v-card-actions>
             </v-row>
             <v-row justify="end" style="margin-right: 10px">
@@ -174,7 +175,7 @@
                     comment.time.slice(11, 16)
                   }}</span></v-card-subtitle>
                 <v-card-text>
-                  <MarkdownDisplay :value="comment.content"></MarkdownDisplay>
+                  <MarkdownDisplay :value="toMdText(comment)"></MarkdownDisplay>
                 </v-card-text>
               </v-card>
             </v-timeline-item>
@@ -269,29 +270,32 @@ import marked from 'marked';
 import Confirm from "@/views/issueInfo/components/Confirm";
 import RelateDialog from "@/components/RelateIssue/RelateDialog";
 import {
-  get_issue_detail,
-  like_issue,
-  follow_issue,
+  adopt_issue,
+  agree_issue,
+  cancel_issue,
   check_follow_issue,
   check_like_issue,
-  cancel_issue,
-  adopt_issue,
-  reject_issue,
-  agree_issue,
-  review_issue,
-  readopt_issue,
   classify_issue,
-  update_issue_tag,
-  get_issue_tag
+  follow_issue,
+  get_issue_detail,
+  get_issue_tag,
+  like_issue,
+  readopt_issue,
+  reject_issue,
+  review_issue,
+  update_issue_tag
 } from "@/api/issue";
-import {get_issue_all_comments, create_comment, delete_comment} from "@/api/forum";
+import {create_comment, get_issue_all_comments} from "@/api/forum";
 import {get_all_tags} from '@/api/tag';
-import {getToken, getRole} from '@/utils/auth';
+import {getRole, getToken} from '@/utils/auth';
 import {upload_public} from "@/api/upload";
 import DOMPurify from "dompurify";
 import {get_association} from "@/api/issue_connect";
 import MdEditor from "@/components/MDeditor/MdEditor";
 import MarkdownDisplay from "@/components/MDeditor/MarkdownDisplay";
+
+const TurndownService = require('turndown').default;
+
 export default {
   name: "issueInfoDetail",
   components: {MarkdownEditor, MyRichText, postIssue, marked, Confirm, RelateDialog,MdEditor,MarkdownDisplay},
@@ -402,6 +406,25 @@ export default {
     },
     initIssueId() {
       this.issue_id = this.$route.query.issue_id
+    },
+    initHasTag(id) {
+      get_issue_tag(getToken(), id).then(response => {
+        let all_tag_list = response.data.tag_list
+        console.log(all_tag_list)
+        this.tag_list = []
+        let i
+        for (i in all_tag_list) {
+          this.tag_list.push(all_tag_list[i].tag_content)
+        }
+        console.log(this.tag_list)
+      }).catch(err => {
+        this.$notify({
+          title: '获取问题标签',
+          message: '获取问题标签失败',
+          type: 'warning',
+          duration: 2000
+        })
+      })
     },
     initTags() {
       get_all_tags(getToken()).then(response => {
@@ -730,6 +753,7 @@ export default {
           duration: 2000
         })
         this.tag_dialog = false;
+        this.initHasTag(this.issue_id)
       }).catch(() => {
         this.$notify({
           title: '标签添加失败',
@@ -745,7 +769,7 @@ export default {
       // this.initissueInfo(id)
       // this.initissueComment(id)
       this.isLoading = true
-      Promise.all([this.initLike(id), this.initFollow(id), this.initissueInfo(id), this.initissueComment(id),this.getAsList(id), this.initTags()])
+      Promise.all([this.initLike(id), this.initFollow(id), this.initissueInfo(id), this.initissueComment(id),this.getAsList(id), this.initHasTag(id),this.initTags()])
         .then(() => {
           this.isLoading = false
         })
@@ -759,6 +783,21 @@ export default {
         })
     },
     //beta
+    removeLocalStorage() {
+      // 或者删除所有本地缓存
+      localStorage.clear();
+    },
+    toMdText(comment) {
+      const targetDate = new Date('2023-05-25T12:00:00');
+      const inputDate = new Date(comment.time);
+
+      if(inputDate < targetDate){
+        var turndownService = new TurndownService()
+        return turndownService.turndown(comment.content)
+      }else{
+        return comment.content
+      }
+    },
     showRealte() {
       this.relate = true
     },
@@ -768,6 +807,7 @@ export default {
     showTagManage() {
       get_issue_tag(getToken(), this.issue_id).then(response => {
         let tag_list = response.data['tag_list']
+        this.added_tags = []
         let i
         for (i in tag_list) {
           this.added_tags.push(tag_list[i].tag_id)
@@ -848,10 +888,14 @@ export default {
     }
 
     this.initAll(id)
+    // 添加 beforeunload 事件监听器
+    window.addEventListener('beforeunload', this.removeLocalStorage);
   },
   beforeDestroy() {
+    // 移除 beforeunload 事件监听器
+    window.removeEventListener('beforeunload', this.removeLocalStorage);
     // 从LocalStorage中移除数据
-    localStorage.removeItem('issue_id')
+    localStorage.clear();
   },
   watch: {
     $route(to, from) {

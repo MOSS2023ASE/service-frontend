@@ -115,35 +115,14 @@
       </v-row>
       <v-row v-if="page === 3">
         <v-col>
-          <label-manage></label-manage>
-          <label-view></label-view>
-        </v-col>
-      </v-row>
-      <v-row v-if="page === 4">
-        <v-col>
           <tutor-manage></tutor-manage>
-        </v-col>
-      </v-row>
-      <v-row v-if="page === 5">
-        <v-col>
-          <post-message></post-message>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col v-if="page === 6">
-          <work-stat></work-stat>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col v-if="page === 7">
-          <bonus-manage></bonus-manage>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
           <v-pagination
             v-model="page"
-            :length="7">
+            :length="3">
           </v-pagination>
         </v-col>
       </v-row>
@@ -155,15 +134,11 @@
 import UserList from './userList';
 import { readXlsxFile } from '@/utils/file';
 import { Message } from 'element-ui';
-import LabelView from './labelView';
 import tutorManage from './tutorManage';
-import postMessage from './postMessage';
 import { batch_register, single_register } from '@/api/admin';
 import { getToken } from '@/utils/auth';
 import { sha256 } from 'js-sha256';
 import labelManage from './labelManage';
-import workStat from './workStat';
-import bonusManage from './bonusManage';
 export default {
   data() {
     return {
@@ -176,7 +151,7 @@ export default {
       dataTable: []
     }
   },
-  components: { UserList, LabelView, tutorManage, postMessage, labelManage, workStat, bonusManage },
+  components: { UserList, tutorManage, labelManage },
   methods: {
     uploadCancel() {
       this.canUpload = true;

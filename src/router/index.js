@@ -103,9 +103,28 @@ export const asyncRoutes = [
         path: 'manage',
         name: 'manage',
         component: () => import('@/views/userManage/userCreate'),
-        meta: {title: '用户管理', icon: 'el-icon-s-tools', roles: [2]}
-      }
-    ]
+        meta: {title: '用户管理', icon: 'el-icon-user-solid'}
+      },
+      {
+        path: 'label',
+        name: 'label',
+        component: () => import('@/views/userManage/labelManage'),
+        meta: {title: '标签管理', icon: 'el-icon-s-flag'}
+      },
+      {
+        path: 'send',
+        name: 'send',
+        component: () => import('@/views/userManage/postMessage'),
+        meta: {title: '发布通知', icon: 'el-icon-s-comment'}
+      },
+      {
+        path: 'stats',
+        name: 'stats',
+        component: () => import('@/views/userManage/workStat'),
+        meta: {title: '统计图表', icon: 'el-icon-s-data'}
+      },
+    ],
+    meta: {title: '管理端', icon: 'el-icon-s-tools', roles: [2]}
   },
   // 404 page must be placed at the end !!!
   {path: '*', redirect: '/404', hidden: true}
